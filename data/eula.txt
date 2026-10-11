@@ -1,0 +1,179 @@
+# Fuey 最终用户许可协议（EULA）
+协议方：本协议由您（以下简称“用户”）与 Fuey 团队（以下简称“我们”）签订。
+生效日期：用户点击“同意”或开始安装、下载、访问、使用本软件、Minecraft目标地图作品之日起生效。
+
+a 许可授予
+1 我们授予用户非独占、不可转让、不可再分许可的有限许可，允许用户在完全符合本协议全部条款前提下，安装、下载、运行、访问本软件及附带数字内容（含软件本体、资源素材、Minecraft目标地图作品，以下统称“软件及作品”）。
+1) 用户不得对软件及作品进行反向工程、反向编译、反汇编、破解、脱壳、逆向分析，不得试图提取、推导软件源代码、未公开算法、工程源文件；除非中华人民共和国现行法律法规有明确、强制性允许的例外情形。
+2) 许可仅限用户本人、本用户账号内部使用；未经 Fuey 团队书面盖章/电子确认，用户不得出租、出借、托管、公开部署给第三方使用。
+3) 用户仅可制作一份备份副本，备份副本必须完整保留全部版权、商标、协议声明标识，备份仅用于个人存档，禁止对外分发。
+4) 本协议授予的是使用许可，并非所有权转移，软件、Minecraft地图、素材一切知识产权归属 Fuey 团队，许可不等于售卖作品本身。
+
+b 个人数据与隐私保护
+1 个人数据保留：我们仅在为用户提供软件功能、优化服务体验、故障排查、安全风控的必要范围内，收集并保留用户相关个人数据（设备标识、系统环境、操作日志、报错记录等）。数据保留期限严格遵循法律与服务必要性，超出必要期限后自动删除或做不可逆匿名化处理。
+1) 隐私安全保障：我们采用加密传输、访问权限隔离、安全存储等技术管理措施，保护用户个人隐私，防范泄露、篡改、滥用。未经用户明确主动授权，不会向第三方披露个人信息，司法机关、监管机构依法调取情形除外。
+2) 用户账号安全：用户有义务保管账号密码、设备访问权限。因密码泄露、设备被盗、转借账号、共享登录产生全部后果，均由用户自行承担。
+3) 用户可依照隐私相关规则，申请查阅、更正、删除属于本人的个人数据。
+
+c Minecraft目标地图作品转让、知识产权维护约定
+1 本节适用于通过本软件流转、交付的Minecraft目标地图数字作品；目标地图：指甲方原创完成，具备完整权属，无第三方权利瑕疵的Minecraft数字地图，含地图原始工程文件、场景配置、资源素材、衍生修改版本。
+1) 地图转让定义：地图转让指原创作方（甲方）将目标地图使用权、修改权、商业处置权限转移至接收方（乙方）；转让后甲方仅保留原始备份存档权利与原始著作权归属，其余约定按本协议执行。
+2) 交付义务：甲方应在约定时限内以加密、安全方式交付完整工程文件、资源包，保障Minecraft地图文件可正常加载运行；文件损坏时甲方应配合修复重交付。
+3) 权属保证：甲方承诺目标地图为原创，不侵犯第三方著作权、肖像权、商标权；若因地图内容带来第三方投诉、诉讼，由甲方承担全部法律与赔偿责任。
+4) 转让后限制
+① 乙方取得Minecraft地图后可以在协议范围内修改、二次创作、商业运营变现；但不得未经许可把地图源文件、工程包分享、拷贝、转授权、转售给任何外部第三方。
+② 乙方不得冒充原始地图创作者对外宣示完整著作权；不得将地图原始文件对外扩散。
+③ 乙方自身存储失误、硬盘损坏导致备份丢失，无权要求甲方重复交付源文件。
+5) 泄密与违规后果：若乙方违反保密、禁止对外分发的约定，Fuey团队有权冻结相关账号、取消全部使用许可，并保留向平台举报、提起诉讼、主张损害赔偿的权利。
+
+d 版权、商标与第三方协议优先约定
+1 软件、界面、图标、音效、Minecraft地图资源全部知识产权（著作权、商标、专利、商业秘密）归 Fuey 团队独家所有。
+1) 用户不得擅自复制、传播、提取、篡改软件、Minecraft地图的任何组成部分，不得把软件、地图直接用于侵权、赌博、色情、诈骗等违法业务；一旦发生，我方有权追究全部法律责任。
+2) 本协议涉及全部Minecraft相关内容，优先受 Mojang EULA（Mojang最终用户许可协议）约束。如本协议条款与Mojang EULA发生冲突，以Mojang EULA规定为准；仅冲突部分无效，本协议其余条款继续生效。
+3) 软件内部可能包含开源第三方组件，对应开源许可协议随软件分发，第三方组件许可同样对用户具备约束力。
+4) 用户不允许删除、修改、遮盖软件内任何版权、商标、EULA协议提示文本与水印标识。
+
+e 许可条款
+1 有限使用许可：本协议授予的许可为非商业‑商业双模式有限许可，用户仅可在本协议、Mojang EULA允许范围内使用软件及Minecraft目标地图。
+1) 衍生作品许可：基于Minecraft目标地图制作衍生作品，衍生作品依旧受本协议以及Mojang EULA双重约束，衍生作品不得脱离现有许可范围对外传播。
+2) 许可不可转移：未经Fuey团队书面许可，用户不得将本协议项下全部或部分许可权利转让、质押、转授权给其他自然人或法人。
+3) 许可自动终止：一旦用户违反任意许可相关条款，本许可即刻自动终止，用户必须销毁全部所持有的软件、Minecraft地图全部副本。
+
+f 公平条款
+1 对等义务：协议双方均应当公平履行本协议项下义务，一方享有协议赋予权利的同时，必须完整承担对应义务。
+1) 禁止不公平利用：用户不得利用本协议漏洞、条款歧义从事损害Fuey团队、Mojang及第三方合法权益的行为。
+2) 格式条款说明：本协议全部条款经合理提示，用户拥有充分阅读、理解权利，不存在单方面不合理加重用户责任、免除我方主要义务的不公平格式内容。若某一条款被认定显失公平，则该条款单独无效，其余协议内容继续有效。
+3) 利益均衡：涉及Minecraft地图转让、付费、授权相关行为，各方应当遵循公平原则确定对价与权责，不得胁迫、欺诈签署相关约定。
+
+g 用户义务与禁止行为
+1 用户承诺仅在合法合规范围内使用软件及Minecraft地图作品，严禁利用本软件制作、传播暴力、色情、诽谤、侵权、危害国家安全等违法内容。
+1) 禁止利用软件进行压测、漏洞扫描、恶意注入、爬虫批量访问、干扰软件服务稳定性的行为。
+2) 禁止篡改软件本地文件、修改校验、绕过权限限制、制作外挂、辅助工具。
+3) 用户因自身操作失误、配置错误产生的数据丢失、Minecraft地图作品损坏，我方不承担恢复义务；建议用户自行定期导出本地备份。
+4) 用户不得将本软件输出的内容用于仿冒、混淆 Fuey 的商标与品牌形象。
+
+h 更新、维护与服务变更
+1 Fuey团队可自主发布软件更新、补丁、版本迭代；更新版本默认受本EULA约束。
+1) 我方不承诺持续提供技术支持、客服答疑；可随时调整、缩减、下线部分在线功能，无需向用户支付补偿。
+2) 重大协议条款修改，我方将通过软件弹窗、官网公告进行公示。
+
+i 免责声明与责任限制
+1 软件及Minecraft地图作品按“现状”提供。我方不对软件完美运行、零BUG、永不中断、特定业务适配效果做任何明示或暗示保证，全部使用风险由用户自行承担。
+1) 因不可抗力、网络故障、第三方攻击、操作系统兼容问题、用户设备故障，造成数据丢失、作品损坏、业务中断，Fuey团队不承担赔偿责任。
+2) 在法律最大允许限度内，我方不对间接损失、可得利益损失、商业利润损失承担赔付责任。
+
+j 协议修改、生效与终止
+1 我方可依据法律法规修订协议条款；修改版本通过软件内通知、官方网页公示，用户继续使用软件即代表接受更新后协议。
+1) 用户可以随时卸载软件、删除全部副本，主动终止本协议。
+2) 用户一旦违反本协议任意实质性条款，我方有权无需提前协商，立即终止全部许可权限，要求用户卸载软件、销毁全部软件及Minecraft地图副本。
+3) 协议终止之后，c知识产权、e许可条款、f公平条款、g禁止行为、k争议解决、l附加冲突条款，条款效力继续保留有效，不因许可终止失效。
+
+k 争议解决与适用法律
+1 本协议订立、履行、解释，适用中华人民共和国法律。
+1) 双方发生争议优先友好协商；协商未果，任意一方可向Fuey团队所在地具备管辖权的人民法院提起诉讼。
+
+l 附加条款：多协议冲突优先顺序
+1 若本协议部分条款与用户所在地强制性法律条文发生冲突：强制性法律条文效力优先；但仅冲突的该条无效，协议其余全部条款继续完整生效。
+1) 涉及Minecraft相关内容，Mojang EULA优先级高于本Fuey EULA。
+2) Fuey体系内协议优先级从高至低：
+① 双方单独签署的书面纸质/电子专项合同
+② 本Fuey最终用户许可协议EULA
+③ Fuey官方社区公约、平台社区规范
+④ Fuey对外公开的品牌附属说明文档
+3) 前述优先顺序仅适用于Fuey体系内各类协议文件；第三方品牌、第三方社区的规则，不自动约束本协议，除非双方书面明确约定引用第三方规则。
+4) 本协议任一条款被主管机关、法院认定无效、不可执行，其余条款完整独立继续生效（可分割原则）。
+5) 未经Fuey团队书面确认，用户单方面的通知、备注、自定义条款，不对Fuey产生任何约束力。
+6) 本协议构成双方就软件与地图使用事项的完整合意，替代过去口头、非正式聊天、临时备忘录的全部约定。
+
+用户须知：您点击“同意”并安装、运行软件、使用Minecraft目标地图，即表示您完整阅读，充分理解并无条件接受本协议全部条款。若不同意全部条款，请立刻停止安装、下载、使用，删除全部软件及地图副本。
+
+---
+
+# End User License Agreement (EULA)
+Parties: This Agreement is concluded between you (hereinafter referred to as "User") and the Fuey Team (hereinafter referred to as "We").
+Effective Date: This Agreement shall take effect upon the date the User clicks “Agree”, or begins installing, downloading, accessing or using the Software and Minecraft target‑map works.
+
+a Grant of License
+1 We grant the User a non‑exclusive, non‑transferable, non‑sublicensable limited license to install, download, run and access the Software and associated digital contents (including software body, assets and Minecraft target‑map works, collectively “Software & Works”), strictly subject to all terms of this Agreement.
+1) The User shall not reverse‑engineer, decompile, disassemble, crack, unpack or attempt to derive source‑code, undisclosed algorithms or original project files of the Software & Works, unless explicitly mandatorily permitted by applicable laws of People’s Republic of China.
+2) The license applies only to the User’s personal and intra‑account usage. Without written electronic or paper confirmation from Fuey Team, the User shall not rent, lend, host or publicly deploy for third‑party usage.
+3) The User may make one backup copy only for archival purposes. The backup must retain all copyright, trademark and legal notices and shall not be externally distributed.
+4) This Agreement grants usage license only, not ownership. All intellectual‑property rights over software and Minecraft maps remain owned by Fuey Team. License does not equal sale of the works.
+
+b Personal Data and Privacy Protection
+1 We collect and store user‑related personal data (device identifier, system environment, operation logs, error reports etc.) only to the extent necessary for function delivery, experience optimization, fault diagnosis and security risk‑control. Data will be deleted or irreversibly anonymized after retention period expires.
+1) We adopt encrypted transmission, permission isolation and secure storage to protect user privacy against leakage, tampering and abuse. Personal data shall not be disclosed to third‑parties without explicit user authorization, except for legally required requests from judicial or regulatory authorities.
+2) The User shall properly safeguard account credentials and device access. Consequences arising from password leakage, device compromise or shared login shall be borne solely by the User.
+3) The User may request inspection, correction or erasure of personal data in accordance with applicable privacy rules.
+
+c Target‑Map Transfer & Intellectual‑Property Maintenance
+1 This section applies to digital Minecraft target‑map works delivered via the Software. Target‑map means original digital‑map work created by Party‑A with full legal ownership free of third‑party claims, including original project files, scene configurations, resources and derivative modified versions.
+1) Definition of Map Transfer: Map transfer means original creator (Party‑A) transfers usage, modification and commercial‑disposal rights of target‑map to receiving party (Party‑B). After transfer, Party‑A retains only archival backup and original copyright ownership, subject to this Agreement.
+2) Delivery Obligations: Party‑A shall deliver complete project packages securely within agreed time‑limit and ensure operability of Minecraft map files. Party‑A shall assist repair or re‑delivery for corrupted files.
+3) Ownership Warranty: Party‑A warrants the target‑map is original and does not infringe third‑party copyright, portrait‑right or trademark‑right. Party‑A shall bear full legal liability for third‑party complaints or lawsuits arising from map content defects.
+4) Post‑transfer Restrictions
+① After obtaining the map, Party‑B may modify, create derivative works and conduct commercial operation and monetization, but shall not share, copy, sublicense or resell map source files and project packages to any external third‑party without permission.
+② Party‑B shall not pretend to be the original creator and claim full copyright of target‑map; shall not disseminate original map files.
+③ If Party‑B loses backup due to storage failure or hardware damage, Party‑B has no right to demand repeated file delivery from Party‑A.
+5) Breach Consequence: If Party‑B violates confidentiality and non‑distribution obligations, Fuey Team may freeze related accounts, revoke all licenses, and reserve rights to report to platforms, file lawsuits and claim compensation for damages.
+
+d Copyright, Trademark and Third‑Party Agreement Priority
+1 All intellectual‑property rights of software, UI, icons, audio and Minecraft map resources belong exclusively to Fuey Team.
+1) The User shall not copy, distribute, extract or alter any part of software and Minecraft maps, shall not use them for infringement, gambling, pornography, fraud or other illegal activities, otherwise we will pursue legal liabilities.
+2) All Minecraft‑related content under this Agreement is primarily governed by Mojang EULA. Where terms of this Agreement conflict with Mojang EULA, Mojang EULA shall prevail. Only conflicting clauses shall be invalid, other clauses of this Agreement remain in full force.
+3) Third‑party open‑source components may be included in software, corresponding open‑source licenses are distributed together with software and shall bind the User.
+4) The User must not delete, modify or obscure any copyright, trademark, EULA notice text and watermark inside software.
+
+e License Terms
+1 Limited‑scope License: License granted herein is dual‑mode limited license for non‑commercial and commercial use. User may use software and Minecraft target‑map only within scope permitted by this Agreement and Mojang EULA.
+1) Derivative‑work License: Derivative works created based upon Minecraft target‑map shall be bound both by this Agreement and Mojang EULA. Derivative works shall not be disseminated beyond licensed scope.
+2) Non‑assignable License: Without written approval from Fuey Team, User shall not assign, pledge or sublicense all or part of license rights here‑under to any natural person or legal entity.
+3) Automatic Termination: Once User breaches any license‑related clause, license terminates automatically. User shall destroy all copies of software and Minecraft maps in possession.
+
+f Fairness Provisions
+1 Mutual Obligation: Both parties shall perform obligations under this Agreement fairly. While enjoying rights granted by this Agreement, each party shall fully undertake corresponding obligations.
+1) Prohibition against unfair exploitation: User shall not exploit loopholes or ambiguous wording of this Agreement to harm legitimate interests of Fuey Team, Mojang or any third‑party.
+2) Standard‑form‑clause Statement: All clauses of this Agreement are reasonably prompted. User has full right to read and understand. There are no unfair clauses that unreasonably aggravate User’s liability or exempt our core obligations. If any clause is deemed obviously unfair, such clause shall be invalid alone and rest of Agreement remains valid.
+3) Interest Balance: For Minecraft‑map transfer, payment and authorization matters, all parties shall determine consideration and rights‑obligations under fair principle, no signing under coercion or fraud.
+
+g User Obligations and Prohibited Conduct
+1 User shall use software and Minecraft maps only in compliance with law. It is strictly forbidden to use this software to produce or disseminate violent, pornographic, defamatory, infringing or national‑security‑endangering content.
+1) It is prohibited to conduct pressure test, vulnerability scanning, malicious injection, mass crawling or other behaviors destabilizing software service.
+2) It is prohibited to tamper local software files, modify checksum, bypass permission restrictions, develop cheats or auxiliary tools.
+3) We shall not be responsible for data loss or map damage caused by User’s mis‑operation. Users are advised to make regular local backups.
+4) User shall not use output content of this software to counterfeit or confuse Fuey’s trademark and brand image.
+
+h Update, Maintenance and Service Change
+1 Fuey Team may release software updates, patches and new versions; updated versions shall be subject to this EULA by default.
+1) We do not guarantee continuous technical support or customer service. We may adjust, reduce or shut down online functions at any time without compensation to User.
+2) Material amendment of agreement will be notified via in‑software pop‑up or official website announcement.
+
+i Disclaimer and Limitation of Liability
+1 Software and Minecraft maps are provided “as‑is”. We make no express or implied warranty for perfect operation, bug‑free performance, uninterrupted service or specific business adaptability. All usage risks shall be borne by User.
+1) We shall not be liable for damages caused by force majeure, network failure, third‑party attack, OS incompatibility or user‑side device failure resulting in data loss, work damage or service interruption.
+2) To maximum extent permitted by law, we shall not be liable for indirect loss, loss of expected profit or commercial benefit.
+
+j Amendment, Effectiveness and Termination
+1 We may revise agreement clauses in accordance with laws. Continued use after publication of revised terms constitutes User’s acceptance of new version.
+1) User may terminate this Agreement voluntarily by uninstalling software and deleting all copies.
+2) Upon User’s material breach of any clause, we may terminate all licenses immediately without prior negotiation, requiring User to uninstall software and destroy all copies of software and Minecraft maps.
+3) After termination, clauses c, e, f, g, k, l shall survive termination and remain legally effective.
+
+k Governing Law and Dispute Resolution
+1 This Agreement shall be governed by the laws of the People’s Republic of China.
+1) Any dispute shall first be settled through friendly negotiation. If negotiation fails, either party may file lawsuit to people’s court with jurisdiction over Fuey Team’s location.
+
+l Additional Provisions: Multi‑agreement Conflict Priority
+1 If any clause conflicts with mandatory local law, mandatory local law shall prevail; only conflicting clause is invalid, rest of Agreement remains valid.
+1) For Minecraft‑related content, Mojang EULA takes precedence over Fuey EULA.
+2) Priority order within Fuey documents from highest to lowest:
+① Separate signed special written / electronic contract between both parties
+② This Fuey End User License Agreement(EULA)
+③ Official Fuey community conventions and platform specifications
+④ Public Fuey brand supplementary documents
+3) Above priority applies only to Fuey‑related documents. Rules of third‑party brands or third‑party communities shall not bind this Agreement unless explicitly referenced in written form.
+4) If any clause is held invalid or unenforceable by authority or court, other clauses shall remain fully effective (severability principle).
+5) Unilateral notices, remarks or custom terms from User shall not bind Fuey without Fuey Team’s written confirmation.
+6) This Agreement constitutes full understanding between parties superseding all prior oral talks, informal chat records and memoranda.
+
+User Notification: By clicking "Agree", installing or using software and Minecraft target‑map, you confirm that you have carefully read, fully understood and unconditionally accepted all terms of this Agreement. If you disagree with any terms, please cease installation, download and usage immediately and delete all copies of software and maps.
