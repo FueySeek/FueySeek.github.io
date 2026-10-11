@@ -2,15 +2,15 @@ window.__DOWNLOAD_DATA__ = {
     items: [
         {
             name: {
-                zh: "项目",
-                en: "Project"
+                zh: "极域反控制",
+                en: "Jiyu Anti-Control"
             },
-            url: "web",
-            code: "key",
-            systems: ["Windows", "macOS", "Linux"],
+            url: "https://wwbja.lanzouq.com/b016kazagf",
+            code: "5nse",
+            systems: ["Windows"],
             date: {
-                zh: "2025-01-15",
-                en: "2025-01-15"
+                zh: "2025-10-09",
+                en: "2025-10-09"
             }
         }
     ]
