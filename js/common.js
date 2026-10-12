@@ -47,7 +47,6 @@ function initHomeEmbed() {
 
     const iframe = document.createElement("iframe");
     iframe.src = "embed.html";
-    iframe.loading = "lazy";
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
     iframe.style.width = "100%";
@@ -56,17 +55,27 @@ function initHomeEmbed() {
 
     let resolved = false;
 
-    function failEmbed() {
+    function showAll() {
+        if (resolved) return;
+        resolved = true;
+        homeEmbedReady = true;
+        container.classList.add("visible");
+        if (scrollBtn) scrollBtn.classList.add("visible");
+        resizeIframe();
+        syncEmbedTheme();
+        setTimeout(syncEmbedTheme, 100);
+        setTimeout(syncEmbedTheme, 500);
+    }
+
+    function hideAll() {
         if (resolved) return;
         resolved = true;
         container.classList.remove("visible");
         if (scrollBtn) scrollBtn.classList.remove("visible");
-        try {
-            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-        } catch (e) {}
     }
 
     function resizeIframe() {
+        if (!resolved) return;
         try {
             const doc = iframe.contentDocument || iframe.contentWindow.document;
             if (doc && doc.body) {
@@ -89,6 +98,11 @@ function initHomeEmbed() {
         } catch (e) {}
     }
 
+    window.addEventListener("message", (e) => {
+        if (!e.data || e.data.type !== "fuey-embed-ready") return;
+        showAll();
+    });
+
     iframe.addEventListener("load", () => {
         if (resolved) return;
         let hasContent = false;
@@ -100,25 +114,14 @@ function initHomeEmbed() {
         } catch (e) {
             hasContent = true;
         }
-        if (!hasContent) {
-            failEmbed();
-            return;
+        if (hasContent) {
+            showAll();
+        } else {
+            hideAll();
         }
-        resolved = true;
-        homeEmbedReady = true;
-        container.classList.add("visible");
-        if (scrollBtn) scrollBtn.classList.add("visible");
-        resizeIframe();
-        syncEmbedTheme();
-        setTimeout(syncEmbedTheme, 100);
-        setTimeout(syncEmbedTheme, 500);
     });
 
-    iframe.addEventListener("error", failEmbed);
-
-    setTimeout(() => {
-        if (!resolved) failEmbed();
-    }, 4000);
+    iframe.addEventListener("error", hideAll);
 
     if (scrollBtn) {
         scrollBtn.addEventListener("click", () => {
@@ -128,7 +131,11 @@ function initHomeEmbed() {
     }
 
     function updateScrollBtn() {
-        if (!scrollBtn || !homeEmbedReady) return;
+        if (!scrollBtn) return;
+        if (!homeEmbedReady) {
+            scrollBtn.classList.remove("visible");
+            return;
+        }
         const scrollY = window.pageYOffset || document.documentElement.scrollTop;
         if (scrollY > 80) {
             scrollBtn.classList.remove("visible");
@@ -146,6 +153,12 @@ function initHomeEmbed() {
     window.__syncHomeEmbedTheme = syncEmbedTheme;
 
     container.appendChild(iframe);
+
+    setTimeout(() => {
+        if (!resolved) {
+            showAll();
+        }
+    }, 1500);
 }
 
 function initSegmented() {
@@ -276,6 +289,7 @@ function initSegmented() {
             if (!hasMoved) {
                 syncActiveClass(getActiveItem());
                 positionIndicator(getActiveItem(), true);
+                pendingItem = null;
                 return;
             }
 
@@ -305,8 +319,8 @@ function initSegmented() {
 
         group.addEventListener("touchstart", (e) => {
             const touch = e.touches[0];
-            if (onDown(touch.clientX)) e.preventDefault();
-        }, { passive: false });
+            onDown(touch.clientX);
+        }, { passive: true });
 
         document.addEventListener("touchmove", (e) => {
             if (!dragging) return;
@@ -705,7 +719,7 @@ function initNavSlider() {
 
     function onTouchStart(e) {
         const touch = e.touches[0];
-        if (onDown(touch.clientX)) e.preventDefault();
+        onDown(touch.clientX);
     }
 
     function onTouchMove(e) {
@@ -726,7 +740,7 @@ function initNavSlider() {
 
     document.addEventListener("mouseup", onUp);
 
-    navLinks.addEventListener("touchstart", onTouchStart, { passive: false });
+    navLinks.addEventListener("touchstart", onTouchStart, { passive: true });
     document.addEventListener("touchmove", onTouchMove, { passive: true });
     document.addEventListener("touchend", onUp);
 

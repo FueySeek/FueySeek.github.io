@@ -58,6 +58,10 @@
             });
         };
         if (typeof applyLang === "function") applyLang();
+
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
+        }
     </script>
 </body>
 </html>
