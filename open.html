@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Fuey Project</title>
+    <link rel="icon" href="images/icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/open.css">
+</head>
+<body>
+    <header class="main-nav">
+        <div class="nav-links">
+            <a href="index.html" id="navHome" class="nav-item" data-lang-key="home">Home</a>
+            <a href="download.html" class="nav-item" data-lang-key="download">Download</a>
+            <a href="open.html" class="nav-item active" data-lang-key="about">About Us</a>
+            <a href="#" id="navSettings" class="nav-item" data-lang-key="settings">Settings<svg class="nav-icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></a>
+        </div>
+    </header>
+
+    <aside id="settingsPanel" class="settings-panel">
+        <div class="settings-header">
+            <h3 data-lang-key="settingsTitle">Settings</h3>
+            <button id="closeSettings" class="close-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-group">
+                <label data-lang-key="theme">Theme</label>
+                <div class="theme-options">
+                    <button id="themeLight" class="theme-btn" data-theme="light" data-lang-key="themeLight">Light Theme</button>
+                    <button id="themeDark" class="theme-btn" data-theme="dark" data-lang-key="themeDark">Dark Theme</button>
+                </div>
+            </div>
+            <div class="setting-group">
+                <label data-lang-key="language">Language</label>
+                <div class="lang-options">
+                    <button id="langEn" class="lang-btn" data-lang="en">English</button>
+                    <button id="langZh" class="lang-btn" data-lang="zh">中文</button>
+                </div>
+            </div>
+        </div>
+        <div class="settings-footer">
+            <button id="resetSettings" class="reset-btn" data-lang-key="resetSettings">Reset Settings</button>
+        </div>
+    </aside>
+
+    <main class="page-container">
+        <div class="page-card">
+            <h1 data-lang-key="aboutTitle">About Us</h1>
+            <p data-lang-key="aboutDesc">About Us Content Here</p>
+            <div id="aboutList" class="about-list">
+                <p class="loading-text" data-lang-key="loading">Loading...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <span class="footer-text">© 2020-<span id="footerYear">2026</span> Fuey All Rights Reserved</span>
+    </footer>
+
+    <script src="data/open-list.js"></script>
+    <script src="js/lang.js"></script>
+    <script src="js/rule.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/open.js"></script>
+</body>
+</html>
