@@ -46,7 +46,6 @@ function initHomeEmbed() {
     if (!container) return;
 
     const iframe = document.createElement("iframe");
-    iframe.src = "embed.html";
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
     iframe.style.width = "100%";
@@ -151,6 +150,9 @@ function initHomeEmbed() {
     });
 
     window.__syncHomeEmbedTheme = syncEmbedTheme;
+
+    const bust = Date.now();
+    iframe.src = "embed.html?_=" + bust;
 
     container.appendChild(iframe);
 
