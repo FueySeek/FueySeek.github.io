@@ -28,7 +28,13 @@ const langData = {
         noData: "暂无下载内容",
         noAboutData: "暂无更多内容",
         visit: "前往",
-        disabled: "此操作已被禁用"
+        disabled: "此操作已被禁用",
+        resetSettings: "重置设置",
+        resetConfirm: "此操作不可逆，是否继续？",
+        yes: "是",
+        no: "否",
+        embedTitle: "这里是自定义内容",
+        embedDesc: "编辑 embed.html 即可更改这里显示的内容。"
     },
     en: {
         home: "Home",
@@ -59,13 +65,25 @@ const langData = {
         noData: "No Downloads Available",
         noAboutData: "No More Content",
         visit: "Visit",
-        disabled: "This Operation Has Been Disabled"
+        disabled: "This Operation Has Been Disabled",
+        resetSettings: "Reset Settings",
+        resetConfirm: "This Action Is Irreversible, Continue?",
+        yes: "Yes",
+        no: "No",
+        embedTitle: "Here is your custom content",
+        embedDesc: "Edit embed.html to change what appears here."
     }
 };
 
-let currentLang = localStorage.getItem("fuey-lang") || "zh";
+let currentLang = localStorage.getItem("fuey-lang") || "en";
+
+if (!langData[currentLang]) {
+    currentLang = "en";
+    localStorage.setItem("fuey-lang", "en");
+}
 
 function setLang(lang) {
+    if (!langData[lang]) lang = "en";
     currentLang = lang;
     localStorage.setItem("fuey-lang", lang);
     applyLang();
@@ -89,12 +107,13 @@ function t(key) {
 }
 
 function applyLang() {
+    if (!langData[currentLang]) currentLang = "en";
+
     document.querySelectorAll("[data-lang-key]").forEach(el => {
         const key = el.getAttribute("data-lang-key");
         if (!langData[currentLang][key]) return;
 
-        const hasSvg = el.querySelector(".nav-icon-settings");
-        if (hasSvg) {
+        if (el.querySelector(".nav-icon-settings")) {
             const firstText = Array.from(el.childNodes).find(n => n.nodeType === 3);
             if (firstText) {
                 firstText.nodeValue = langData[currentLang][key];
@@ -105,6 +124,7 @@ function applyLang() {
             el.textContent = langData[currentLang][key];
         }
     });
+
     document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.classList.toggle("active", btn.getAttribute("data-lang") === currentLang);
     });
