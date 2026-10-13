@@ -24,7 +24,7 @@
     text-decoration: none;
     color: var(--text);
     font-size: 17px;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, flex-direction 0.45s ease;
     animation: itemFadeIn 0.5s ease backwards;
 }
 
@@ -52,4 +52,16 @@
 
 .about-item:hover .about-item-arrow {
     transform: translateX(6px);
+}
+
+html[data-handed="left"] .about-item {
+    flex-direction: row-reverse;
+}
+
+html[data-handed="left"] .about-item:hover {
+    transform: translateX(-6px);
+}
+
+html[data-handed="left"] .about-item:hover .about-item-arrow {
+    transform: translateX(-6px);
 }

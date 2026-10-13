@@ -13,6 +13,69 @@
     font-size: 16px;
 }
 
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-top: 24px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    border: 0.5px solid var(--border);
+    transition: background 0.3s ease, border-color 0.3s ease, flex-direction 0.45s ease;
+}
+
+[data-theme="dark"] .search-bar {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.search-bar:focus-within {
+    border-color: var(--accent);
+}
+
+.search-input {
+    flex: 4;
+    min-width: 0;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    border-radius: var(--radius-pill);
+    transition: text-align 0.45s ease;
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.search-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 20px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: var(--radius-pill);
+    cursor: url("../images/mouse.png") 4 4, auto;
+    transition: background 0.25s ease, transform 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.search-btn:hover {
+    background: #0062c4;
+    transform: scale(1.03);
+}
+
+.search-btn:active {
+    transform: scale(0.97);
+}
+
 .download-item {
     padding: 20px 24px;
     background: rgba(255, 255, 255, 0.25);
@@ -48,6 +111,7 @@
     margin-bottom: 14px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
+    transition: flex-direction 0.45s ease;
 }
 
 .download-item-title {
@@ -67,12 +131,14 @@
     gap: 10px;
     margin-bottom: 10px;
     flex-wrap: wrap;
+    transition: flex-direction 0.45s ease;
 }
 
 .download-item-label {
     font-size: 14px;
     color: var(--text-secondary);
     min-width: 70px;
+    transition: text-align 0.45s ease;
 }
 
 .system-tags {
@@ -151,6 +217,7 @@
     margin-top: 14px;
     display: flex;
     justify-content: flex-end;
+    transition: justify-content 0.45s ease;
 }
 
 .download-btn {
@@ -172,4 +239,28 @@
 
 .download-btn:active {
     transform: scale(0.96);
+}
+
+html[data-handed="left"] .search-bar {
+    flex-direction: row-reverse;
+}
+
+html[data-handed="left"] .search-input {
+    text-align: right;
+}
+
+html[data-handed="left"] .download-item-header {
+    flex-direction: row-reverse;
+}
+
+html[data-handed="left"] .download-item-row {
+    flex-direction: row-reverse;
+}
+
+html[data-handed="left"] .download-item-label {
+    text-align: right;
+}
+
+html[data-handed="left"] .download-item-actions {
+    justify-content: flex-start;
 }

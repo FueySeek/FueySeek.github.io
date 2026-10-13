@@ -38,6 +38,16 @@
                     <button id="langZh" class="lang-btn" data-lang="zh">中文</button>
                 </div>
             </div>
+            <div class="setting-group">
+                <label data-lang-key="handed">Left-handed Mode</label>
+                <div class="handed-toggle-row">
+                    <span class="handed-toggle-label" data-lang-key="handedToggle">Enable left-handed layout</span>
+                    <button id="handedToggle" class="toggle-switch" role="switch" aria-checked="false" aria-label="Toggle left-handed mode">
+                        <span class="toggle-knob"></span>
+                    </button>
+                </div>
+                <p class="handed-desc" data-lang-key="handedDesc">Mirrors the settings panel, homepage hero and bottom controls to the left side, for left-handed use.</p>
+            </div>
         </div>
         <div class="settings-footer">
             <button id="resetSettings" class="reset-btn" data-lang-key="resetSettings">Reset Settings</button>
@@ -48,6 +58,12 @@
         <div class="page-card">
             <h1 data-lang-key="downloadTitle">Download</h1>
             <p data-lang-key="downloadDesc">Download Content Here</p>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input" data-lang-key="searchPlaceholder" placeholder="Search our projects">
+                <button id="searchBtn" class="search-btn" data-lang-key="searchBtn">Search</button>
+            </div>
+
             <div id="downloadList" class="download-list">
                 <p class="loading-text" data-lang-key="loading">Loading...</p>
             </div>

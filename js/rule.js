@@ -3,8 +3,15 @@
 
     let toastTimer = null;
     let toastEl = null;
+    let isEmbed = window.parent && window.parent !== window;
 
     function showSecurityToast() {
+        if (isEmbed) {
+            try {
+                window.parent.postMessage({ type: "fuey-security-toast" }, "*");
+            } catch (e) {}
+            return;
+        }
         if (!toastEl) {
             toastEl = document.createElement("div");
             toastEl.className = "security-toast";
@@ -13,14 +20,14 @@
         }
         const textEl = toastEl.querySelector(".security-toast-text");
         textEl.textContent = (typeof t === "function") ? t("disabled") : "此操作已被禁用";
-
         toastEl.classList.remove("show");
         void toastEl.offsetWidth;
         toastEl.classList.add("show");
-
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1800);
     }
+
+    window.__fueyShowSecurityToast = showSecurityToast;
 
     function isEditable(target) {
         const tag = target && target.tagName;
@@ -58,7 +65,6 @@
         document.addEventListener("keydown", (e) => {
             const key = (e.key || "").toLowerCase();
             const code = e.keyCode || e.which;
-
             if (key === "f11" || code === 122) return true;
             if (key === "f5" || code === 116) return true;
             if (e.ctrlKey && key === "r") return true;
@@ -67,7 +73,6 @@
             if (e.metaKey && ["+", "-", "=", "0"].includes(key)) return true;
             if (e.ctrlKey && key === "f") return true;
             if (e.metaKey && key === "f") return true;
-
             if (key === "f12" || code === 123) return block(e);
             if (e.ctrlKey && e.shiftKey && ["i", "j", "c", "k", "e"].includes(key)) return block(e);
             if (e.metaKey && e.altKey && ["i", "j", "c", "u"].includes(key)) return block(e);

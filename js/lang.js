@@ -9,6 +9,11 @@ const langData = {
         themeLight: "浅色主题",
         themeDark: "深色主题",
         language: "语言",
+        handed: "惯用手",
+        handedRight: "右手",
+        handedLeft: "左手",
+        handedToggle: "启用左手布局",
+        handedDesc: "将设置面板、首页主视觉和底部控件镜像到左侧，方便左手操作。",
         weAreMaking: "我们正在制作一些",
         interesting: "有意思的",
         projects: "项目",
@@ -33,8 +38,8 @@ const langData = {
         resetConfirm: "此操作不可逆，是否继续？",
         yes: "是",
         no: "否",
-        embedTitle: "这里是自定义内容",
-        embedDesc: "编辑 embed.html 即可更改这里显示的内容。"
+        searchPlaceholder: "查找我们的项目",
+        searchBtn: "搜索"
     },
     en: {
         home: "Home",
@@ -46,6 +51,11 @@ const langData = {
         themeLight: "Light Theme",
         themeDark: "Dark Theme",
         language: "Language",
+        handed: "Handedness",
+        handedRight: "Right-handed",
+        handedLeft: "Left-handed",
+        handedToggle: "Enable left-handed layout",
+        handedDesc: "Mirrors the settings panel, homepage hero and bottom controls to the left side, for left-handed use.",
         weAreMaking: "We Are Making Some ",
         interesting: "Interesting ",
         projects: "Projects",
@@ -70,8 +80,8 @@ const langData = {
         resetConfirm: "This Action Is Irreversible, Continue?",
         yes: "Yes",
         no: "No",
-        embedTitle: "Here is your custom content",
-        embedDesc: "Edit embed.html to change what appears here."
+        searchPlaceholder: "Search our projects",
+        searchBtn: "Search"
     }
 };
 
@@ -88,7 +98,8 @@ function setLang(lang) {
     localStorage.setItem("fuey-lang", lang);
     applyLang();
     if (typeof renderDownloadList === "function" && typeof downloadData !== "undefined") {
-        renderDownloadList(downloadData);
+        const data = (typeof downloadFiltered !== "undefined" && downloadFiltered) ? downloadFiltered : downloadData;
+        renderDownloadList(data);
     }
     if (typeof renderAboutList === "function" && typeof aboutData !== "undefined") {
         renderAboutList(aboutData);
@@ -108,11 +119,9 @@ function t(key) {
 
 function applyLang() {
     if (!langData[currentLang]) currentLang = "en";
-
     document.querySelectorAll("[data-lang-key]").forEach(el => {
         const key = el.getAttribute("data-lang-key");
         if (!langData[currentLang][key]) return;
-
         if (el.querySelector(".nav-icon-settings")) {
             const firstText = Array.from(el.childNodes).find(n => n.nodeType === 3);
             if (firstText) {
@@ -120,11 +129,12 @@ function applyLang() {
             } else {
                 el.insertBefore(document.createTextNode(langData[currentLang][key]), el.firstChild);
             }
+        } else if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+            el.setAttribute("placeholder", langData[currentLang][key]);
         } else {
             el.textContent = langData[currentLang][key];
         }
     });
-
     document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.classList.toggle("active", btn.getAttribute("data-lang") === currentLang);
     });

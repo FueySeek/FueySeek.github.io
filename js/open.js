@@ -1,20 +1,10 @@
 let aboutData = null;
 
-function bustListCache() {
-    try {
-        const scripts = document.querySelectorAll('script[src*="open-list.js"]');
-        scripts.forEach(s => {
-            const src = s.getAttribute("src");
-            if (src && !src.includes("t=")) {
-                const sep = src.includes("?") ? "&" : "?";
-                s.setAttribute("src", src + sep + "t=" + Date.now());
-            }
-        });
-    } catch (e) {}
+function getCurrentLang() {
+    return localStorage.getItem("fuey-lang") || "en";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    bustListCache();
     if (typeof applyLang === "function") applyLang();
     aboutData = window.__OPEN_DATA__ || null;
     renderAboutList(aboutData);
@@ -23,18 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function renderAboutList(data) {
     const listEl = document.getElementById("aboutList");
     if (!listEl) return;
-
     if (!data || !Array.isArray(data.items) || data.items.length === 0) {
         listEl.innerHTML = `<p class="empty-text">${t("noAboutData")}</p>`;
         return;
     }
-
-    const lang = localStorage.getItem("fuey-lang") || "zh";
-
+    const lang = getCurrentLang();
     listEl.innerHTML = data.items.map((item, index) => {
         let name = "";
         if (item.name && typeof item.name === "object") {
-            name = item.name[lang] || item.name.zh || item.name.en || "";
+            name = item.name[lang] || item.name.en || item.name.zh || "";
         } else if (typeof item.name === "string") {
             name = item.name;
         }

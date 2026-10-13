@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     initTheme();
+    initHanded();
     initNavSlider();
     initSettingsPanel();
     initNavHome();
@@ -38,6 +39,88 @@ function clearAllFueyStorage() {
     } catch (e) {}
 }
 
+const taskLock = {
+    current: null,
+    acquire(name) {
+        if (this.current && this.current !== name) return false;
+        this.current = name;
+        return true;
+    },
+    release(name) {
+        if (this.current === name) this.current = null;
+    },
+    isLocked() {
+        return this.current !== null;
+    }
+};
+window.__fueyTaskLock = taskLock;
+
+function lockBodyScroll() {
+    document.documentElement.classList.add("locked");
+    document.body.classList.add("locked");
+}
+
+function unlockBodyScroll() {
+    document.documentElement.classList.remove("locked");
+    document.body.classList.remove("locked");
+}
+
+function initHanded() {
+    const savedHanded = localStorage.getItem("fuey-handed") || "right";
+    document.documentElement.setAttribute("data-handed", savedHanded);
+
+    const toggle = document.getElementById("handedToggle");
+    if (toggle) {
+        toggle.setAttribute("aria-checked", savedHanded === "left" ? "true" : "false");
+        toggle.addEventListener("click", () => {
+            const current = document.documentElement.getAttribute("data-handed") || "right";
+            const next = current === "left" ? "right" : "left";
+            applyHanded(next);
+        });
+    }
+}
+
+function applyHanded(handed) {
+    const settingsPanel = document.getElementById("settingsPanel");
+    const backdrop = document.querySelector(".settings-backdrop");
+    const isPanelOpen = settingsPanel && settingsPanel.classList.contains("open");
+
+    function commitHanded() {
+        document.documentElement.setAttribute("data-handed", handed);
+        localStorage.setItem("fuey-handed", handed);
+        const toggle = document.getElementById("handedToggle");
+        if (toggle) {
+            toggle.setAttribute("aria-checked", handed === "left" ? "true" : "false");
+        }
+        syncAllSegmented();
+        if (typeof window.__refreshNavIndicator === "function") {
+            window.__refreshNavIndicator();
+        }
+        if (typeof window.__syncHomeEmbedTheme === "function") {
+            window.__syncHomeEmbedTheme();
+        }
+    }
+
+    if (!isPanelOpen) {
+        commitHanded();
+        return;
+    }
+
+    if (settingsPanel) settingsPanel.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("open");
+
+    setTimeout(() => {
+        commitHanded();
+        if (settingsPanel) {
+            settingsPanel.classList.add("open");
+            if (backdrop) backdrop.classList.add("open");
+            syncAllSegmented();
+            requestAnimationFrame(syncAllSegmented);
+            setTimeout(syncAllSegmented, 250);
+        }
+    }, 520);
+}
+
 let homeEmbedReady = false;
 
 function initHomeEmbed() {
@@ -49,8 +132,12 @@ function initHomeEmbed() {
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
     iframe.style.width = "100%";
+    iframe.style.height = "200px";
     iframe.style.border = "none";
     iframe.style.background = "transparent";
+    iframe.style.display = "block";
+    iframe.style.overflow = "hidden";
+    iframe.style.minHeight = "0";
 
     let resolved = false;
 
@@ -60,7 +147,6 @@ function initHomeEmbed() {
         homeEmbedReady = true;
         container.classList.add("visible");
         if (scrollBtn) scrollBtn.classList.add("visible");
-        resizeIframe();
         syncEmbedTheme();
         setTimeout(syncEmbedTheme, 100);
         setTimeout(syncEmbedTheme, 500);
@@ -73,33 +159,58 @@ function initHomeEmbed() {
         if (scrollBtn) scrollBtn.classList.remove("visible");
     }
 
-    function resizeIframe() {
-        if (!resolved) return;
+    function setIframeHeight(h) {
+        if (!h || h < 10) return;
+        iframe.style.height = h + "px";
+    }
+
+    function measure() {
         try {
             const doc = iframe.contentDocument || iframe.contentWindow.document;
-            if (doc && doc.body) {
-                const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 200);
-                iframe.style.height = h + "px";
-            }
-        } catch (e) {
-            iframe.style.height = "400px";
-        }
+            if (!doc || !doc.body) return;
+            const h = Math.max(
+                doc.body.scrollHeight,
+                doc.body.offsetHeight,
+                doc.documentElement.scrollHeight,
+                doc.documentElement.offsetHeight
+            );
+            setIframeHeight(h);
+        } catch (e) {}
     }
 
     function syncEmbedTheme() {
         if (!homeEmbedReady) return;
         const theme = document.documentElement.getAttribute("data-theme") || "light";
         const lang = localStorage.getItem("fuey-lang") || "en";
+        const handed = localStorage.getItem("fuey-handed") || "right";
         try {
             if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: "fuey-embed-sync", theme: theme, lang: lang }, "*");
+                iframe.contentWindow.postMessage({
+                    type: "fuey-embed-sync",
+                    theme: theme,
+                    lang: lang,
+                    handed: handed
+                }, "*");
             }
         } catch (e) {}
     }
 
     window.addEventListener("message", (e) => {
-        if (!e.data || e.data.type !== "fuey-embed-ready") return;
-        showAll();
+        if (!e.data) return;
+        if (e.data.type === "fuey-embed-ready") {
+            showAll();
+            measure();
+        } else if (e.data.type === "fuey-embed-resize") {
+            if (typeof e.data.height === "number" && e.data.height > 0) {
+                setIframeHeight(e.data.height);
+            } else {
+                measure();
+            }
+        } else if (e.data.type === "fuey-security-toast") {
+            if (typeof window.__fueyShowSecurityToast === "function") {
+                window.__fueyShowSecurityToast();
+            }
+        }
     });
 
     iframe.addEventListener("load", () => {
@@ -115,6 +226,9 @@ function initHomeEmbed() {
         }
         if (hasContent) {
             showAll();
+            measure();
+            setTimeout(measure, 100);
+            setTimeout(measure, 500);
         } else {
             hideAll();
         }
@@ -146,7 +260,7 @@ function initHomeEmbed() {
     window.addEventListener("scroll", updateScrollBtn, { passive: true });
 
     window.addEventListener("resize", () => {
-        if (homeEmbedReady) resizeIframe();
+        if (homeEmbedReady) measure();
     });
 
     window.__syncHomeEmbedTheme = syncEmbedTheme;
@@ -159,6 +273,7 @@ function initHomeEmbed() {
     setTimeout(() => {
         if (!resolved) {
             showAll();
+            measure();
         }
     }, 1500);
 }
@@ -237,6 +352,7 @@ function initSegmented() {
 
         function onDown(clientX) {
             if (!hitGroup(clientX)) return false;
+            if (!taskLock.acquire("segmented")) return false;
 
             const groupRect = group.getBoundingClientRect();
             const indicatorRect = indicator.getBoundingClientRect();
@@ -249,6 +365,7 @@ function initSegmented() {
 
             group.classList.add("dragging");
             indicator.classList.remove("animate");
+            lockBodyScroll();
             return true;
         }
 
@@ -287,6 +404,8 @@ function initSegmented() {
             dragging = false;
             group.classList.remove("dragging");
             indicator.classList.add("animate");
+            unlockBodyScroll();
+            taskLock.release("segmented");
 
             if (!hasMoved) {
                 syncActiveClass(getActiveItem());
@@ -423,14 +542,19 @@ function initSettingsPanel() {
         settingsPanel.classList.add("open");
         backdrop.classList.add("open");
         notifyNavToSettings();
+        lockBodyScroll();
         syncAllSegmented();
         requestAnimationFrame(syncAllSegmented);
         setTimeout(syncAllSegmented, 250);
+        initPanelDrag();
     }
 
     function closePanel() {
         settingsPanel.classList.remove("open");
         backdrop.classList.remove("open");
+        unlockBodyScroll();
+        settingsPanel.style.transform = "";
+        settingsPanel.style.opacity = "";
         setTimeout(() => {
             if (typeof onSettingsCloseCallback === "function") {
                 const cb = onSettingsCloseCallback;
@@ -463,6 +587,103 @@ function initSettingsPanel() {
         resetBtn.addEventListener("click", () => {
             showResetConfirm();
         });
+    }
+
+    let panelDragInited = false;
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let currentOffset = 0;
+    let baseOffset = 0;
+    let isLeftHanded = false;
+    let panelWidth = 320;
+
+    function initPanelDrag() {
+        if (panelDragInited) return;
+        panelDragInited = true;
+
+        panelWidth = settingsPanel.offsetWidth || 320;
+
+        function onDown(clientX, clientY) {
+            if (!settingsPanel.classList.contains("open")) return false;
+            if (!taskLock.acquire("settings")) return false;
+
+            isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
+            dragging = true;
+            dragStartX = clientX;
+            dragStartY = clientY;
+            currentOffset = 0;
+            baseOffset = 0;
+            settingsPanel.style.transition = "none";
+            lockBodyScroll();
+            return true;
+        }
+
+        function onMove(clientX, clientY) {
+            if (!dragging) return;
+            const dx = clientX - dragStartX;
+            const dy = clientY - dragStartY;
+
+            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+                return;
+            }
+
+            let offset;
+            if (isLeftHanded) {
+                offset = Math.min(0, dx);
+            } else {
+                offset = Math.max(0, dx);
+            }
+
+            currentOffset = offset;
+            settingsPanel.style.transform = `translateX(${baseOffset + offset}px)`;
+            settingsPanel.style.opacity = String(1 - Math.min(Math.abs(offset) / panelWidth, 1) * 0.5);
+        }
+
+        function onUp() {
+            if (!dragging) return;
+            dragging = false;
+            settingsPanel.style.transition = "";
+            unlockBodyScroll();
+            taskLock.release("settings");
+
+            const threshold = panelWidth / 3;
+            if (Math.abs(currentOffset) >= threshold) {
+                closePanel();
+            } else {
+                settingsPanel.style.transform = "";
+                settingsPanel.style.opacity = "";
+            }
+            currentOffset = 0;
+            baseOffset = 0;
+        }
+
+        settingsPanel.addEventListener("mousedown", (e) => {
+            if (e.button !== 0) return;
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options")) return;
+            if (onDown(e.clientX, e.clientY)) e.preventDefault();
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!dragging) return;
+            e.preventDefault();
+            onMove(e.clientX, e.clientY);
+        });
+
+        document.addEventListener("mouseup", onUp);
+
+        settingsPanel.addEventListener("touchstart", (e) => {
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options")) return;
+            const touch = e.touches[0];
+            onDown(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        document.addEventListener("touchmove", (e) => {
+            if (!dragging) return;
+            onMove(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        document.addEventListener("touchend", onUp);
     }
 }
 
@@ -631,6 +852,7 @@ function initNavSlider() {
 
     function onDown(clientX) {
         if (!hitIndicator(clientX)) return false;
+        if (!taskLock.acquire("nav")) return false;
 
         const navRect = navLinks.getBoundingClientRect();
         const indicatorRect = indicator.getBoundingClientRect();
@@ -644,6 +866,7 @@ function initNavSlider() {
         navLinks.classList.add("dragging");
         indicator.classList.remove("animate", "snap");
         document.body.style.userSelect = "none";
+        lockBodyScroll();
         return true;
     }
 
@@ -679,6 +902,8 @@ function initNavSlider() {
         dragging = false;
         navLinks.classList.remove("dragging");
         document.body.style.userSelect = "";
+        unlockBodyScroll();
+        taskLock.release("nav");
         suppressClick = true;
         setTimeout(() => { suppressClick = false; }, 50);
 
@@ -703,6 +928,7 @@ function initNavSlider() {
             if (settingsPanel && !settingsPanel.classList.contains("open")) {
                 settingsPanel.classList.add("open");
                 if (backdrop) backdrop.classList.add("open");
+                lockBodyScroll();
                 syncAllSegmented();
                 requestAnimationFrame(syncAllSegmented);
                 setTimeout(syncAllSegmented, 250);
