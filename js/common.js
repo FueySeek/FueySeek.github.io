@@ -121,8 +121,6 @@ function applyHanded(handed) {
     }, 520);
 }
 
-let homeEmbedReady = false;
-
 function initHomeEmbed() {
     const container = document.getElementById("homeEmbed");
     const scrollBtn = document.getElementById("scrollDownBtn");
@@ -131,78 +129,62 @@ function initHomeEmbed() {
     const iframe = document.createElement("iframe");
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
-    iframe.style.width = "100%";
-    iframe.style.height = "200px";
-    iframe.style.border = "none";
-    iframe.style.background = "transparent";
-    iframe.style.display = "block";
-    iframe.style.overflow = "hidden";
-    iframe.style.minHeight = "0";
+    iframe.style.cssText = "width:100%;height:200px;border:none;background:transparent;display:block;overflow:hidden;min-height:0;";
 
-    let resolved = false;
+    let ready = false;
 
-    function showAll() {
-        if (resolved) return;
-        resolved = true;
-        homeEmbedReady = true;
-        container.classList.add("visible");
-        if (scrollBtn) scrollBtn.classList.add("visible");
-        syncEmbedTheme();
-        setTimeout(syncEmbedTheme, 100);
-        setTimeout(syncEmbedTheme, 500);
+    function syncTheme() {
+        if (!ready || !iframe.contentWindow) return;
+        try {
+            iframe.contentWindow.postMessage({
+                type: "fuey-embed-sync",
+                theme: document.documentElement.getAttribute("data-theme") || "light",
+                lang: localStorage.getItem("fuey-lang") || "en",
+                handed: localStorage.getItem("fuey-handed") || "right"
+            }, "*");
+        } catch (e) {}
     }
 
-    function hideAll() {
-        if (resolved) return;
-        resolved = true;
+    function show() {
+        if (ready) return;
+        ready = true;
+        container.classList.add("visible");
+        if (scrollBtn) scrollBtn.classList.add("visible");
+        syncTheme();
+    }
+
+    function hide() {
+        if (ready) return;
+        ready = true;
         container.classList.remove("visible");
         if (scrollBtn) scrollBtn.classList.remove("visible");
     }
 
-    function setIframeHeight(h) {
-        if (!h || h < 10) return;
-        iframe.style.height = h + "px";
+    function setHeight(h) {
+        if (h && h >= 10) iframe.style.height = h + "px";
     }
 
     function measure() {
         try {
             const doc = iframe.contentDocument || iframe.contentWindow.document;
             if (!doc || !doc.body) return;
-            const h = Math.max(
+            setHeight(Math.max(
                 doc.body.scrollHeight,
                 doc.body.offsetHeight,
                 doc.documentElement.scrollHeight,
                 doc.documentElement.offsetHeight
-            );
-            setIframeHeight(h);
-        } catch (e) {}
-    }
-
-    function syncEmbedTheme() {
-        if (!homeEmbedReady) return;
-        const theme = document.documentElement.getAttribute("data-theme") || "light";
-        const lang = localStorage.getItem("fuey-lang") || "en";
-        const handed = localStorage.getItem("fuey-handed") || "right";
-        try {
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({
-                    type: "fuey-embed-sync",
-                    theme: theme,
-                    lang: lang,
-                    handed: handed
-                }, "*");
-            }
+            ));
         } catch (e) {}
     }
 
     window.addEventListener("message", (e) => {
         if (!e.data) return;
         if (e.data.type === "fuey-embed-ready") {
-            showAll();
+            show();
             measure();
         } else if (e.data.type === "fuey-embed-resize") {
             if (typeof e.data.height === "number" && e.data.height > 0) {
-                setIframeHeight(e.data.height);
+                setHeight(e.data.height);
             } else {
                 measure();
             }
@@ -214,65 +196,52 @@ function initHomeEmbed() {
     });
 
     iframe.addEventListener("load", () => {
-        if (resolved) return;
         let hasContent = false;
         try {
             const doc = iframe.contentDocument || iframe.contentWindow.document;
-            if (doc && doc.body && doc.body.innerHTML.trim().length > 0) {
-                hasContent = true;
-            }
+            if (doc && doc.body && doc.body.innerHTML.trim().length > 0) hasContent = true;
         } catch (e) {
             hasContent = true;
         }
         if (hasContent) {
-            showAll();
+            show();
             measure();
-            setTimeout(measure, 100);
-            setTimeout(measure, 500);
         } else {
-            hideAll();
+            hide();
         }
     });
 
-    iframe.addEventListener("error", hideAll);
+    iframe.addEventListener("error", hide);
 
     if (scrollBtn) {
         scrollBtn.addEventListener("click", () => {
-            const targetTop = container.offsetTop + window.pageYOffset - 100;
-            window.scrollTo({ top: targetTop, behavior: "smooth" });
+            window.scrollTo({
+                top: container.offsetTop + window.pageYOffset - 100,
+                behavior: "smooth"
+            });
         });
     }
 
     function updateScrollBtn() {
         if (!scrollBtn) return;
-        if (!homeEmbedReady) {
-            scrollBtn.classList.remove("visible");
-            return;
-        }
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        if (scrollY > 80) {
-            scrollBtn.classList.remove("visible");
-        } else {
-            scrollBtn.classList.add("visible");
-        }
+        const visible = ready && (window.pageYOffset || document.documentElement.scrollTop) <= 80;
+        scrollBtn.classList.toggle("visible", visible);
     }
 
     window.addEventListener("scroll", updateScrollBtn, { passive: true });
 
     window.addEventListener("resize", () => {
-        if (homeEmbedReady) measure();
+        if (ready) measure();
     });
 
-    window.__syncHomeEmbedTheme = syncEmbedTheme;
+    window.__syncHomeEmbedTheme = syncTheme;
 
-    const bust = Date.now();
-    iframe.src = "embed.html?_=" + bust;
-
+    iframe.src = "embed.html?_=" + Date.now();
     container.appendChild(iframe);
 
     setTimeout(() => {
-        if (!resolved) {
-            showAll();
+        if (!ready) {
+            show();
             measure();
         }
     }, 1500);
