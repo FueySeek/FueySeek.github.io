@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        html, body {
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            height: auto;
+        }
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+        .embed-content {
+            padding: 24px 0;
+            color: var(--text);
+            transition: color 0.4s ease;
+        }
+        .notes-card {
+            padding: 48px 24px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 0.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        [data-theme="dark"] .notes-card {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .notes-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15);
+        }
+        .notes-card-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="embed-content">
+        <div class="notes-card">
+            <span class="notes-card-text" data-notes-key="underConstruction">Under Construction . . .</span>
+        </div>
+    </div>
+
+    <script src="js/rule.js"></script>
+    <script>
+        const notesLangData = {
+            zh: { underConstruction: "正在施工中 . . ." },
+            en: { underConstruction: "Under Construction . . ." }
+        };
+
+        let currentNotesLang = "en";
+
+        function applyNotesLang(lang) {
+            if (!notesLangData[lang]) lang = "en";
+            currentNotesLang = lang;
+            document.querySelectorAll("[data-notes-key]").forEach(el => {
+                const key = el.getAttribute("data-notes-key");
+                if (notesLangData[lang][key] !== undefined) {
+                    el.textContent = notesLangData[lang][key];
+                }
+            });
+        }
+
+        function reportNotesHeight() {
+            if (!window.parent || window.parent === window) return;
+            const h = Math.max(
+                document.body.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.scrollHeight,
+                document.documentElement.offsetHeight
+            );
+            window.parent.postMessage({ type: "fuey-embed-resize", height: h }, "*");
+        }
+
+        window.addEventListener("message", (e) => {
+            if (!e.data || e.data.type !== "fuey-embed-sync") return;
+            if (e.data.theme) {
+                document.documentElement.setAttribute("data-theme", e.data.theme);
+                document.documentElement.style.colorScheme = e.data.theme;
+            }
+            if (e.data.lang) applyNotesLang(e.data.lang);
+        });
+
+        window.__applyFueyLang = function (lang) {
+            applyNotesLang(lang);
+        };
+
+        applyNotesLang(localStorage.getItem("fuey-lang") || "en");
+
+        const initialTheme = localStorage.getItem("fuey-theme") || "light";
+        document.documentElement.setAttribute("data-theme", initialTheme);
+        document.documentElement.style.colorScheme = initialTheme;
+
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
+        }
+
+        if (window.ResizeObserver) {
+            new ResizeObserver(reportNotesHeight).observe(document.body);
+        } else {
+            setInterval(reportNotesHeight, 500);
+        }
+    </script>
+</body>
+</html>

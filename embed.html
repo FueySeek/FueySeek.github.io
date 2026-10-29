@@ -110,6 +110,16 @@
             color: var(--accent);
             font-weight: 700;
         }
+        .embed-sub {
+            margin-top: 24px;
+        }
+        .embed-sub-frame {
+            display: block;
+            width: 100%;
+            border: none;
+            background: transparent;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -120,10 +130,36 @@
 
             <li class="changelog-item">
                 <div class="changelog-header">
-                    <span class="changelog-version">v26.10.13.1</span>
-                    <span class="changelog-date">2026-10-13</span>
+                    <span class="changelog-version">v26.10.29.0</span>
+                    <span class="changelog-date" data-embed-date="2026-10-29"></span>
                 </div>
-                <div class="changelog-title" data-embed-key="log4Title">Left-handed Mode & Interaction Fixes</div>
+                <div class="changelog-title" data-embed-key="log5Title">Date Format Fix &amp; Sub-page</div>
+
+                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
+                <ul class="changelog-desc">
+                    <li data-embed-key="log5_add1">Added a sub-page inside the embed, loaded by the embed itself using the same rules and width.</li>
+                    <li data-embed-key="log5_add2">The sub-page updates its height and language together with the parent embed.</li>
+                </ul>
+
+                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
+                <ul class="changelog-desc">
+                    <li data-embed-key="log5_chg1">Dates are no longer hardcoded in the markup; they are stored as data and formatted per language.</li>
+                    <li data-embed-key="log5_chg2">Chinese dates now display as YYYY/MM/DD; English dates display as DD/MM/YYYY.</li>
+                </ul>
+
+                <div class="changelog-section" data-embed-key="sectionFixed">Fixed</div>
+                <ul class="changelog-desc">
+                    <li data-embed-key="log5_fix1">Date format no longer stays fixed when switching languages.</li>
+                    <li data-embed-key="log5_fix2">Sub-page now follows language changes from the embed.</li>
+                </ul>
+            </li>
+
+            <li class="changelog-item">
+                <div class="changelog-header">
+                    <span class="changelog-version">v26.10.13.1</span>
+                    <span class="changelog-date" data-embed-date="2026-10-13"></span>
+                </div>
+                <div class="changelog-title" data-embed-key="log4Title">Left-handed Mode &amp; Interaction Fixes</div>
 
                 <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
                 <ul class="changelog-desc">
@@ -151,7 +187,7 @@
             <li class="changelog-item">
                 <div class="changelog-header">
                     <span class="changelog-version">v26.10.13.0</span>
-                    <span class="changelog-date">2026-10-13</span>
+                    <span class="changelog-date" data-embed-date="2026-10-13"></span>
                 </div>
                 <div class="changelog-title" data-embed-key="log0Title">Search Bar &amp; Multi-language Improvements</div>
 
@@ -182,7 +218,7 @@
             <li class="changelog-item">
                 <div class="changelog-header">
                     <span class="changelog-version">v26.10.12.0</span>
-                    <span class="changelog-date">2026-10-12</span>
+                    <span class="changelog-date" data-embed-date="2026-10-12"></span>
                 </div>
                 <div class="changelog-title" data-embed-key="log1Title">Embed Panel</div>
 
@@ -202,7 +238,7 @@
             <li class="changelog-item">
                 <div class="changelog-header">
                     <span class="changelog-version">v26.10.11.0</span>
-                    <span class="changelog-date">2026-10-11</span>
+                    <span class="changelog-date" data-embed-date="2026-10-11"></span>
                 </div>
                 <div class="changelog-title" data-embed-key="log2Title">Settings &amp; Theme</div>
 
@@ -224,7 +260,7 @@
             <li class="changelog-item">
                 <div class="changelog-header">
                     <span class="changelog-version">v26.10.10.0</span>
-                    <span class="changelog-date">2026-10-10</span>
+                    <span class="changelog-date" data-embed-date="2026-10-10"></span>
                 </div>
                 <div class="changelog-title" data-embed-key="log3Title">First Release</div>
 
@@ -238,6 +274,10 @@
             </li>
 
         </ul>
+
+        <div class="embed-sub">
+            <iframe id="notesFrame" class="embed-sub-frame" scrolling="no" frameborder="0" src="embed-notes.html"></iframe>
+        </div>
     </div>
 
     <script src="js/rule.js"></script>
@@ -249,6 +289,14 @@
                 sectionAdded: "新增",
                 sectionChanged: "修改",
                 sectionFixed: "修复",
+
+                log5Title: "日期格式修复与附属页",
+                log5_add1: "在扩展页内部新增附属页，由扩展页自身加载，沿用同一套规则和宽度。",
+                log5_add2: "附属页会跟随扩展页同步更新高度和语言。",
+                log5_chg1: "日期不再硬编码在页面标记中，改为数据存储并按语言格式化。",
+                log5_chg2: "中文日期显示为 YYYY/MM/DD，英文日期显示为 DD/MM/YYYY。",
+                log5_fix1: "修复切换语言时日期格式不变化的问题。",
+                log5_fix2: "附属页现在会跟随扩展页切换语言。",
 
                 log4Title: "左撇子模式与交互修复",
                 log4_add1: "左撇子模式：设置面板现在从左侧平滑滑出。",
@@ -302,6 +350,14 @@
                 sectionChanged: "Changed",
                 sectionFixed: "Fixed",
 
+                log5Title: "Date Format Fix & Sub-page",
+                log5_add1: "Added a sub-page inside the embed, loaded by the embed itself using the same rules and width.",
+                log5_add2: "The sub-page updates its height and language together with the parent embed.",
+                log5_chg1: "Dates are no longer hardcoded in the markup; they are stored as data and formatted per language.",
+                log5_chg2: "Chinese dates now display as YYYY/MM/DD; English dates display as DD/MM/YYYY.",
+                log5_fix1: "Date format no longer stays fixed when switching languages.",
+                log5_fix2: "Sub-page now follows language changes from the embed.",
+
                 log4Title: "Left-handed Mode & Interaction Fixes",
                 log4_add1: "Left-handed mode: settings panel now slides out from the left with a smooth transition.",
                 log4_add2: "Settings panel can now be closed by dragging it back to the edge; dragging about one third of the panel width closes it.",
@@ -349,16 +405,33 @@
             }
         };
 
-        const contentEl = document.getElementById("embedContent");
+        const notesFrame = document.getElementById("notesFrame");
+        let currentEmbedLang = "en";
+
+        function formatEmbedDate(isoDate) {
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate || "");
+            if (!m) return isoDate || "";
+            const [, y, mo, d] = m;
+            return currentEmbedLang === "zh" ? `${y}/${mo}/${d}` : `${d}/${mo}/${y}`;
+        }
+
+        function renderEmbedDates() {
+            document.querySelectorAll("[data-embed-date]").forEach(el => {
+                el.textContent = formatEmbedDate(el.getAttribute("data-embed-date"));
+            });
+        }
 
         function applyEmbedLang(lang) {
             if (!embedLangData[lang]) lang = "en";
+            currentEmbedLang = lang;
             document.querySelectorAll("[data-embed-key]").forEach(el => {
                 const key = el.getAttribute("data-embed-key");
                 if (embedLangData[lang][key] !== undefined) {
                     el.textContent = embedLangData[lang][key];
                 }
             });
+            renderEmbedDates();
+            syncNotes();
         }
 
         function reportHeight() {
@@ -372,34 +445,49 @@
             window.parent.postMessage({ type: "fuey-embed-resize", height: h }, "*");
         }
 
+        function syncNotes() {
+            if (!notesFrame || !notesFrame.contentWindow) return;
+            try {
+                notesFrame.contentWindow.postMessage({
+                    type: "fuey-embed-sync",
+                    theme: document.documentElement.getAttribute("data-theme") || "light",
+                    lang: currentEmbedLang
+                }, "*");
+            } catch (e) {}
+        }
+
+        window.addEventListener("message", (e) => {
+            if (!e.data) return;
+            if (e.data.type === "fuey-embed-sync") {
+                if (e.data.theme) {
+                    document.documentElement.setAttribute("data-theme", e.data.theme);
+                    document.documentElement.style.colorScheme = e.data.theme;
+                }
+                if (e.data.lang) applyEmbedLang(e.data.lang);
+            } else if (e.data.type === "fuey-embed-ready" && e.source === notesFrame.contentWindow) {
+                syncNotes();
+            } else if (e.data.type === "fuey-embed-resize" && e.source === notesFrame.contentWindow) {
+                if (typeof e.data.height === "number" && e.data.height > 0) {
+                    notesFrame.style.height = e.data.height + "px";
+                }
+            }
+        });
+
         window.__applyFueyLang = function (lang) {
             applyEmbedLang(lang);
-            requestAnimationFrame(() => {
-                requestAnimationFrame(reportHeight);
-            });
         };
 
-        const initialLang = localStorage.getItem("fuey-lang") || "en";
-        applyEmbedLang(initialLang);
+        applyEmbedLang(localStorage.getItem("fuey-lang") || "en");
 
         if (window.parent && window.parent !== window) {
             window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
         }
 
-        if (window.ResizeObserver && contentEl) {
-            const ro = new ResizeObserver(() => {
-                reportHeight();
-            });
-            ro.observe(document.body);
-            ro.observe(contentEl);
+        if (window.ResizeObserver) {
+            new ResizeObserver(reportHeight).observe(document.body);
         } else {
             setInterval(reportHeight, 500);
         }
-
-        window.addEventListener("load", reportHeight);
-        requestAnimationFrame(reportHeight);
-        setTimeout(reportHeight, 100);
-        setTimeout(reportHeight, 500);
     </script>
 </body>
 </html>
