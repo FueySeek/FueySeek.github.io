@@ -124,288 +124,23 @@
 </head>
 <body>
     <div class="embed-content" id="embedContent">
-        <h2 data-embed-key="embedTitle">Update Log</h2>
-        <p data-embed-key="embedDesc">All changes to this project are recorded here.</p>
-        <ul class="changelog-list">
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.29.0</span>
-                    <span class="changelog-date" data-embed-date="2026-10-29"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log5Title">Date Format Fix &amp; Sub-page</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log5_add1">Added a sub-page inside the embed, loaded by the embed itself using the same rules and width.</li>
-                    <li data-embed-key="log5_add2">The sub-page updates its height and language together with the parent embed.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log5_chg1">Dates are no longer hardcoded in the markup; they are stored as data and formatted per language.</li>
-                    <li data-embed-key="log5_chg2">Chinese dates now display as YYYY/MM/DD; English dates display as DD/MM/YYYY.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionFixed">Fixed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log5_fix1">Date format no longer stays fixed when switching languages.</li>
-                    <li data-embed-key="log5_fix2">Sub-page now follows language changes from the embed.</li>
-                </ul>
-            </li>
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.13.1</span>
-                    <span class="changelog-date" data-embed-date="2026-10-13"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log4Title">Left-handed Mode &amp; Interaction Fixes</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log4_add1">Left-handed mode: settings panel now slides out from the left with a smooth transition.</li>
-                    <li data-embed-key="log4_add2">Settings panel can now be closed by dragging it back to the edge; dragging about one third of the panel width closes it.</li>
-                    <li data-embed-key="log4_add3">Security warning inside the embed panel is now forwarded to the parent page, so it uses the same UI and language as the main page.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log4_chg1">Left-handed mode: settings panel now keeps its rounded corners and its 16px gap from the browser edge.</li>
-                    <li data-embed-key="log4_chg2">Left-handed mode: toggle now plays the panel close animation before mirroring the layout.</li>
-                    <li data-embed-key="log4_chg3">Task lock now prevents two drag gestures from running at the same time; the first one wins.</li>
-                    <li data-embed-key="log4_chg4">Page scroll is locked while a drag gesture or the settings panel is active.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionFixed">Fixed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log4_fix1">Left-handed mode: settings panel no longer drifts when dragged to close.</li>
-                    <li data-embed-key="log4_fix2">Download page and About page now mirror correctly in left-handed mode.</li>
-                    <li data-embed-key="log4_fix3">Missing left-handed translations added to the language file.</li>
-                </ul>
-            </li>
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.13.0</span>
-                    <span class="changelog-date" data-embed-date="2026-10-13"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log0Title">Search Bar &amp; Multi-language Improvements</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log0_add1">Download page: added a search bar with a fully rounded design.</li>
-                    <li data-embed-key="log0_add2">Search matches both Chinese and English names, regardless of the current language.</li>
-                    <li data-embed-key="log0_add3">Embed panel: grows with its content, no more fixed height.</li>
-                    <li data-embed-key="log0_add4">Embed panel: real-time height sync when the content changes.</li>
-                    <li data-embed-key="log0_add5">Embed panel: cache refresh so the latest content is always loaded.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log0_chg1">Default language changed to English.</li>
-                    <li data-embed-key="log0_chg2">Top navigation bar is now fully rounded.</li>
-                    <li data-embed-key="log0_chg3">Search results now display only in the current language, no mixed output.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionFixed">Fixed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log0_fix1">Default language mismatch on the Download and About pages.</li>
-                    <li data-embed-key="log0_fix2">Language switch not reflected correctly in the settings panel.</li>
-                    <li data-embed-key="log0_fix3">Embed panel not visible on mobile and server deployments.</li>
-                </ul>
-            </li>
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.12.0</span>
-                    <span class="changelog-date" data-embed-date="2026-10-12"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log1Title">Embed Panel</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log1_add1">Added an expandable embed area below the homepage hero.</li>
-                    <li data-embed-key="log1_add2">Added a scroll-down circular button with a glow effect.</li>
-                    <li data-embed-key="log1_add3">Embedded content is loaded separately from the main page.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log1_chg1">Homepage layout adjusted so the embed area sits below the first screen.</li>
-                </ul>
-            </li>
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.11.0</span>
-                    <span class="changelog-date" data-embed-date="2026-10-11"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log2Title">Settings &amp; Theme</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log2_add1">Added a draggable segmented control in the settings panel.</li>
-                    <li data-embed-key="log2_add2">Added light / dark theme toggle with a liquid transition.</li>
-                    <li data-embed-key="log2_add3">Added English / Chinese language toggle.</li>
-                    <li data-embed-key="log2_add4">Added a reset settings button with a confirmation dialog.</li>
-                </ul>
-
-                <div class="changelog-section" data-embed-key="sectionChanged">Changed</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log2_chg1">Overall UI changed to a glassmorphism style.</li>
-                    <li data-embed-key="log2_chg2">Buttons and cards changed to fully rounded corners.</li>
-                </ul>
-            </li>
-
-            <li class="changelog-item">
-                <div class="changelog-header">
-                    <span class="changelog-version">v26.10.10.0</span>
-                    <span class="changelog-date" data-embed-date="2026-10-10"></span>
-                </div>
-                <div class="changelog-title" data-embed-key="log3Title">First Release</div>
-
-                <div class="changelog-section" data-embed-key="sectionAdded">Added</div>
-                <ul class="changelog-desc">
-                    <li data-embed-key="log3_add1">Initial homepage with hero text and person image.</li>
-                    <li data-embed-key="log3_add2">Download page.</li>
-                    <li data-embed-key="log3_add3">About page with a configurable link list.</li>
-                    <li data-embed-key="log3_add4">Custom cursor and custom font.</li>
-                </ul>
-            </li>
-
-        </ul>
+        <h2 id="embedTitle"></h2>
+        <p id="embedDesc"></p>
+        <ul id="changelogList" class="changelog-list"></ul>
 
         <div class="embed-sub">
             <iframe id="notesFrame" class="embed-sub-frame" scrolling="no" frameborder="0" src="embed-notes.html"></iframe>
         </div>
     </div>
 
+    <script src="data/embed-update-logs.js"></script>
     <script src="js/rule.js"></script>
     <script>
-        const embedLangData = {
-            zh: {
-                embedTitle: "更新日志",
-                embedDesc: "本项目的所有改动都记录在这里。",
-                sectionAdded: "新增",
-                sectionChanged: "修改",
-                sectionFixed: "修复",
-
-                log5Title: "日期格式修复与附属页",
-                log5_add1: "在扩展页内部新增附属页，由扩展页自身加载，沿用同一套规则和宽度。",
-                log5_add2: "附属页会跟随扩展页同步更新高度和语言。",
-                log5_chg1: "日期不再硬编码在页面标记中，改为数据存储并按语言格式化。",
-                log5_chg2: "中文日期显示为 YYYY/MM/DD，英文日期显示为 DD/MM/YYYY。",
-                log5_fix1: "修复切换语言时日期格式不变化的问题。",
-                log5_fix2: "附属页现在会跟随扩展页切换语言。",
-
-                log4Title: "左撇子模式与交互修复",
-                log4_add1: "左撇子模式：设置面板现在从左侧平滑滑出。",
-                log4_add2: "设置面板现在支持拖动关闭，拖回约三分之一宽度即可关闭。",
-                log4_add3: "扩展页内的禁用警告现在转发到主页面，与主页面使用同一套 UI 和语言。",
-                log4_chg1: "左撇子模式：设置面板保留圆角，并保持与浏览器边缘 16px 的间隔。",
-                log4_chg2: "左撇子模式：切换时先播放面板关闭动画，再进行布局镜像。",
-                log4_chg3: "任务锁现在阻止两个拖动手势同时进行，先执行的那个优先。",
-                log4_chg4: "拖动或设置面板打开时，页面滚动被锁定。",
-                log4_fix1: "左撇子模式：拖动关闭设置面板时不再乱漂移。",
-                log4_fix2: "下载页和关于页现在在左撇子模式下正确镜像。",
-                log4_fix3: "语言文件补全了缺失的左撇子相关翻译。",
-
-                log0Title: "搜索框与多语言改进",
-                log0_add1: "下载页新增搜索框，采用全圆角设计。",
-                log0_add2: "搜索现在同时匹配中文名和英文名，不受当前语言影响。",
-                log0_add3: "扩展页：移除固定高度，现在会随内容自动撑开。",
-                log0_add4: "扩展页：内容变化时高度实时同步。",
-                log0_add5: "扩展页：新增缓存刷新，始终加载最新内容。",
-                log0_chg1: "默认语言改为英文。",
-                log0_chg2: "上方条改为全圆角。",
-                log0_chg3: "搜索结果只按当前语言显示，不再中英混排。",
-                log0_fix1: "修复下载页和关于页默认语言不匹配的问题。",
-                log0_fix2: "修复设置面板中语言切换未正确反映的问题。",
-                log0_fix3: "修复扩展页在手机端和服务器部署中不可见的问题。",
-
-                log1Title: "扩展页",
-                log1_add1: "在首页主视觉下方新增可展开的扩展区域。",
-                log1_add2: "新增带光晕效果的圆形下滑按钮。",
-                log1_add3: "扩展内容与主页面分开加载。",
-                log1_chg1: "调整首页布局，扩展区域整体下移，不再出现在第一屏。",
-
-                log2Title: "设置与主题",
-                log2_add1: "设置面板新增可拖动的分段控件。",
-                log2_add2: "新增浅色 / 深色主题切换，带液态过渡动画。",
-                log2_add3: "新增英文 / 中文语言切换。",
-                log2_add4: "新增重置设置按钮，带确认弹窗。",
-                log2_chg1: "整体界面改为毛玻璃风格。",
-                log2_chg2: "按钮和卡片改为全圆角。",
-
-                log3Title: "首次发布",
-                log3_add1: "初始首页，包含主标题和人物图。",
-                log3_add2: "下载页。",
-                log3_add3: "关于页，可配置链接列表。",
-                log3_add4: "自定义鼠标与自定义字体。"
-            },
-            en: {
-                embedTitle: "Update Log",
-                embedDesc: "All changes to this project are recorded here.",
-                sectionAdded: "Added",
-                sectionChanged: "Changed",
-                sectionFixed: "Fixed",
-
-                log5Title: "Date Format Fix & Sub-page",
-                log5_add1: "Added a sub-page inside the embed, loaded by the embed itself using the same rules and width.",
-                log5_add2: "The sub-page updates its height and language together with the parent embed.",
-                log5_chg1: "Dates are no longer hardcoded in the markup; they are stored as data and formatted per language.",
-                log5_chg2: "Chinese dates now display as YYYY/MM/DD; English dates display as DD/MM/YYYY.",
-                log5_fix1: "Date format no longer stays fixed when switching languages.",
-                log5_fix2: "Sub-page now follows language changes from the embed.",
-
-                log4Title: "Left-handed Mode & Interaction Fixes",
-                log4_add1: "Left-handed mode: settings panel now slides out from the left with a smooth transition.",
-                log4_add2: "Settings panel can now be closed by dragging it back to the edge; dragging about one third of the panel width closes it.",
-                log4_add3: "Security warning inside the embed panel is now forwarded to the parent page, so it uses the same UI and language as the main page.",
-                log4_chg1: "Left-handed mode: settings panel now keeps its rounded corners and its 16px gap from the browser edge.",
-                log4_chg2: "Left-handed mode: toggle now plays the panel close animation before mirroring the layout.",
-                log4_chg3: "Task lock now prevents two drag gestures from running at the same time; the first one wins.",
-                log4_chg4: "Page scroll is locked while a drag gesture or the settings panel is active.",
-                log4_fix1: "Left-handed mode: settings panel no longer drifts when dragged to close.",
-                log4_fix2: "Download page and About page now mirror correctly in left-handed mode.",
-                log4_fix3: "Missing left-handed translations added to the language file.",
-
-                log0Title: "Search Bar & Multi-language Improvements",
-                log0_add1: "Download page: added a search bar with a fully rounded design.",
-                log0_add2: "Search matches both Chinese and English names, regardless of the current language.",
-                log0_add3: "Embed panel: grows with its content, no more fixed height.",
-                log0_add4: "Embed panel: real-time height sync when the content changes.",
-                log0_add5: "Embed panel: cache refresh so the latest content is always loaded.",
-                log0_chg1: "Default language changed to English.",
-                log0_chg2: "Top navigation bar is now fully rounded.",
-                log0_chg3: "Search results now display only in the current language, no mixed output.",
-                log0_fix1: "Default language mismatch on the Download and About pages.",
-                log0_fix2: "Language switch not reflected correctly in the settings panel.",
-                log0_fix3: "Embed panel not visible on mobile and server deployments.",
-
-                log1Title: "Embed Panel",
-                log1_add1: "Added an expandable embed area below the homepage hero.",
-                log1_add2: "Added a scroll-down circular button with a glow effect.",
-                log1_add3: "Embedded content is loaded separately from the main page.",
-                log1_chg1: "Homepage layout adjusted so the embed area sits below the first screen.",
-
-                log2Title: "Settings & Theme",
-                log2_add1: "Added a draggable segmented control in the settings panel.",
-                log2_add2: "Added light / dark theme toggle with a liquid transition.",
-                log2_add3: "Added English / Chinese language toggle.",
-                log2_add4: "Added a reset settings button with a confirmation dialog.",
-                log2_chg1: "Overall UI changed to a glassmorphism style.",
-                log2_chg2: "Buttons and cards changed to fully rounded corners.",
-
-                log3Title: "First Release",
-                log3_add1: "Initial homepage with hero text and person image.",
-                log3_add2: "Download page.",
-                log3_add3: "About page with a configurable link list.",
-                log3_add4: "Custom cursor and custom font."
-            }
-        };
-
         const notesFrame = document.getElementById("notesFrame");
+        const titleEl = document.getElementById("embedTitle");
+        const descEl = document.getElementById("embedDesc");
+        const listEl = document.getElementById("changelogList");
+        const logData = window.__EMBED_UPDATE_LOGS__;
         let currentEmbedLang = "en";
 
         function formatEmbedDate(isoDate) {
@@ -415,22 +150,33 @@
             return currentEmbedLang === "zh" ? `${y}/${mo}/${d}` : `${d}/${mo}/${y}`;
         }
 
-        function renderEmbedDates() {
-            document.querySelectorAll("[data-embed-date]").forEach(el => {
-                el.textContent = formatEmbedDate(el.getAttribute("data-embed-date"));
-            });
+        function renderLogs() {
+            const pack = logData[currentEmbedLang] || logData.en;
+            titleEl.textContent = pack.embedTitle;
+            descEl.textContent = pack.embedDesc;
+            listEl.innerHTML = pack.logs.map(log => {
+                const sections = log.sections.map(sec => {
+                    const sectionTitle = pack[sec.key] || sec.key;
+                    const items = sec.items.map(text => `<li>${text}</li>`).join("");
+                    return `<div class="changelog-section">${sectionTitle}</div><ul class="changelog-desc">${items}</ul>`;
+                }).join("");
+                return `
+                    <li class="changelog-item">
+                        <div class="changelog-header">
+                            <span class="changelog-version">${log.version}</span>
+                            <span class="changelog-date">${formatEmbedDate(log.date)}</span>
+                        </div>
+                        <div class="changelog-title">${log.title}</div>
+                        ${sections}
+                    </li>
+                `;
+            }).join("");
         }
 
         function applyEmbedLang(lang) {
-            if (!embedLangData[lang]) lang = "en";
+            if (!logData[lang]) lang = "en";
             currentEmbedLang = lang;
-            document.querySelectorAll("[data-embed-key]").forEach(el => {
-                const key = el.getAttribute("data-embed-key");
-                if (embedLangData[lang][key] !== undefined) {
-                    el.textContent = embedLangData[lang][key];
-                }
-            });
-            renderEmbedDates();
+            renderLogs();
             syncNotes();
         }
 
