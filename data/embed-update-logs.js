@@ -7,6 +7,41 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.10.31.2",
+                date: "2026-10-31",
+                title: "主视觉图片渲染与排版优化",
+                sections: [
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "调整了首页主视觉的排版，现在文字整体靠左，图片靠右对齐，视觉上更加平衡协调。",
+                            "增强了主视觉图片的阴影强度，使其在纯白背景或浅色模式下边缘依旧清晰分明。"
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了主页面图片在部分分辨率下可能被强制压缩、拉伸变形的问题。",
+                            "移除了导致图片画质降低的多层模糊滤镜，现在图片按原始比例自适应渲染，保留了最高画质与锐度。"
+                        ]
+                    }
+                ]
+            },
+            {
+                version: "v26.10.31.1",
+                date: "2026-10-31",
+                title: "图片显示与比例修复",
+                sections: [
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了主页面图片在某些分辨率下可能被强制压缩变形的问题。",
+                            "优化了图片容器的渲染方式，现在图片会按原始比例完整显示在框架内，既不会溢出屏幕也不会被拉伸。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.10.31.0",
                 date: "2026-10-31",
                 title: "神秘更新",
@@ -279,6 +314,41 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionChanged: "Changed",
         sectionFixed: "Fixed",
         logs: [
+            {
+                version: "v26.10.31.2",
+                date: "2026-10-31",
+                title: "Hero Image Rendering & Layout Optimization",
+                sections: [
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "Adjusted the homepage hero layout: text is now aligned to the left and the image to the right for a more balanced visual composition.",
+                            "Enhanced the shadow intensity of the hero image to make its edges clear and distinct against pure white or light-mode backgrounds."
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed the issue where the homepage image could be forcibly compressed or distorted at certain resolutions.",
+                            "Removed blur-inducing multi-layered filters; images now render at their original aspect ratio, preserving maximum quality and sharpness."
+                        ]
+                    }
+                ]
+            },
+            {
+                version: "v26.10.31.1",
+                date: "2026-10-31",
+                title: "Image Display & Ratio Fix",
+                sections: [
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed the issue where the homepage image could be compressed or distorted at certain resolutions.",
+                            "Optimized the rendering of the image container. The image now displays completely within the frame according to its original aspect ratio, without overflowing the screen or being stretched."
+                        ]
+                    }
+                ]
+            },
             {
                 version: "v26.10.31.0",
                 date: "2026-10-31",
