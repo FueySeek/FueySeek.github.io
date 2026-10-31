@@ -49,10 +49,14 @@ window.__fueyTaskLock = taskLock;
 function lockBodyScroll() {
     document.documentElement.classList.add("locked");
     document.body.classList.add("locked");
+    const iframe = document.querySelector("#homeEmbed iframe");
+    if (iframe) iframe.style.pointerEvents = "none";
 }
 function unlockBodyScroll() {
     document.documentElement.classList.remove("locked");
     document.body.classList.remove("locked");
+    const iframe = document.querySelector("#homeEmbed iframe");
+    if (iframe) iframe.style.pointerEvents = "auto";
 }
 function initHanded() {
     const savedHanded = localStorage.getItem("fuey-handed") || "right";
@@ -177,16 +181,13 @@ function initHomeEmbed() {
     const container = document.getElementById("homeEmbed");
     const scrollBtn = document.getElementById("scrollDownBtn");
     if (!container) return;
-
     const wrapper = document.createElement("div");
     wrapper.style.cssText = "position:relative;width:100%;display:block;";
-
     const iframe = document.createElement("iframe");
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
     iframe.style.cssText = "width:100%;height:200px;border:none;background:transparent;display:block;overflow:hidden;min-height:0;";
     let ready = false;
-
     function syncTheme() {
         if (!ready || !iframe.contentWindow) return;
         try {
@@ -198,7 +199,6 @@ function initHomeEmbed() {
             }, "*");
         } catch (e) {}
     }
-
     function show() {
         if (ready) return;
         ready = true;
@@ -222,10 +222,14 @@ function initHomeEmbed() {
         try {
             const doc = iframe.contentDocument || iframe.contentWindow.document;
             if (!doc || !doc.body) return;
-            setHeight(Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight));
+            setHeight(Math.max(
+                doc.body.scrollHeight,
+                doc.body.offsetHeight,
+                doc.documentElement.scrollHeight,
+                doc.documentElement.offsetHeight
+            ));
         } catch (e) {}
     }
-
     window.addEventListener("message", (e) => {
         if (!e.data) return;
         if (e.data.type === "fuey-embed-ready") {
@@ -245,13 +249,22 @@ function initHomeEmbed() {
             }
         }
     });
-
     iframe.addEventListener("load", () => {
-        show();
-        measure();
-        syncTheme();
+        let hasContent = false;
+        try {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            if (doc && doc.body && doc.body.innerHTML.trim().length > 0) hasContent = true;
+        } catch (e) {
+            hasContent = true;
+        }
+        if (hasContent) {
+            show();
+            measure();
+        } else {
+            hide();
+        }
     });
-
+    iframe.addEventListener("error", hide);
     if (scrollBtn) {
         scrollBtn.addEventListener("click", () => {
             const nav = document.querySelector(".main-nav");
@@ -260,15 +273,25 @@ function initHomeEmbed() {
             window.scrollTo({ top: targetTop, behavior: "smooth" });
         });
     }
-
+    function updateScrollBtn() {
+        if (!scrollBtn) return;
+        const visible = ready && (window.pageYOffset || document.documentElement.scrollTop) <= 80;
+        scrollBtn.classList.toggle("visible", visible);
+    }
+    window.addEventListener("scroll", updateScrollBtn, { passive: true });
     window.addEventListener("resize", () => {
         if (ready) measure();
     });
-
     window.__syncHomeEmbedTheme = syncTheme;
     iframe.src = "embed.html?_=" + Date.now();
     wrapper.appendChild(iframe);
     container.appendChild(wrapper);
+    setTimeout(() => {
+        if (!ready) {
+            show();
+            measure();
+        }
+    }, 1500);
 }
 function initSegmented() {
     document.querySelectorAll(".theme-options, .lang-options").forEach(group => {
