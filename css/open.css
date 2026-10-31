@@ -4,7 +4,6 @@
     flex-direction: column;
     gap: 12px;
 }
-
 .loading-text,
 .empty-text {
     text-align: center;
@@ -12,7 +11,6 @@
     padding: 40px 0;
     font-size: 16px;
 }
-
 .about-item {
     display: flex;
     justify-content: space-between;
@@ -24,44 +22,41 @@
     text-decoration: none;
     color: var(--text);
     font-size: 17px;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, flex-direction 0.45s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     animation: itemFadeIn 0.5s ease backwards;
 }
-
 @keyframes itemFadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 .about-item:hover {
     transform: translateX(6px);
     border-color: var(--accent);
     background: var(--accent-soft);
     box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15);
 }
-
 .about-item-name {
     font-weight: 500;
 }
-
 .about-item-arrow {
     color: var(--accent);
     font-size: 18px;
     transition: transform 0.3s ease;
 }
-
 .about-item:hover .about-item-arrow {
     transform: translateX(6px);
 }
-
-html[data-handed="left"] .about-item {
-    flex-direction: row-reverse;
+html[data-handed="left"] .home-container,
+html[data-handed="left"] .hero-left,
+html[data-handed="left"] .page-card,
+html[data-handed="left"] .about-item,
+html[data-handed="left"] .page-container {
+    flex-direction: row;
+    text-align: left;
 }
-
 html[data-handed="left"] .about-item:hover {
-    transform: translateX(-6px);
+    transform: translateX(6px);
 }
-
 html[data-handed="left"] .about-item:hover .about-item-arrow {
-    transform: translateX(-6px);
+    transform: translateX(6px);
 }
