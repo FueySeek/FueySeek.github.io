@@ -127,21 +127,19 @@
         <h2 id="embedTitle"></h2>
         <p id="embedDesc"></p>
         <ul id="changelogList" class="changelog-list"></ul>
-
         <div class="embed-sub">
             <iframe id="notesFrame" class="embed-sub-frame" scrolling="no" frameborder="0" src="embed-notes.html"></iframe>
         </div>
     </div>
-
-    <script src="data/embed-update-logs.js"></script>
     <script src="js/rule.js"></script>
     <script>
         const notesFrame = document.getElementById("notesFrame");
         const titleEl = document.getElementById("embedTitle");
         const descEl = document.getElementById("embedDesc");
         const listEl = document.getElementById("changelogList");
-        const logData = window.__EMBED_UPDATE_LOGS__;
         let currentEmbedLang = "en";
+        let logData = null;
+        let dataReady = false;
 
         function formatEmbedDate(isoDate) {
             const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate || "");
@@ -151,6 +149,7 @@
         }
 
         function renderLogs() {
+            if (!logData) return;
             const pack = logData[currentEmbedLang] || logData.en;
             titleEl.textContent = pack.embedTitle;
             descEl.textContent = pack.embedDesc;
@@ -160,20 +159,12 @@
                     const items = sec.items.map(text => `<li>${text}</li>`).join("");
                     return `<div class="changelog-section">${sectionTitle}</div><ul class="changelog-desc">${items}</ul>`;
                 }).join("");
-                return `
-                    <li class="changelog-item">
-                        <div class="changelog-header">
-                            <span class="changelog-version">${log.version}</span>
-                            <span class="changelog-date">${formatEmbedDate(log.date)}</span>
-                        </div>
-                        <div class="changelog-title">${log.title}</div>
-                        ${sections}
-                    </li>
-                `;
+                return `<li class="changelog-item"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatEmbedDate(log.date)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
             }).join("");
         }
 
         function applyEmbedLang(lang) {
+            if (!logData) return;
             if (!logData[lang]) lang = "en";
             currentEmbedLang = lang;
             renderLogs();
@@ -209,21 +200,42 @@
                     document.documentElement.setAttribute("data-theme", e.data.theme);
                     document.documentElement.style.colorScheme = e.data.theme;
                 }
-                if (e.data.lang) applyEmbedLang(e.data.lang);
+                if (e.data.lang && dataReady) applyEmbedLang(e.data.lang);
             } else if (e.data.type === "fuey-embed-ready" && e.source === notesFrame.contentWindow) {
                 syncNotes();
             } else if (e.data.type === "fuey-embed-resize" && e.source === notesFrame.contentWindow) {
                 if (typeof e.data.height === "number" && e.data.height > 0) {
                     notesFrame.style.height = e.data.height + "px";
                 }
+            } else if (e.data.type === "fuey-security-toast") {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: "fuey-security-toast" }, "*");
+                }
             }
         });
 
         window.__applyFueyLang = function (lang) {
-            applyEmbedLang(lang);
+            if (dataReady) applyEmbedLang(lang);
         };
 
-        applyEmbedLang(localStorage.getItem("fuey-lang") || "en");
+        function onLogDataReady() {
+            logData = window.__EMBED_UPDATE_LOGS__;
+            dataReady = true;
+            if (!logData) return;
+            applyEmbedLang(localStorage.getItem("fuey-lang") || "en");
+            requestAnimationFrame(reportHeight);
+            setTimeout(reportHeight, 100);
+            setTimeout(reportHeight, 500);
+        }
+
+        const s = document.createElement("script");
+        s.src = "data/embed-update-logs.js?_=" + Date.now();
+        s.onload = onLogDataReady;
+        s.onerror = () => {
+            dataReady = true;
+            reportHeight();
+        };
+        document.head.appendChild(s);
 
         if (window.parent && window.parent !== window) {
             window.parent.postMessage({ type: "fuey-embed-ready" }, "*");

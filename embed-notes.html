@@ -27,6 +27,7 @@
             transition: color 0.4s ease;
         }
         .notes-card {
+            position: relative;
             padding: 48px 24px;
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(16px) saturate(180%);
@@ -35,6 +36,9 @@
             border-radius: var(--radius-sm);
             text-align: center;
             transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
         }
         [data-theme="dark"] .notes-card {
             background: rgba(255, 255, 255, 0.06);
@@ -49,22 +53,30 @@
             color: var(--text-secondary);
             letter-spacing: 1px;
         }
+        .dino-canvas {
+            display: none;
+            width: 100%;
+            height: 180px;
+            background: transparent;
+            image-rendering: pixelated;
+            outline: none;
+            margin-bottom: -15px;
+        }
     </style>
 </head>
 <body>
-    <div class="embed-content">
-        <div class="notes-card">
-            <span class="notes-card-text" data-notes-key="underConstruction">Under Construction . . .</span>
+    <div class="embed-content" id="embedContent">
+        <div class="notes-card" id="notesCard">
+            <span class="notes-card-text" id="notesText" data-notes-key="underConstruction">Under Construction . . .</span>
+            <canvas id="dinoCanvas" class="dino-canvas"></canvas>
         </div>
     </div>
-
     <script src="js/rule.js"></script>
     <script>
         const notesLangData = {
             zh: { underConstruction: "正在施工中 . . ." },
             en: { underConstruction: "Under Construction . . ." }
         };
-
         let currentNotesLang = "en";
 
         function applyNotesLang(lang) {
@@ -90,12 +102,14 @@
         }
 
         window.addEventListener("message", (e) => {
-            if (!e.data || e.data.type !== "fuey-embed-sync") return;
-            if (e.data.theme) {
-                document.documentElement.setAttribute("data-theme", e.data.theme);
-                document.documentElement.style.colorScheme = e.data.theme;
+            if (!e.data) return;
+            if (e.data.type === "fuey-embed-sync") {
+                if (e.data.theme) {
+                    document.documentElement.setAttribute("data-theme", e.data.theme);
+                    document.documentElement.style.colorScheme = e.data.theme;
+                }
+                if (e.data.lang) applyNotesLang(e.data.lang);
             }
-            if (e.data.lang) applyNotesLang(e.data.lang);
         });
 
         window.__applyFueyLang = function (lang) {
@@ -103,13 +117,231 @@
         };
 
         applyNotesLang(localStorage.getItem("fuey-lang") || "en");
-
         const initialTheme = localStorage.getItem("fuey-theme") || "light";
         document.documentElement.setAttribute("data-theme", initialTheme);
         document.documentElement.style.colorScheme = initialTheme;
 
         if (window.parent && window.parent !== window) {
             window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
+        }
+
+        const notesCard = document.getElementById("notesCard");
+        const notesText = document.getElementById("notesText");
+        const dinoCanvas = document.getElementById("dinoCanvas");
+        let clickCount = 0;
+        let clickTimer = null;
+        let isGameRunning = false;
+
+        notesCard.addEventListener("click", (e) => {
+            if (isGameRunning) return;
+            if (e.target.closest("canvas")) return;
+            clickCount++;
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 500);
+            } else if (clickCount === 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                startDinoGame();
+            }
+        });
+
+        function startDinoGame() {
+            isGameRunning = true;
+            notesText.style.display = "none";
+            dinoCanvas.style.display = "block";
+            notesCard.style.padding = "0";
+            reportNotesHeight();
+            
+            setTimeout(() => {
+                initDinoGame();
+            }, 50);
+        }
+
+        function initDinoGame() {
+            const ctx = dinoCanvas.getContext("2d");
+            const width = dinoCanvas.clientWidth;
+            const height = dinoCanvas.clientHeight;
+            dinoCanvas.width = width;
+            dinoCanvas.height = height;
+
+            let isJumping = false;
+            let velocity = 0;
+            const gravity = 0.6;
+            const jumpStrength = -8.5;
+            const groundY = height - 25;
+            let speed = 4.5;
+            let score = 0;
+            let highScore = parseInt(localStorage.getItem("fuey-dino-hi") || "0", 10);
+            let gameOver = false;
+            let obstacleTimer = 0;
+            let legFrame = 0;
+
+            const dino = {
+                x: 30,
+                y: groundY - 28,
+                width: 22,
+                height: 28,
+                draw() {
+                    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+                    ctx.fillStyle = isDark ? "#ffffff" : "#333333";
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                    ctx.fillStyle = isDark ? "#333333" : "#ffffff";
+                    ctx.fillRect(this.x + 14, this.y + 4, 4, 4);
+                    if (!isJumping && !gameOver) {
+                        const offset = Math.floor(legFrame / 5) % 2 === 0 ? 0 : 4;
+                        ctx.fillStyle = isDark ? "#ffffff" : "#333333";
+                        ctx.fillRect(this.x + 4, this.y + 24, 6, 4);
+                        ctx.fillRect(this.x + 14, this.y + 24 + offset, 6, 4);
+                    } else {
+                        ctx.fillStyle = isDark ? "#ffffff" : "#333333";
+                        ctx.fillRect(this.x + 4, this.y + 24, 6, 4);
+                        ctx.fillRect(this.x + 14, this.y + 24, 6, 4);
+                    }
+                }
+            };
+
+            let obstacles = [];
+            let frame = 0;
+            let rafId;
+
+            function reset() {
+                isJumping = false;
+                velocity = 0;
+                obstacles = [];
+                score = 0;
+                gameOver = false;
+                speed = 4.5;
+                frame = 0;
+                obstacleTimer = 0;
+                dino.y = groundY - dino.height;
+            }
+
+            function jump() {
+                if (!isJumping && !gameOver) {
+                    isJumping = true;
+                    velocity = jumpStrength;
+                }
+            }
+
+            function handleInput(e) {
+                if (e.type === "keydown") {
+                    if (e.code === "Space" || e.code === "ArrowUp") {
+                        e.preventDefault();
+                        if (e.repeat) return;
+                    } else {
+                        return;
+                    }
+                }
+                if (e.type === "touchstart" || e.type === "mousedown") {
+                    e.preventDefault();
+                }
+                if (gameOver) {
+                    cancelAnimationFrame(rafId);
+                    reset();
+                    loop();
+                } else {
+                    jump();
+                }
+            }
+
+            window.addEventListener("keydown", handleInput);
+            dinoCanvas.addEventListener("touchstart", handleInput, { passive: false });
+            dinoCanvas.addEventListener("mousedown", handleInput);
+
+            function loop() {
+                if (!isGameRunning) return;
+
+                ctx.clearRect(0, 0, width, height);
+
+                const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+                ctx.strokeStyle = isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, groundY + 2);
+                ctx.lineTo(width, groundY + 2);
+                ctx.stroke();
+
+                if (!gameOver) {
+                    legFrame++;
+                    if (isJumping) {
+                        velocity += gravity;
+                        dino.y += velocity;
+                        if (dino.y >= groundY - dino.height) {
+                            dino.y = groundY - dino.height;
+                            isJumping = false;
+                            velocity = 0;
+                        }
+                    }
+
+                    frame++;
+                    score += 0.1;
+                    if (score > 100) speed = 5.5;
+                    if (score > 300) speed = 6.5;
+                    if (score > 600) speed = 7.5;
+
+                    obstacleTimer++;
+                    const nextSpawn = Math.max(45, 100 - speed * 6);
+                    if (obstacleTimer > nextSpawn) {
+                        obstacleTimer = 0;
+                        const type = Math.random();
+                        let obsWidth = 15, obsHeight = 25;
+                        if (type > 0.7) { obsWidth = 25; obsHeight = 20; }
+                        else if (type > 0.4) { obsWidth = 15; obsHeight = 35; }
+                        obstacles.push({
+                            x: width + 10,
+                            y: groundY - obsHeight + 2,
+                            width: obsWidth,
+                            height: obsHeight
+                        });
+                    }
+                }
+
+                ctx.fillStyle = isDark ? "#6e6e73" : "#a1a1a6";
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    let obs = obstacles[i];
+                    if (!gameOver) obs.x -= speed;
+                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+                    const padding = 4;
+                    if (dino.x + padding < obs.x + obs.width &&
+                        dino.x + dino.width - padding > obs.x &&
+                        dino.y + padding < obs.y + obs.height &&
+                        dino.y + dino.height - padding > obs.y) {
+                        gameOver = true;
+                        if (score > highScore) {
+                            highScore = score;
+                            localStorage.setItem("fuey-dino-hi", Math.floor(highScore).toString());
+                        }
+                    }
+
+                    if (obs.x + obs.width < 0) {
+                        obstacles.splice(i, 1);
+                    }
+                }
+
+                dino.draw();
+
+                ctx.fillStyle = isDark ? "#a1a1a6" : "#6e6e73";
+                ctx.font = "bold 12px monospace";
+                ctx.textAlign = "right";
+                const scoreStr = Math.floor(score).toString().padStart(5, "0");
+                const hiStr = Math.floor(highScore).toString().padStart(5, "0");
+                ctx.fillText(`HI ${hiStr}  ${scoreStr}`, width - 20, 30);
+
+                if (gameOver) {
+                    ctx.textAlign = "center";
+                    ctx.font = "bold 14px 'Script', sans-serif";
+                    ctx.fillStyle = isDark ? "#ffffff" : "#333333";
+                    ctx.fillText(currentNotesLang === "zh" ? "游戏结束 - 按空格或点击重玩" : "GAME OVER - Press Space or Tap", width / 2, height / 2 - 10);
+                } else {
+                    rafId = requestAnimationFrame(loop);
+                }
+            }
+
+            reset();
+            loop();
         }
 
         if (window.ResizeObserver) {
