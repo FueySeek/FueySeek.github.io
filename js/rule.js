@@ -1,15 +1,12 @@
 (function () {
     "use strict";
-
     let toastTimer = null;
     let toastEl = null;
     let isEmbed = window.parent && window.parent !== window;
 
     function showSecurityToast() {
         if (isEmbed) {
-            try {
-                window.parent.postMessage({ type: "fuey-security-toast" }, "*");
-            } catch (e) {}
+            try { window.parent.postMessage({ type: "fuey-security-toast" }, "*"); } catch (e) {}
             return;
         }
         if (!toastEl) {
@@ -36,32 +33,16 @@
 
     function initSecurity() {
         const block = (e) => {
+            if (e.type === "selectstart" && window.getSelection().toString() === "") return true;
             e.preventDefault();
             showSecurityToast();
             return false;
         };
-
         document.addEventListener("contextmenu", block);
-
-        document.addEventListener("selectstart", (e) => {
-            if (isEditable(e.target)) return true;
-            return block(e);
-        });
-
-        document.addEventListener("dragstart", (e) => {
-            if (e.target.tagName === "IMG") return block(e);
-        });
-
-        document.addEventListener("copy", (e) => {
-            if (isEditable(document.activeElement)) return true;
-            return block(e);
-        });
-
-        document.addEventListener("cut", (e) => {
-            if (isEditable(document.activeElement)) return true;
-            return block(e);
-        });
-
+        document.addEventListener("selectstart", (e) => { if (isEditable(e.target)) return true; return block(e); });
+        document.addEventListener("dragstart", (e) => { if (e.target.tagName === "IMG") return block(e); });
+        document.addEventListener("copy", (e) => { if (isEditable(document.activeElement)) return true; return block(e); });
+        document.addEventListener("cut", (e) => { if (isEditable(document.activeElement)) return true; return block(e); });
         document.addEventListener("keydown", (e) => {
             const key = (e.key || "").toLowerCase();
             const code = e.keyCode || e.which;
@@ -82,24 +63,22 @@
 
     function initThemeSync() {
         window.addEventListener("message", (e) => {
-            if (!e.data || e.data.type !== "fuey-embed-sync") return;
-            if (e.data.theme) {
-                document.documentElement.setAttribute("data-theme", e.data.theme);
-                document.documentElement.style.colorScheme = e.data.theme;
-            }
-            if (e.data.lang && typeof window.__applyFueyLang === "function") {
-                window.__applyFueyLang(e.data.lang);
+            if (!e.data) return;
+            if (e.data.type === "fuey-embed-sync") {
+                if (e.data.theme) {
+                    document.documentElement.setAttribute("data-theme", e.data.theme);
+                    document.documentElement.style.colorScheme = e.data.theme;
+                }
+                if (e.data.lang && typeof window.__applyFueyLang === "function") {
+                    window.__applyFueyLang(e.data.lang);
+                }
             }
         });
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-            initSecurity();
-            initThemeSync();
-        });
+        document.addEventListener("DOMContentLoaded", () => { initSecurity(); initThemeSync(); });
     } else {
-        initSecurity();
-        initThemeSync();
+        initSecurity(); initThemeSync();
     }
 })();
