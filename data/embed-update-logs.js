@@ -7,6 +7,30 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.10.30.1",
+                date: "2026-10-30",
+                title: "交互修复与UI完美对齐",
+                sections: [
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "重构了左侧面板的开关（Toggle）动画逻辑，现在支持像 iOS 一样纯实时的拖拽跟随，点击和拖拽松手均带有完美的弹簧过渡动画。",
+                            "调整了全局的视觉对齐规范：导航栏变细，间距、字体大小、内外边距全面微调，整体更加紧凑协调。",
+                            "扩展页的规则拦截提示统一由主页面弹出，保证层级和样式完全一致。"
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了扩展页面的子页面（附属页）无法正确调用规则、导致前端无法正常显示禁用警告提示的问题。",
+                            "修复了手机端点击首页右下角下滑按钮后，首屏内容未被完全推上去，仍能看到图片底部的问题。",
+                            "修复了左侧开关开启和关闭状态下颜色与预期相反的问题，颜色和拖拽进度现在完全同步。",
+                            "统一了数据文件的加载方式，为更新日志的数据文件加入时间戳以防止浏览器缓存旧内容，确保每次访问都能加载最新数据。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.10.30.0",
                 date: "2026-10-30",
                 title: "日志数据化与附属页修复",
@@ -14,18 +38,17 @@ window.__EMBED_UPDATE_LOGS__ = {
                     {
                         key: "sectionAdded",
                         items: [
-                            "更新日志改为数据驱动，所有日志条目统一存放在独立的数据文件中，新增日志只需在数据文件里追加一条对象，无需改动页面结构。",
-                            "扩展页内部新增附属页，由扩展页自身加载，沿用同一套样式规则和宽度，作为独立文件存在，可单独打开也可被扩展页内嵌调用。",
-                            "附属页高度会跟随内容自动上报给扩展页，扩展页再同步给主页面，形成子页面到父页面的完整高度同步链路。",
-                            "附属页与扩展页共用同一套语言数据和格式化函数，切换语言时两边同步更新。"
+                            "更新日志改为数据驱动，统一存放在独立的数据文件中，新增日志只需在数据文件里追加一条对象，无需改动页面结构。",
+                            "扩展页内部新增附属页，由扩展页自身加载，沿用同一套样式规则和宽度。",
+                            "附属页高度会跟随内容自动上报给扩展页，扩展页再同步给主页面。",
+                            "附属页作为独立文件存在，可单独打开也可被扩展页内嵌调用。"
                         ]
                     },
                     {
                         key: "sectionChanged",
                         items: [
-                            "扩展页 HTML 只保留结构与渲染逻辑，日志内容改由数据文件提供，文件体积大幅减小。",
+                            "扩展页 HTML 只保留结构与渲染逻辑，日志内容改由数据文件提供，体积大幅减小。",
                             "日志日期统一以数据形式存储，渲染时按当前语言格式化：中文显示为年/月/日，英文显示为日/月/年。",
-                            "扩展页渲染日志时按数据条目顺序生成列表，标题、段落标题、列表项都从数据中读取，不再散落在 HTML 中。",
                             "主题和语言同步统一收敛到一处入口，扩展页只保留必要的消息处理，避免重复逻辑。"
                         ]
                     },
@@ -35,8 +58,7 @@ window.__EMBED_UPDATE_LOGS__ = {
                             "修复附属页不跟随扩展页切换语言的问题。",
                             "修复扩展页在语言切换后日期格式未同步更新的问题。",
                             "修复附属页初始化时高度未及时上报、导致父页面出现空白的问题。",
-                            "修复扩展页与附属页之间消息重复处理导致的高度抖动问题。",
-                            "修复扩展页在子页面未就绪时提前发送同步消息、导致同步丢失的问题。"
+                            "修复扩展页与附属页之间消息重复处理导致的高度抖动问题。"
                         ]
                     }
                 ]
@@ -244,6 +266,30 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "Fixed",
         logs: [
             {
+                version: "v26.10.30.1",
+                date: "2026-10-30",
+                title: "Interaction Fixes & UI Alignment",
+                sections: [
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "Refactored the left-handed toggle animation logic; it now supports real-time drag tracking like iOS, with perfect spring transitions on both click and drag release.",
+                            "Adjusted global visual alignment: thinner navigation bar, comprehensively fine-tuned spacing, font size, and margins for a more compact and coordinated look.",
+                            "Security interceptions in the embed are now uniformly displayed by the main page, ensuring identical styling and layering."
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed the issue where the embed sub-page could not correctly call the rules, causing the frontend to fail to display disabled operation warnings.",
+                            "Fixed the issue on mobile where clicking the scroll-down button on the homepage did not fully push the first-screen content up, leaving the bottom of the image visible.",
+                            "Fixed the issue where the on/off colors of the left-handed toggle were inverted; colors and drag progress are now fully synchronized.",
+                            "Unified the loading method of data files and added timestamps to the update log data file to prevent browser caching of old content, ensuring the latest data is loaded on every visit."
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.10.30.0",
                 date: "2026-10-30",
                 title: "Data-driven Logs & Sub-page Fix",
@@ -252,9 +298,9 @@ window.__EMBED_UPDATE_LOGS__ = {
                         key: "sectionAdded",
                         items: [
                             "Update logs are now data-driven; all log entries are stored in a separate data file, so adding a new log only requires appending an object to the data file, without touching the page structure.",
-                            "Added a sub-page inside the embed, loaded by the embed itself using the same style rules and width; it exists as an independent file and can be opened on its own or embedded by the embed page.",
-                            "The sub-page reports its height to the embed automatically, and the embed forwards it to the main page, forming a complete height-sync chain from the sub-page to the parent.",
-                            "The sub-page and the embed share the same language data and formatting functions, so both update in sync on language switch."
+                            "Added a sub-page inside the embed, loaded by the embed itself using the same style rules and width.",
+                            "The sub-page reports its height to the embed automatically, and the embed forwards it to the main page.",
+                            "The sub-page exists as an independent file and can be opened on its own or embedded by the embed page."
                         ]
                     },
                     {
@@ -262,7 +308,6 @@ window.__EMBED_UPDATE_LOGS__ = {
                         items: [
                             "The embed HTML now only keeps the structure and rendering logic; log content is provided by the data file, greatly reducing file size.",
                             "Log dates are stored as data and formatted per language at render time: Chinese uses year/month/day, English uses day/month/year.",
-                            "The embed renders logs in the order of the data entries; titles, section headers and list items are all read from data instead of being scattered in HTML.",
                             "Theme and language sync are consolidated into a single entry point; the embed only keeps the necessary message handling to avoid duplicated logic."
                         ]
                     },
@@ -272,8 +317,7 @@ window.__EMBED_UPDATE_LOGS__ = {
                             "Fixed the sub-page not following language changes from the embed.",
                             "Fixed the date format not updating after switching languages in the embed.",
                             "Fixed the sub-page height not being reported in time on initialization, which caused blank space on the parent page.",
-                            "Fixed height jitter caused by duplicate message handling between the embed and the sub-page.",
-                            "Fixed sync messages being sent before the sub-page was ready, causing the sync to be lost."
+                            "Fixed height jitter caused by duplicate message handling between the embed and the sub-page."
                         ]
                     }
                 ]
