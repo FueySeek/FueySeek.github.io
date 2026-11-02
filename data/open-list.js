@@ -9,10 +9,6 @@ window.__OPEN_DATA__ = {
             url: "https://littleskin.cn/skinlib?filter=skin&uploader=2836915&sort=time&page=1"
         },
         {
-            name: { zh: "邮箱", en: "E-mail" },
-            url: "mailto:fuey_admin@163.com"
-        },
-        {
             name: { zh: "GNU GPLv3 许可证", en: "GNU GPLv3 License" },
             url: "https://www.gnu.org/licenses/gpl-3.0.txt"
         },
