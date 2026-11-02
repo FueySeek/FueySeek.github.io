@@ -1,16 +1,130 @@
 let downloadData = null;
 let downloadFiltered = null;
+let currentDataSrc = null;
+let loadToken = 0;
 
 function getCurrentLang() {
     return localStorage.getItem("fuey-lang") || "en";
 }
 
+function getDataSourceSafe() {
+    if (typeof getDataSource === "function") return getDataSource();
+    return localStorage.getItem("fuey-data-source") || "github";
+}
+
+function withCacheBust(url) {
+    const sep = url.indexOf("?") === -1 ? "?" : "&";
+    return url + sep + "_=" + Date.now();
+}
+
+function loadScript(url, expectKey) {
+    return new Promise((resolve, reject) => {
+        window[expectKey] = null;
+        const s = document.createElement("script");
+        s.src = url;
+        s.onload = () => {
+            if (s.parentNode) s.parentNode.removeChild(s);
+            if (window[expectKey]) resolve(window[expectKey]);
+            else reject(new Error("No data set by " + url));
+        };
+        s.onerror = () => {
+            if (s.parentNode) s.parentNode.removeChild(s);
+            reject(new Error("Load error: " + url));
+        };
+        document.head.appendChild(s);
+    });
+}
+
+function getGithubUrls(filename) {
+    return [
+        "https://fueyseek.github.io/data/" + filename,
+        "https://raw.githubusercontent.com/FueySeek/FueySeek.github.io/main/data/" + filename,
+        "https://cdn.jsdelivr.net/gh/FueySeek/FueySeek.github.io@main/data/" + filename
+    ];
+}
+
+function applyCurrentSearch() {
+    const input = document.getElementById("searchInput");
+    const btn = document.getElementById("searchBtn");
+    if (input && input.value.trim() && btn) {
+        btn.click();
+        return;
+    }
+    renderDownloadList(downloadFiltered);
+}
+
+async function tryLoadGithub(filename, expectKey, token) {
+    const urls = getGithubUrls(filename);
+    for (let i = 0; i < urls.length; i++) {
+        try {
+            const data = await loadScript(withCacheBust(urls[i]), expectKey);
+            if (token !== loadToken) return null;
+            return data;
+        } catch (e) {}
+    }
+    return null;
+}
+
+async function loadDownloadData(src) {
+    currentDataSrc = src;
+    const myToken = ++loadToken;
+    window.__DOWNLOAD_DATA__ = null;
+    downloadData = null;
+    downloadFiltered = null;
+    renderDownloadList(null);
+
+    const localPath = "data/download-list.js";
+
+    if (src === "local") {
+        try {
+            const data = await loadScript(withCacheBust(localPath), "__DOWNLOAD_DATA__");
+            if (myToken !== loadToken) return;
+            downloadData = data;
+            downloadFiltered = downloadData;
+            applyCurrentSearch();
+        } catch (e) {
+            if (myToken !== loadToken) return;
+            renderDownloadList(null);
+        }
+        return;
+    }
+
+    const githubData = await tryLoadGithub("download-list.js", "__DOWNLOAD_DATA__", myToken);
+    if (myToken !== loadToken) return;
+
+    if (githubData) {
+        downloadData = githubData;
+        downloadFiltered = downloadData;
+        applyCurrentSearch();
+        return;
+    }
+
+    if (typeof window.__showIOToast === "function" && typeof t === "function") {
+        window.__showIOToast(t("dataSourceFallback"), "warn");
+    }
+    try {
+        const data = await loadScript(withCacheBust(localPath), "__DOWNLOAD_DATA__");
+        if (myToken !== loadToken) return;
+        downloadData = data;
+        downloadFiltered = downloadData;
+        applyCurrentSearch();
+    } catch (e) {
+        if (myToken !== loadToken) return;
+        renderDownloadList(null);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof applyLang === "function") applyLang();
-    downloadData = window.__DOWNLOAD_DATA__ || null;
-    downloadFiltered = downloadData;
-    renderDownloadList(downloadFiltered);
+    loadDownloadData(getDataSourceSafe());
     bindSearch();
+    document.addEventListener("fuey-settings-changed", () => {
+        if (downloadFiltered) renderDownloadList(downloadFiltered);
+    });
+    document.addEventListener("fuey-datasource-changed", () => {
+        const src = getDataSourceSafe();
+        if (src !== currentDataSrc) loadDownloadData(src);
+    });
 });
 
 function bindSearch() {
@@ -44,7 +158,8 @@ function bindSearch() {
             }
             const systems = Array.isArray(item.systems) ? item.systems.join(" ") : "";
             const code = item.code || "";
-            const haystack = (nameText + " " + dateText + " " + systems + " " + code).toLowerCase();
+            const url = item.url || "";
+            const haystack = (nameText + " " + dateText + " " + systems + " " + code + " " + url).toLowerCase();
             return haystack.includes(keyword);
         });
         downloadFiltered = { items: filteredItems };
@@ -118,3 +233,9 @@ function renderDownloadList(data) {
         });
     });
 }
+
+window.__refreshDownloadData = function () {
+    loadDownloadData(getDataSourceSafe());
+};
+
+window.__fueyReloadData = window.__refreshDownloadData;

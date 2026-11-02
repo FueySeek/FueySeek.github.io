@@ -1,39 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-    }
-    initTheme();
-    initHanded();
-    initNavSlider();
-    initSettingsPanel();
-    initNavHome();
-    initFooterYear();
-    initPageExitOverlay();
-    initSegmented();
-    initHomeEmbed();
-    if (typeof applyLang === "function") applyLang();
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-            if (window.__refreshNavIndicator) window.__refreshNavIndicator();
-            syncAllSegmented();
-        });
-    }
-});
 const segmentedSyncers = [];
 function syncAllSegmented() {
     segmentedSyncers.forEach(fn => fn());
 }
-function clearAllFueyStorage() {
-    const keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.indexOf("fuey-") === 0) keys.push(key);
-    }
-    keys.forEach(k => localStorage.removeItem(k));
-    try {
-        sessionStorage.clear();
-    } catch (e) {}
-}
+window.__syncAllSegmented = syncAllSegmented;
+
 const taskLock = {
     current: null,
     acquire(name) {
@@ -46,18 +16,121 @@ const taskLock = {
     }
 };
 window.__fueyTaskLock = taskLock;
+
+let scrollLockCount = 0;
+let scrollLocked = false;
+function onWheelBlock(e) {
+    if (!scrollLocked) return;
+    const t = e.target;
+    if (t && t.closest && (t.closest(".settings-body") || t.closest(".lang-dropdown-panel"))) return;
+    e.preventDefault();
+}
+function onTouchBlock(e) {
+    if (!scrollLocked) return;
+    if (e.touches && e.touches.length > 1) { e.preventDefault(); return; }
+    const t = e.target;
+    if (t && t.closest && (t.closest(".settings-body") || t.closest(".lang-dropdown-panel"))) return;
+    e.preventDefault();
+}
 function lockBodyScroll() {
+    scrollLockCount++;
+    if (scrollLocked) return;
+    scrollLocked = true;
     document.documentElement.classList.add("locked");
     document.body.classList.add("locked");
-    const iframe = document.querySelector("#homeEmbed iframe");
-    if (iframe) iframe.style.pointerEvents = "none";
+    document.addEventListener("wheel", onWheelBlock, { passive: false });
+    document.addEventListener("touchmove", onTouchBlock, { passive: false });
 }
 function unlockBodyScroll() {
+    scrollLockCount = Math.max(0, scrollLockCount - 1);
+    if (scrollLockCount > 0) return;
+    scrollLocked = false;
     document.documentElement.classList.remove("locked");
     document.body.classList.remove("locked");
-    const iframe = document.querySelector("#homeEmbed iframe");
-    if (iframe) iframe.style.pointerEvents = "auto";
+    document.removeEventListener("wheel", onWheelBlock, { passive: false });
+    document.removeEventListener("touchmove", onTouchBlock, { passive: false });
 }
+
+function clearAllFueyStorage() {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.indexOf("fuey-") === 0) keys.push(key);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+    try { sessionStorage.clear(); } catch (e) {}
+}
+
+function getDataSource() {
+    return localStorage.getItem("fuey-data-source") || "github";
+}
+function setDataSource(src, silent) {
+    if (src !== "github" && src !== "local") src = "github";
+    localStorage.setItem("fuey-data-source", src);
+    document.querySelectorAll(".data-source-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-source") === src);
+    });
+    updateDataSourceWarning();
+    syncAllSegmented();
+    notifyFrames({ dataSource: src });
+    if (!silent) {
+        document.dispatchEvent(new Event("fuey-datasource-changed"));
+    }
+}
+function updateDataSourceWarning() {
+    const el = document.getElementById("dataSourceWarning");
+    if (!el) return;
+    const src = getDataSource();
+    const warnGithub = (typeof t === "function" && t("dataSourceWarnGithub")) ? t("dataSourceWarnGithub") : "If you are using an offline version, please ensure you have network access!";
+    const warnLocal = (typeof t === "function" && t("dataSourceWarnLocal")) ? t("dataSourceWarnLocal") : "This list needs to be online, otherwise some content cannot be synchronized";
+    el.textContent = src === "github" ? warnGithub : warnLocal;
+    el.classList.add("show");
+}
+window.__fueyUpdateDataSourceWarning = updateDataSourceWarning;
+function initDataSource() {
+    const githubBtn = document.getElementById("dataSourceGithub");
+    const localBtn = document.getElementById("dataSourceLocal");
+    if (!githubBtn || !localBtn) return;
+    const src = getDataSource();
+    githubBtn.classList.toggle("active", src === "github");
+    localBtn.classList.toggle("active", src === "local");
+    githubBtn.addEventListener("click", () => setDataSource("github"));
+    localBtn.addEventListener("click", () => setDataSource("local"));
+    updateDataSourceWarning();
+}
+window.__fueyGetDataSource = getDataSource;
+
+function notifyFrames(payload) {
+    document.querySelectorAll("iframe").forEach(f => {
+        try {
+            if (f.contentWindow) f.contentWindow.postMessage(Object.assign({ type: "fuey-sync" }, payload), "*");
+        } catch (e) {}
+    });
+}
+window.__fueyNotifyFrames = notifyFrames;
+
+function initTheme() {
+    const savedTheme = localStorage.getItem("fuey-theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    document.documentElement.style.colorScheme = savedTheme;
+    const lightBtn = document.getElementById("themeLight");
+    const darkBtn = document.getElementById("themeDark");
+    if (lightBtn) lightBtn.classList.toggle("active", savedTheme === "light");
+    if (darkBtn) darkBtn.classList.toggle("active", savedTheme === "dark");
+}
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem("fuey-theme", theme);
+    const lightBtn = document.getElementById("themeLight");
+    const darkBtn = document.getElementById("themeDark");
+    if (lightBtn) lightBtn.classList.toggle("active", theme === "light");
+    if (darkBtn) darkBtn.classList.toggle("active", theme === "dark");
+    syncAllSegmented();
+    notifyFrames({ theme: theme });
+    document.dispatchEvent(new Event("fuey-settings-changed"));
+}
+
 function initHanded() {
     const savedHanded = localStorage.getItem("fuey-handed") || "right";
     document.documentElement.setAttribute("data-handed", savedHanded);
@@ -72,21 +145,11 @@ function initHanded() {
     let moved = false;
     let suppressClick = false;
     toggle.setAttribute("aria-checked", savedHanded === "left" ? "true" : "false");
-    function onDown(clientX) {
-        if (!taskLock.acquire("handed")) return false;
-        dragging = true;
-        moved = false;
-        startX = clientX;
-        startOffset = toggle.getAttribute("aria-checked") === "true" ? maxOffset : 0;
-        currentOffset = startOffset;
-        toggle.classList.add("dragging");
-        return true;
-    }
     function onMove(clientX) {
         if (!dragging) return;
         const dx = clientX - startX;
         if (!moved && Math.abs(dx) < 3) return;
-        moved = true;
+        if (!moved) { lockBodyScroll(); moved = true; }
         let next = startOffset + dx;
         next = Math.max(0, Math.min(maxOffset, next));
         currentOffset = next;
@@ -101,6 +164,7 @@ function initHanded() {
         if (!dragging) return;
         dragging = false;
         toggle.classList.remove("dragging");
+        if (moved) unlockBodyScroll();
         taskLock.release("handed");
         const checked = currentOffset >= maxOffset / 2;
         const wasChecked = toggle.getAttribute("aria-checked") === "true";
@@ -116,36 +180,51 @@ function initHanded() {
             suppressClick = true;
             setTimeout(() => { suppressClick = false; }, 50);
         }
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", onUp);
+        document.removeEventListener("touchmove", handleTouchMove);
+        document.removeEventListener("touchend", onUp);
+    }
+    function handleMouseMove(e) {
+        onMove(e.clientX);
+        if (moved) e.preventDefault();
+    }
+    function handleTouchMove(e) {
+        if (e.touches.length !== 1) { onUp(); return; }
+        onMove(e.touches[0].clientX);
     }
     toggle.addEventListener("click", (e) => {
-        if (suppressClick) {
-            e.preventDefault();
-            return;
-        }
+        if (suppressClick) { e.preventDefault(); return; }
         const current = toggle.getAttribute("aria-checked") === "true";
         toggle.setAttribute("aria-checked", current ? "false" : "true");
         applyHanded(current ? "right" : "left");
     });
     toggle.addEventListener("mousedown", (e) => {
         if (e.button !== 0) return;
-        if (onDown(e.clientX)) e.preventDefault();
+        if (!taskLock.acquire("handed")) return;
+        dragging = true;
+        moved = false;
+        startX = e.clientX;
+        startOffset = toggle.getAttribute("aria-checked") === "true" ? maxOffset : 0;
+        currentOffset = startOffset;
+        toggle.classList.add("dragging");
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", onUp);
     });
-    document.addEventListener("mousemove", (e) => {
-        if (!dragging) return;
-        e.preventDefault();
-        onMove(e.clientX);
-    });
-    document.addEventListener("mouseup", onUp);
     toggle.addEventListener("touchstart", (e) => {
-        const touch = e.touches[0];
-        onDown(touch.clientX);
+        if (e.touches.length !== 1) return;
+        if (!taskLock.acquire("handed")) return;
+        dragging = true;
+        moved = false;
+        startX = e.touches[0].clientX;
+        startOffset = toggle.getAttribute("aria-checked") === "true" ? maxOffset : 0;
+        currentOffset = startOffset;
+        toggle.classList.add("dragging");
+        document.addEventListener("touchmove", handleTouchMove, { passive: false });
+        document.addEventListener("touchend", onUp);
     }, { passive: true });
-    document.addEventListener("touchmove", (e) => {
-        if (!dragging) return;
-        onMove(e.touches[0].clientX);
-    }, { passive: true });
-    document.addEventListener("touchend", onUp);
 }
+
 function applyHanded(handed) {
     const settingsPanel = document.getElementById("settingsPanel");
     const backdrop = document.querySelector(".settings-backdrop");
@@ -154,14 +233,10 @@ function applyHanded(handed) {
         document.documentElement.setAttribute("data-handed", handed);
         localStorage.setItem("fuey-handed", handed);
         syncAllSegmented();
-        if (typeof window.__refreshNavIndicator === "function") {
-            window.__refreshNavIndicator();
-        }
+        notifyFrames({ handed: handed });
+        if (typeof window.__refreshNavIndicator === "function") window.__refreshNavIndicator(true);
     }
-    if (!isPanelOpen) {
-        commitHanded();
-        return;
-    }
+    if (!isPanelOpen) { commitHanded(); return; }
     if (settingsPanel) settingsPanel.classList.remove("open");
     if (backdrop) backdrop.classList.remove("open");
     setTimeout(() => {
@@ -177,318 +252,371 @@ function applyHanded(handed) {
         }, 500);
     }, 520);
 }
-function initHomeEmbed() {
-    const container = document.getElementById("homeEmbed");
-    const scrollBtn = document.getElementById("scrollDownBtn");
-    if (!container) return;
-    const wrapper = document.createElement("div");
-    wrapper.style.cssText = "position:relative;width:100%;display:block;";
-    const iframe = document.createElement("iframe");
-    iframe.setAttribute("scrolling", "no");
-    iframe.setAttribute("frameborder", "0");
-    iframe.style.cssText = "width:100%;height:200px;border:none;background:transparent;display:block;overflow:hidden;min-height:0;";
-    let ready = false;
-    function syncTheme() {
-        if (!ready || !iframe.contentWindow) return;
-        try {
-            iframe.contentWindow.postMessage({
-                type: "fuey-embed-sync",
-                theme: document.documentElement.getAttribute("data-theme") || "light",
-                lang: localStorage.getItem("fuey-lang") || "en",
-                handed: localStorage.getItem("fuey-handed") || "right"
-            }, "*");
-        } catch (e) {}
-    }
-    function show() {
-        if (ready) return;
-        ready = true;
-        container.classList.add("visible");
-        if (scrollBtn) scrollBtn.classList.add("visible");
-        syncTheme();
-    }
-    function hide() {
-        if (ready) return;
-        ready = true;
-        container.classList.remove("visible");
-        if (scrollBtn) scrollBtn.classList.remove("visible");
-    }
-    function setHeight(h) {
-        if (h && h >= 10) {
-            iframe.style.height = h + "px";
-            wrapper.style.height = h + "px";
-        }
-    }
-    function measure() {
-        try {
-            const doc = iframe.contentDocument || iframe.contentWindow.document;
-            if (!doc || !doc.body) return;
-            setHeight(Math.max(
-                doc.body.scrollHeight,
-                doc.body.offsetHeight,
-                doc.documentElement.scrollHeight,
-                doc.documentElement.offsetHeight
-            ));
-        } catch (e) {}
-    }
-    window.addEventListener("message", (e) => {
-        if (!e.data) return;
-        if (e.data.type === "fuey-embed-ready") {
-            show();
-            measure();
-        } else if (e.data.type === "fuey-embed-resize") {
-            if (typeof e.data.height === "number" && e.data.height > 0) {
-                setHeight(e.data.height);
-            } else {
-                measure();
-            }
-        } else if (e.data.type === "fuey-security-toast") {
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: "fuey-security-toast" }, "*");
-            } else if (typeof window.__fueyShowSecurityToast === "function") {
-                window.__fueyShowSecurityToast();
-            }
-        }
-    });
-    iframe.addEventListener("load", () => {
-        let hasContent = false;
-        try {
-            const doc = iframe.contentDocument || iframe.contentWindow.document;
-            if (doc && doc.body && doc.body.innerHTML.trim().length > 0) hasContent = true;
-        } catch (e) {
-            hasContent = true;
-        }
-        if (hasContent) {
-            show();
-            measure();
-        } else {
-            hide();
-        }
-    });
-    iframe.addEventListener("error", hide);
-    if (scrollBtn) {
-        scrollBtn.addEventListener("click", () => {
-            const nav = document.querySelector(".main-nav");
-            const navHeight = nav ? nav.getBoundingClientRect().height : 0;
-            const targetTop = container.offsetTop + window.pageYOffset - navHeight - 16;
-            window.scrollTo({ top: targetTop, behavior: "smooth" });
-        });
-    }
-    function updateScrollBtn() {
-        if (!scrollBtn) return;
-        const visible = ready && (window.pageYOffset || document.documentElement.scrollTop) <= 80;
-        scrollBtn.classList.toggle("visible", visible);
-    }
-    window.addEventListener("scroll", updateScrollBtn, { passive: true });
-    window.addEventListener("resize", () => {
-        if (ready) measure();
-    });
-    window.__syncHomeEmbedTheme = syncTheme;
-    iframe.src = "embed.html?_=" + Date.now();
-    wrapper.appendChild(iframe);
-    container.appendChild(wrapper);
-    setTimeout(() => {
-        if (!ready) {
-            show();
-            measure();
-        }
-    }, 1500);
-}
+
 function initSegmented() {
-    document.querySelectorAll(".theme-options, .lang-options").forEach(group => {
-        const items = Array.from(group.querySelectorAll(".theme-btn, .lang-btn"));
+    document.querySelectorAll(".theme-options, .lang-options, .data-source-options").forEach(group => {
+        const items = Array.from(group.querySelectorAll(".theme-btn, .lang-btn, .data-source-btn"));
         if (items.length < 2) return;
         const indicator = document.createElement("div");
         indicator.className = "segmented-indicator";
         group.insertBefore(indicator, group.firstChild);
         let dragging = false;
-        let dragStartX = 0;
-        let indicatorStartLeft = 0;
-        let pendingItem = null;
         let hasMoved = false;
+        let pendingItem = null;
         let suppressClick = false;
+        let dragStartX = 0;
+        let dragStartLeft = 0;
+        let dragStartWidth = 0;
         const dragThreshold = 3;
+
         function getActiveItem() {
-            return group.querySelector(".theme-btn.active, .lang-btn.active") || items[0];
+            return group.querySelector(".theme-btn.active, .lang-btn.active, .data-source-btn.active") || items[0];
         }
         function syncActiveClass(item) {
             items.forEach(i => i.classList.remove("active"));
             item.classList.add("active");
         }
-        function positionIndicator(target, animate) {
+        function readIndicatorLeft() {
+            const inline = indicator.style.transform;
+            const m = /translateX\((-?\d+(?:\.\d+)?)px\)/.exec(inline || "");
+            if (m) return parseFloat(m[1]);
+            try {
+                const mtx = new DOMMatrixReadOnly(window.getComputedStyle(indicator).transform);
+                return mtx.m41 || 0;
+            } catch (e) { return 0; }
+        }
+        function readIndicatorWidth() {
+            return indicator.offsetWidth || 0;
+        }
+        function positionIndicator(target, instant) {
+            if (!target) return;
             const groupRect = group.getBoundingClientRect();
             const targetRect = target.getBoundingClientRect();
-            const left = targetRect.left - groupRect.left;
-            const width = targetRect.width;
-            if (animate === false) {
-                indicator.classList.remove("animate");
+            const maxW = group.clientWidth;
+            const w = Math.min(targetRect.width, maxW);
+            let left = targetRect.left - groupRect.left;
+            if (left < 0) left = 0;
+            if (left + w > maxW) left = maxW - w;
+            if (instant) {
+                indicator.classList.add("no-anim");
                 indicator.style.transform = `translateX(${left}px)`;
-                indicator.style.width = `${width}px`;
+                indicator.style.width = `${w}px`;
                 void indicator.offsetWidth;
-                indicator.classList.add("animate");
+                indicator.classList.remove("no-anim");
             } else {
-                indicator.classList.add("animate");
+                indicator.classList.remove("no-anim", "dragging");
                 indicator.style.transform = `translateX(${left}px)`;
-                indicator.style.width = `${width}px`;
+                indicator.style.width = `${w}px`;
             }
         }
         function applyChoice(target) {
             if (target.id === "themeLight") applyTheme("light");
             else if (target.id === "themeDark") applyTheme("dark");
+            else if (target.id === "dataSourceGithub") setDataSource("github");
+            else if (target.id === "dataSourceLocal") setDataSource("local");
             else if (target.id === "langZh") applyLangChoice("zh");
             else if (target.id === "langEn") applyLangChoice("en");
         }
-        function selectItem(target, animate) {
-            syncActiveClass(target);
-            applyChoice(target);
-            positionIndicator(target, animate !== false);
-        }
-        function sync() {
-            const current = getActiveItem();
-            requestAnimationFrame(() => positionIndicator(current, false));
-        }
-        segmentedSyncers.push(sync);
-        requestAnimationFrame(sync);
-        function hitGroup(clientX) {
-            const r = group.getBoundingClientRect();
-            return clientX >= r.left && clientX <= r.right;
-        }
-        function onDown(clientX) {
-            if (!hitGroup(clientX)) return false;
-            if (!taskLock.acquire("segmented")) return false;
-            const groupRect = group.getBoundingClientRect();
-            const indicatorRect = indicator.getBoundingClientRect();
-            dragging = true;
-            hasMoved = false;
-            dragStartX = clientX;
-            indicatorStartLeft = indicatorRect.left - groupRect.left;
-            pendingItem = null;
-            group.classList.add("dragging");
-            indicator.classList.remove("animate");
-            lockBodyScroll();
-            return true;
-        }
+        function syncInstant() { positionIndicator(getActiveItem(), true); }
+        function syncAnimated() { positionIndicator(getActiveItem(), false); }
+        segmentedSyncers.push(syncAnimated);
+        requestAnimationFrame(syncInstant);
+
         function onMove(clientX) {
             if (!dragging) return;
-            if (!hasMoved && Math.abs(clientX - dragStartX) < dragThreshold) return;
-            hasMoved = true;
-            const groupRect = group.getBoundingClientRect();
-            const maxLeft = groupRect.width - indicator.offsetWidth;
-            let newLeft = indicatorStartLeft + (clientX - dragStartX);
+            const dx = clientX - dragStartX;
+            if (!hasMoved && Math.abs(dx) < dragThreshold) return;
+            if (!hasMoved) { hasMoved = true; lockBodyScroll(); }
+            const maxLeft = Math.max(0, group.clientWidth - dragStartWidth);
+            let newLeft = dragStartLeft + dx;
             newLeft = Math.max(0, Math.min(newLeft, maxLeft));
             indicator.style.transform = `translateX(${newLeft}px)`;
-            const currentCenter = newLeft + indicator.offsetWidth / 2;
+            const groupRect = group.getBoundingClientRect();
+            const centerX = groupRect.left + newLeft + dragStartWidth / 2;
             let closest = null;
             let minDist = Infinity;
             items.forEach(item => {
                 const r = item.getBoundingClientRect();
-                const center = r.left - groupRect.left + r.width / 2;
-                const d = Math.abs(currentCenter - center);
+                const center = (r.left + r.right) / 2;
+                const d = Math.abs(centerX - center);
                 if (d < minDist) { minDist = d; closest = item; }
             });
             pendingItem = closest;
-            items.forEach(item => {
-                item.classList.toggle("active", item === closest);
-            });
+            items.forEach(item => item.classList.toggle("active", item === closest));
         }
         function onUp() {
             if (!dragging) return;
             dragging = false;
             group.classList.remove("dragging");
-            indicator.classList.add("animate");
-            unlockBodyScroll();
-            taskLock.release("segmented");
-            if (!hasMoved) {
-                syncActiveClass(getActiveItem());
-                positionIndicator(getActiveItem(), true);
-                pendingItem = null;
-                return;
-            }
-            if (pendingItem) {
-                selectItem(pendingItem, true);
+            indicator.classList.remove("dragging");
+            const moved = hasMoved;
+            hasMoved = false;
+            if (moved) {
+                unlockBodyScroll();
+                suppressClick = true;
+                setTimeout(() => { suppressClick = false; }, 60);
+                if (pendingItem) {
+                    if (pendingItem.id === "langOther") {
+                        syncActiveClass(pendingItem);
+                        positionIndicator(pendingItem, false);
+                        openLangDropdown();
+                    } else {
+                        syncActiveClass(pendingItem);
+                        positionIndicator(pendingItem, false);
+                        applyChoice(pendingItem);
+                    }
+                } else {
+                    positionIndicator(getActiveItem(), false);
+                }
             } else {
-                syncActiveClass(getActiveItem());
-                positionIndicator(getActiveItem(), true);
+                positionIndicator(getActiveItem(), false);
             }
             pendingItem = null;
-            suppressClick = true;
-            setTimeout(() => { suppressClick = false; }, 50);
+            taskLock.release("segmented");
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", onUp);
+            document.removeEventListener("touchmove", handleTouchMove);
+            document.removeEventListener("touchend", onUp);
         }
+        function handleMouseMove(e) {
+            onMove(e.clientX);
+            if (hasMoved) e.preventDefault();
+        }
+        function handleTouchMove(e) {
+            if (e.touches.length !== 1) { onUp(); return; }
+            onMove(e.touches[0].clientX);
+            if (hasMoved) e.preventDefault();
+        }
+
         group.addEventListener("mousedown", (e) => {
             if (e.button !== 0) return;
-            if (onDown(e.clientX)) e.preventDefault();
+            if (!taskLock.acquire("segmented")) return;
+            dragging = true;
+            hasMoved = false;
+            dragStartX = e.clientX;
+            dragStartLeft = readIndicatorLeft();
+            dragStartWidth = readIndicatorWidth();
+            group.classList.add("dragging");
+            indicator.classList.add("dragging");
+            indicator.style.transform = `translateX(${dragStartLeft}px)`;
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", onUp);
         });
-        document.addEventListener("mousemove", (e) => {
-            if (!dragging) return;
-            e.preventDefault();
-            onMove(e.clientX);
-        });
-        document.addEventListener("mouseup", onUp);
         group.addEventListener("touchstart", (e) => {
-            const touch = e.touches[0];
-            onDown(touch.clientX);
+            if (e.touches.length !== 1) return;
+            if (!taskLock.acquire("segmented")) return;
+            dragging = true;
+            hasMoved = false;
+            dragStartX = e.touches[0].clientX;
+            dragStartLeft = readIndicatorLeft();
+            dragStartWidth = readIndicatorWidth();
+            group.classList.add("dragging");
+            indicator.classList.add("dragging");
+            indicator.style.transform = `translateX(${dragStartLeft}px)`;
+            document.addEventListener("touchmove", handleTouchMove, { passive: false });
+            document.addEventListener("touchend", onUp);
         }, { passive: true });
-        document.addEventListener("touchmove", (e) => {
-            if (!dragging) return;
-            onMove(e.touches[0].clientX);
-        }, { passive: true });
-        document.addEventListener("touchend", onUp);
+
         items.forEach(item => {
             item.addEventListener("click", (e) => {
-                if (suppressClick) {
-                    e.preventDefault();
+                if (suppressClick) { e.preventDefault(); return; }
+                if (item.id === "langOther") {
+                    syncActiveClass(item);
+                    positionIndicator(item, false);
+                    openLangDropdown();
                     return;
                 }
-                selectItem(item, true);
+                closeLangDropdown();
+                syncActiveClass(item);
+                positionIndicator(item, false);
+                applyChoice(item);
             });
         });
-        window.addEventListener("resize", sync);
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(sync);
-        }
+        window.addEventListener("resize", syncInstant);
     });
 }
-function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    document.documentElement.style.colorScheme = theme;
-    localStorage.setItem("fuey-theme", theme);
-    const lightBtn = document.getElementById("themeLight");
-    const darkBtn = document.getElementById("themeDark");
-    if (lightBtn) lightBtn.classList.toggle("active", theme === "light");
-    if (darkBtn) darkBtn.classList.toggle("active", theme === "dark");
-    if (typeof window.__syncHomeEmbedTheme === "function") {
-        window.__syncHomeEmbedTheme();
-    }
-}
+
 function applyLangChoice(lang) {
     if (typeof setLang === "function") setLang(lang);
-    const langZh = document.getElementById("langZh");
-    const langEn = document.getElementById("langEn");
-    if (langZh) langZh.classList.toggle("active", lang === "zh");
-    if (langEn) langEn.classList.toggle("active", lang === "en");
-    if (typeof window.__syncHomeEmbedTheme === "function") {
-        window.__syncHomeEmbedTheme();
+}
+
+let lastOpenLangTime = 0;
+function openLangDropdown() {
+    const dropdown = document.getElementById("langDropdown");
+    const otherBtn = document.getElementById("langOther");
+    if (!dropdown) return;
+    lastOpenLangTime = Date.now();
+    if (dropdown.classList.contains("open")) return;
+    dropdown.classList.add("open");
+    if (otherBtn) {
+        const group = otherBtn.parentElement;
+        if (group) {
+            group.querySelectorAll(".lang-btn").forEach(i => i.classList.remove("active"));
+            otherBtn.classList.add("active");
+        }
+    }
+    lockBodyScroll();
+    syncAllSegmented();
+}
+function closeLangDropdown() {
+    const dropdown = document.getElementById("langDropdown");
+    if (!dropdown) return;
+    if (!dropdown.classList.contains("open")) return;
+    dropdown.classList.remove("open");
+    unlockBodyScroll();
+    if (typeof syncLangButtons === "function") syncLangButtons();
+    if (typeof window.__syncLangDropdown === "function") window.__syncLangDropdown();
+    syncAllSegmented();
+}
+window.__openLangDropdown = openLangDropdown;
+window.__closeLangDropdown = closeLangDropdown;
+
+function initLangDropdown() {
+    const dropdown = document.getElementById("langDropdown");
+    const toggle = document.getElementById("langDropdownToggle");
+    const panel = document.getElementById("langDropdownPanel");
+    const label = document.getElementById("langDropdownLabel");
+    if (!dropdown || !toggle || !panel) return;
+    if (dropdown.dataset.built === "1") return;
+    dropdown.dataset.built = "1";
+    function syncActive() {
+        const lang = localStorage.getItem("fuey-lang") || "en";
+        panel.querySelectorAll(".lang-dropdown-item").forEach(item => {
+            item.classList.toggle("active", item.dataset.code === lang);
+        });
+        if (label) {
+            if (typeof OTHER_LANG_NAMES !== "undefined" && OTHER_LANG_NAMES[lang]) label.textContent = OTHER_LANG_NAMES[lang];
+            else label.textContent = (typeof t === "function") ? t("otherLang") : "Other";
+        }
+    }
+    window.__syncLangDropdown = syncActive;
+    syncActive();
+    toggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dropdown.classList.contains("open")) {
+            lastOpenLangTime = 0;
+            closeLangDropdown();
+        } else {
+            openLangDropdown();
+        }
+    });
+    panel.querySelectorAll(".lang-dropdown-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const code = item.dataset.code;
+            if (code && typeof setLang === "function") setLang(code);
+            syncActive();
+            lastOpenLangTime = 0;
+            closeLangDropdown();
+        });
+    });
+    document.addEventListener("click", (ev) => {
+        if (!dropdown.classList.contains("open")) return;
+        if (Date.now() - lastOpenLangTime < 500) return;
+        if (dropdown.contains(ev.target)) return;
+        const otherBtn = document.getElementById("langOther");
+        if (ev.target === otherBtn) return;
+        lastOpenLangTime = 0;
+        closeLangDropdown();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            lastOpenLangTime = 0;
+            closeLangDropdown();
+        }
+    });
+    document.addEventListener("fuey-settings-changed", syncActive);
+}
+
+function initSettingsIO() {
+    const exportBtn = document.getElementById("exportSettings");
+    const importBtn = document.getElementById("importSettings");
+    const fileInput = document.getElementById("importFile");
+    if (exportBtn) exportBtn.addEventListener("click", exportSettings);
+    if (importBtn && fileInput) {
+        importBtn.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", importSettingsFile);
     }
 }
-function initPageExitOverlay() {
-    const overlay = document.createElement("div");
-    overlay.className = "page-exit-overlay";
-    document.body.appendChild(overlay);
+function exportSettings() {
+    const settings = {
+        theme: localStorage.getItem("fuey-theme") || "light",
+        lang: localStorage.getItem("fuey-lang") || "en",
+        handed: localStorage.getItem("fuey-handed") || "right",
+        dataSource: getDataSource()
+    };
+    const content = `window.__FUEY_SETTINGS__ = ${JSON.stringify(settings, null, 2)};\n`;
+    const blob = new Blob([content], { type: "application/javascript" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "FueySettings.js";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showIOToast(typeof t === "function" ? t("exportSuccess") : "Exported", "ok");
 }
-function navigateTo(url) {
-    const overlay = document.querySelector(".page-exit-overlay");
-    if (overlay) overlay.classList.add("active");
-    setTimeout(() => { window.location.href = url; }, 500);
+function importSettingsFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const code = String(reader.result || "");
+            const fn = new Function("window", code + "\nreturn window.__FUEY_SETTINGS__ || null;");
+            const settings = fn(window);
+            if (!settings || typeof settings !== "object") {
+                showIOToast(typeof t === "function" ? t("importFailed") : "Import failed", "err");
+                e.target.value = "";
+                return;
+            }
+            if (settings.theme === "light" || settings.theme === "dark") localStorage.setItem("fuey-theme", settings.theme);
+            if (settings.lang) localStorage.setItem("fuey-lang", settings.lang);
+            if (settings.handed === "left" || settings.handed === "right") localStorage.setItem("fuey-handed", settings.handed);
+            if (settings.dataSource === "github" || settings.dataSource === "local") localStorage.setItem("fuey-data-source", settings.dataSource);
+            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
+            setTimeout(() => {
+                window.location.replace(window.location.href.split("#")[0]);
+            }, 600);
+        } catch (err) {
+            showIOToast(typeof t === "function" ? t("importFailed") : "Import failed", "err");
+            e.target.value = "";
+        }
+    };
+    reader.readAsText(file);
 }
-function initTheme() {
-    const savedTheme = localStorage.getItem("fuey-theme") || "light";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    document.documentElement.style.colorScheme = savedTheme;
-    const lightBtn = document.getElementById("themeLight");
-    const darkBtn = document.getElementById("themeDark");
-    if (lightBtn) lightBtn.classList.toggle("active", savedTheme === "light");
-    if (darkBtn) darkBtn.classList.toggle("active", savedTheme === "dark");
+function showIOToast(text, typeOrBool) {
+    let type = "ok";
+    if (typeOrBool === false) type = "err";
+    else if (typeOrBool === "warn") type = "warn";
+    else if (typeOrBool === "err") type = "err";
+    else if (typeOrBool === "ok" || typeOrBool === true) type = "ok";
+    const icons = { ok: "✓", err: "⊘", warn: "⚠" };
+    let el = document.getElementById("ioToast");
+    if (!el) {
+        el = document.createElement("div");
+        el.id = "ioToast";
+        el.className = "io-toast";
+        el.innerHTML = `<span class="io-toast-icon"></span><span class="io-toast-text"></span>`;
+        document.body.appendChild(el);
+    }
+    const iconEl = el.querySelector(".io-toast-icon");
+    const textEl = el.querySelector(".io-toast-text");
+    if (iconEl) iconEl.textContent = icons[type] || "✓";
+    if (textEl) textEl.textContent = text;
+    el.classList.remove("show", "ok", "err", "warn");
+    void el.offsetWidth;
+    el.classList.add("show");
+    el.classList.add(type);
+    clearTimeout(el.__timer);
+    el.__timer = setTimeout(() => el.classList.remove("show"), 2200);
 }
+window.__showIOToast = showIOToast;
+
 let onSettingsCloseCallback = null;
+
 function initSettingsPanel() {
     const settingsBtn = document.getElementById("navSettings");
     const settingsPanel = document.getElementById("settingsPanel");
@@ -500,12 +628,8 @@ function initSettingsPanel() {
         backdrop.className = "settings-backdrop";
         document.body.appendChild(backdrop);
     }
-    function notifyNavToSettings() {
-        if (window.__setNavUiItem) window.__setNavUiItem("settings");
-    }
-    function notifyNavToPage() {
-        if (window.__setNavUiItem) window.__setNavUiItem("page");
-    }
+    function notifyNavToSettings() { if (window.__setNavUiItem) window.__setNavUiItem("settings"); }
+    function notifyNavToPage() { if (window.__setNavUiItem) window.__setNavUiItem("page"); }
     function openPanel() {
         settingsPanel.classList.add("open");
         backdrop.classList.add("open");
@@ -519,6 +643,8 @@ function initSettingsPanel() {
     function closePanel() {
         settingsPanel.classList.remove("open");
         backdrop.classList.remove("open");
+        lastOpenLangTime = 0;
+        closeLangDropdown();
         unlockBodyScroll();
         settingsPanel.style.transform = "";
         settingsPanel.style.opacity = "";
@@ -535,21 +661,14 @@ function initSettingsPanel() {
     settingsBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        settingsPanel.classList.contains("open") ? closePanel() : openPanel();
+        if (settingsPanel.classList.contains("open")) closePanel();
+        else openPanel();
     });
     if (closeBtn) closeBtn.addEventListener("click", closePanel);
-    backdrop.addEventListener("click", (e) => {
-        if (e.target === backdrop) closePanel();
-    });
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closePanel();
-    });
+    backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closePanel(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanel(); });
     const resetBtn = document.getElementById("resetSettings");
-    if (resetBtn) {
-        resetBtn.addEventListener("click", () => {
-            showResetConfirm();
-        });
-    }
+    if (resetBtn) resetBtn.addEventListener("click", () => showResetConfirm());
     let panelDragInited = false;
     let dragging = false;
     let dragStartX = 0;
@@ -562,32 +681,12 @@ function initSettingsPanel() {
         if (panelDragInited) return;
         panelDragInited = true;
         panelWidth = settingsPanel.offsetWidth || 320;
-        function onDown(clientX, clientY) {
-            if (!settingsPanel.classList.contains("open")) return false;
-            if (!taskLock.acquire("settings")) return false;
-            isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
-            dragging = true;
-            dragStartX = clientX;
-            dragStartY = clientY;
-            currentOffset = 0;
-            baseOffset = 0;
-            settingsPanel.style.transition = "none";
-            lockBodyScroll();
-            return true;
-        }
         function onMove(clientX, clientY) {
             if (!dragging) return;
             const dx = clientX - dragStartX;
             const dy = clientY - dragStartY;
-            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
-                return;
-            }
-            let offset;
-            if (isLeftHanded) {
-                offset = Math.min(0, dx);
-            } else {
-                offset = Math.max(0, dx);
-            }
+            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) return;
+            let offset = isLeftHanded ? Math.min(0, dx) : Math.max(0, dx);
             currentOffset = offset;
             settingsPanel.style.transform = `translateX(${baseOffset + offset}px)`;
             settingsPanel.style.opacity = String(1 - Math.min(Math.abs(offset) / panelWidth, 1) * 0.5);
@@ -599,38 +698,61 @@ function initSettingsPanel() {
             unlockBodyScroll();
             taskLock.release("settings");
             const threshold = panelWidth / 3;
-            if (Math.abs(currentOffset) >= threshold) {
-                closePanel();
-            } else {
+            if (Math.abs(currentOffset) >= threshold) closePanel();
+            else {
                 settingsPanel.style.transform = "";
                 settingsPanel.style.opacity = "";
             }
             currentOffset = 0;
             baseOffset = 0;
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", onUp);
+            document.removeEventListener("touchmove", handleTouchMove);
+            document.removeEventListener("touchend", onUp);
+        }
+        function handleMouseMove(e) {
+            onMove(e.clientX, e.clientY);
+            e.preventDefault();
+        }
+        function handleTouchMove(e) {
+            if (e.touches.length !== 1) { onUp(); return; }
+            onMove(e.touches[0].clientX, e.touches[0].clientY);
         }
         settingsPanel.addEventListener("mousedown", (e) => {
             if (e.button !== 0) return;
-            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options")) return;
-            if (onDown(e.clientX, e.clientY)) e.preventDefault();
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row")) return;
+            if (!settingsPanel.classList.contains("open")) return;
+            if (!taskLock.acquire("settings")) return;
+            isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
+            dragging = true;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            currentOffset = 0;
+            baseOffset = 0;
+            settingsPanel.style.transition = "none";
+            lockBodyScroll();
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", onUp);
         });
-        document.addEventListener("mousemove", (e) => {
-            if (!dragging) return;
-            e.preventDefault();
-            onMove(e.clientX, e.clientY);
-        });
-        document.addEventListener("mouseup", onUp);
         settingsPanel.addEventListener("touchstart", (e) => {
-            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options")) return;
-            const touch = e.touches[0];
-            onDown(touch.clientX, touch.clientY);
+            if (e.touches.length !== 1) return;
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row")) return;
+            if (!settingsPanel.classList.contains("open")) return;
+            if (!taskLock.acquire("settings")) return;
+            isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
+            dragging = true;
+            dragStartX = e.touches[0].clientX;
+            dragStartY = e.touches[0].clientY;
+            currentOffset = 0;
+            baseOffset = 0;
+            settingsPanel.style.transition = "none";
+            lockBodyScroll();
+            document.addEventListener("touchmove", handleTouchMove, { passive: false });
+            document.addEventListener("touchend", onUp);
         }, { passive: true });
-        document.addEventListener("touchmove", (e) => {
-            if (!dragging) return;
-            onMove(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
-        document.addEventListener("touchend", onUp);
     }
 }
+
 function showResetConfirm() {
     const existing = document.querySelector(".confirm-overlay");
     if (existing) existing.remove();
@@ -652,26 +774,35 @@ function showResetConfirm() {
     });
     overlay.querySelector(".confirm-btn.yes").addEventListener("click", () => {
         clearAllFueyStorage();
-        const url = window.location.href.split("#")[0];
-        window.location.replace(url);
+        window.location.replace(window.location.href.split("#")[0]);
     });
-    requestAnimationFrame(() => {
-        overlay.classList.add("show");
-    });
+    requestAnimationFrame(() => overlay.classList.add("show"));
 }
+
+function initPageExitOverlay() {
+    const overlay = document.createElement("div");
+    overlay.className = "page-exit-overlay";
+    document.body.appendChild(overlay);
+}
+function navigateTo(url) {
+    const overlay = document.querySelector(".page-exit-overlay");
+    if (overlay) overlay.classList.add("active");
+    setTimeout(() => { window.location.href = url; }, 500);
+}
+
 function initNavHome() {
     const homeBtn = document.getElementById("navHome");
-    if (homeBtn) {
-        homeBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/")) {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                return;
-            }
-            navigateTo("index.html");
-        });
-    }
+    if (!homeBtn) return;
+    homeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/")) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
+        navigateTo("index.html");
+    });
 }
+
 function initNavSlider() {
     const navLinks = document.querySelector(".nav-links");
     if (!navLinks) return;
@@ -683,16 +814,22 @@ function initNavSlider() {
         indicator.className = "nav-indicator animate";
         navLinks.insertBefore(indicator, navLinks.firstChild);
     }
+    items.forEach(item => {
+        item.setAttribute("draggable", "false");
+        item.addEventListener("dragstart", (e) => e.preventDefault());
+    });
     const settingsItem = items.find(i => i.id === "navSettings") || null;
     let pageItem = navLinks.querySelector(".nav-item.active") || items[0];
     let uiItem = pageItem;
     let dragging = false;
     let dragStartX = 0;
-    let indicatorStartLeft = 0;
-    let pendingItem = null;
+    let dragStartLeft = 0;
+    let dragStartWidth = 0;
     let hasMoved = false;
     let suppressClick = false;
-    const dragThreshold = 4;
+    const dragThreshold = 3;
+    const dragState = { raf: 0, lastClientX: 0 };
+
     function applyActiveClass(item) {
         items.forEach(i => i.classList.remove("active"));
         if (item) item.classList.add("active");
@@ -701,198 +838,277 @@ function initNavSlider() {
         uiItem = item;
         applyActiveClass(item);
     }
-    function getContainerWidth() {
-        return navLinks.clientWidth;
+    function readIndicatorLeft() {
+        const inline = indicator.style.transform;
+        const m = /translateX\((-?\d+(?:\.\d+)?)px\)/.exec(inline || "");
+        if (m) return parseFloat(m[1]);
+        try {
+            const mtx = new DOMMatrixReadOnly(window.getComputedStyle(indicator).transform);
+            return mtx.m41 || 0;
+        } catch (e) { return 0; }
     }
-    function clampLeft(left, width) {
-        const maxLeft = Math.max(0, getContainerWidth() - width);
-        return Math.max(0, Math.min(left, maxLeft));
+    function readIndicatorWidth() {
+        return indicator.offsetWidth || 0;
     }
-    function positionIndicator(target, animate) {
+    function positionIndicator(target, instant) {
+        if (!target) return;
         const navRect = navLinks.getBoundingClientRect();
         const targetRect = target.getBoundingClientRect();
-        const left = clampLeft(targetRect.left - navRect.left, targetRect.width);
-        indicator.classList.remove("snap");
-        if (animate === false) {
-            indicator.classList.remove("animate");
+        const maxW = navLinks.clientWidth;
+        const w = Math.min(targetRect.width, maxW);
+        let left = targetRect.left - navRect.left;
+        if (left < 0) left = 0;
+        if (left + w > maxW) left = maxW - w;
+        if (instant) {
+            indicator.classList.add("no-anim");
             indicator.style.transform = `translateX(${left}px)`;
-            indicator.style.width = `${targetRect.width}px`;
+            indicator.style.width = `${w}px`;
             void indicator.offsetWidth;
+            indicator.classList.remove("no-anim");
             indicator.classList.add("animate");
         } else {
             indicator.classList.add("animate");
             indicator.style.transform = `translateX(${left}px)`;
-            indicator.style.width = `${targetRect.width}px`;
+            indicator.style.width = `${w}px`;
         }
     }
-    function snapIndicator(target) {
-        const navRect = navLinks.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const left = clampLeft(targetRect.left - navRect.left, targetRect.width);
-        indicator.classList.remove("animate");
-        void indicator.offsetWidth;
-        indicator.classList.add("snap");
-        indicator.style.transform = `translateX(${left}px)`;
-        indicator.style.width = `${targetRect.width}px`;
-        setTimeout(() => {
-            indicator.classList.remove("snap");
-            indicator.classList.add("animate");
-            positionIndicator(target, true);
-        }, 520);
-    }
-    function refreshIndicator() {
+    function refreshIndicator(smooth) {
+        const settingsPanel = document.getElementById("settingsPanel");
+        const isSettingsOpen = settingsPanel && settingsPanel.classList.contains("open");
+        if (!isSettingsOpen && uiItem && uiItem.id === "navSettings") {
+            uiItem = pageItem;
+        }
         if (!uiItem || !uiItem.isConnected) {
             uiItem = navLinks.querySelector(".nav-item.active") || items[0];
         }
         applyActiveClass(uiItem);
-        requestAnimationFrame(() => positionIndicator(uiItem, false));
+        positionIndicator(uiItem, smooth !== true);
     }
     window.__refreshNavIndicator = refreshIndicator;
     window.__setNavUiItem = function (target) {
         if (target === "settings" && settingsItem) {
             setUiItem(settingsItem);
-            positionIndicator(settingsItem, true);
+            positionIndicator(settingsItem, false);
         } else if (target === "page") {
             setUiItem(pageItem);
-            positionIndicator(pageItem, true);
+            positionIndicator(pageItem, false);
         }
     };
-    requestAnimationFrame(() => positionIndicator(uiItem, false));
-    window.addEventListener("resize", refreshIndicator);
-    window.addEventListener("load", refreshIndicator);
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(refreshIndicator);
-    }
-    function hitIndicator(clientX) {
-        const r = indicator.getBoundingClientRect();
-        return clientX >= r.left && clientX <= r.right;
-    }
-    function onDown(clientX) {
-        if (!hitIndicator(clientX)) return false;
-        if (!taskLock.acquire("nav")) return false;
-        const navRect = navLinks.getBoundingClientRect();
-        const indicatorRect = indicator.getBoundingClientRect();
-        dragging = true;
-        hasMoved = false;
-        dragStartX = clientX;
-        indicatorStartLeft = indicatorRect.left - navRect.left;
-        pendingItem = null;
-        navLinks.classList.add("dragging");
-        indicator.classList.remove("animate", "snap");
-        document.body.style.userSelect = "none";
-        lockBodyScroll();
-        return true;
-    }
-    function onMove(clientX) {
-        if (!dragging) return;
-        if (!hasMoved && Math.abs(clientX - dragStartX) < dragThreshold) return;
-        hasMoved = true;
-        const maxLeft = getContainerWidth() - indicator.offsetWidth;
-        let newLeft = indicatorStartLeft + (clientX - dragStartX);
+    requestAnimationFrame(() => positionIndicator(uiItem, true));
+    window.addEventListener("resize", () => refreshIndicator(true));
+    window.addEventListener("load", () => refreshIndicator(true));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => refreshIndicator(true));
+
+    function updateDragPosition(clientX) {
+        const dx = clientX - dragStartX;
+        if (!hasMoved && Math.abs(dx) < dragThreshold) return;
+        if (!hasMoved) {
+            hasMoved = true;
+            lockBodyScroll();
+        }
+        const maxLeft = Math.max(0, navLinks.clientWidth - dragStartWidth);
+        let newLeft = dragStartLeft + dx;
         newLeft = Math.max(0, Math.min(newLeft, maxLeft));
         indicator.style.transform = `translateX(${newLeft}px)`;
         const navRect = navLinks.getBoundingClientRect();
-        const currentCenter = newLeft + indicator.offsetWidth / 2;
+        const centerX = navRect.left + newLeft + dragStartWidth / 2;
         let closest = null;
         let minDist = Infinity;
         items.forEach(item => {
             const r = item.getBoundingClientRect();
-            const center = r.left - navRect.left + r.width / 2;
-            const d = Math.abs(currentCenter - center);
+            const center = (r.left + r.right) / 2;
+            const d = Math.abs(centerX - center);
             if (d < minDist) { minDist = d; closest = item; }
         });
-        pendingItem = closest;
-        applyActiveClass(closest);
+        if (closest && closest !== uiItem) {
+            uiItem = closest;
+            applyActiveClass(closest);
+        }
     }
-    function onUp() {
+
+    function onDragMove(e) {
+        if (!dragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        dragState.lastClientX = clientX;
+        if (dragState.raf) return;
+        dragState.raf = requestAnimationFrame(() => {
+            dragState.raf = 0;
+            updateDragPosition(dragState.lastClientX);
+        });
+        if (hasMoved && e.cancelable) e.preventDefault();
+    }
+
+    function endDrag() {
         if (!dragging) return;
         dragging = false;
         navLinks.classList.remove("dragging");
         document.body.style.userSelect = "";
-        unlockBodyScroll();
-        taskLock.release("nav");
-        suppressClick = true;
-        setTimeout(() => { suppressClick = false; }, 50);
-        const target = hasMoved ? (pendingItem || uiItem) : uiItem;
-        if (!hasMoved || target === uiItem) {
-            applyActiveClass(uiItem);
-            positionIndicator(uiItem, true);
-            pendingItem = null;
-            return;
+        if (dragState.raf) {
+            cancelAnimationFrame(dragState.raf);
+            dragState.raf = 0;
+            updateDragPosition(dragState.lastClientX);
         }
-        if (target.id === "navSettings") {
-            setUiItem(target);
-            snapIndicator(target);
-            onSettingsCloseCallback = () => {
-                setUiItem(pageItem);
-                positionIndicator(pageItem, true);
-            };
-            const settingsPanel = document.getElementById("settingsPanel");
-            const backdrop = document.querySelector(".settings-backdrop");
-            if (settingsPanel && !settingsPanel.classList.contains("open")) {
-                settingsPanel.classList.add("open");
-                if (backdrop) backdrop.classList.add("open");
-                lockBodyScroll();
-                syncAllSegmented();
-                requestAnimationFrame(syncAllSegmented);
-                setTimeout(syncAllSegmented, 250);
+        const moved = hasMoved;
+        hasMoved = false;
+        if (moved) {
+            unlockBodyScroll();
+            suppressClick = true;
+            setTimeout(() => { suppressClick = false; }, 80);
+            const target = uiItem;
+            if (target && target.id === "navSettings") {
+                positionIndicator(target, false);
+                onSettingsCloseCallback = () => {
+                    setUiItem(pageItem);
+                    positionIndicator(pageItem, false);
+                };
+                const settingsPanel = document.getElementById("settingsPanel");
+                const backdrop = document.querySelector(".settings-backdrop");
+                if (settingsPanel && !settingsPanel.classList.contains("open")) {
+                    settingsPanel.classList.add("open");
+                    if (backdrop) backdrop.classList.add("open");
+                    lockBodyScroll();
+                    syncAllSegmented();
+                    requestAnimationFrame(syncAllSegmented);
+                    setTimeout(syncAllSegmented, 250);
+                }
+            } else if (target) {
+                pageItem = target;
+                setUiItem(target);
+                positionIndicator(target, false);
+                const href = target.getAttribute("href");
+                if (href && !href.endsWith("#") && !window.location.pathname.endsWith(href)) {
+                    setTimeout(() => navigateTo(href), 420);
+                }
             }
         } else {
-            pageItem = target;
-            setUiItem(target);
-            snapIndicator(target);
-            const href = target.getAttribute("href");
-            if (href && !href.endsWith("#")) {
-                setTimeout(() => navigateTo(href), 380);
-            }
+            positionIndicator(uiItem, false);
         }
-        pendingItem = null;
+        taskLock.release("nav");
+        document.removeEventListener("mousemove", onDragMove);
+        document.removeEventListener("mouseup", endDrag);
+        document.removeEventListener("touchmove", onDragMove, { passive: false });
+        document.removeEventListener("touchend", endDrag);
     }
-    function onTouchStart(e) {
-        const touch = e.touches[0];
-        onDown(touch.clientX);
+
+    function startDrag(clientX, clientY, e) {
+        if (!taskLock.acquire("nav")) return false;
+        const r = indicator.getBoundingClientRect();
+        if (clientX < r.left - 10 || clientX > r.right + 10 || clientY < r.top - 8 || clientY > r.bottom + 8) {
+            taskLock.release("nav");
+            return false;
+        }
+        dragging = true;
+        hasMoved = false;
+        dragStartX = clientX;
+        dragStartLeft = readIndicatorLeft();
+        dragStartWidth = readIndicatorWidth();
+        dragState.lastClientX = clientX;
+        indicator.classList.remove("animate", "snap", "no-anim");
+        indicator.style.transform = `translateX(${dragStartLeft}px)`;
+        navLinks.classList.add("dragging");
+        document.body.style.userSelect = "none";
+        if (e && e.cancelable) e.preventDefault();
+        return true;
     }
-    function onTouchMove(e) {
-        if (!dragging) return;
-        onMove(e.touches[0].clientX);
-    }
+
     navLinks.addEventListener("mousedown", (e) => {
         if (e.button !== 0) return;
-        if (onDown(e.clientX)) e.preventDefault();
+        if (!startDrag(e.clientX, e.clientY, e)) return;
+        document.addEventListener("mousemove", onDragMove);
+        document.addEventListener("mouseup", endDrag);
     });
-    document.addEventListener("mousemove", (e) => {
-        if (!dragging) return;
-        e.preventDefault();
-        onMove(e.clientX);
-    });
-    document.addEventListener("mouseup", onUp);
-    navLinks.addEventListener("touchstart", onTouchStart, { passive: true });
-    document.addEventListener("touchmove", onTouchMove, { passive: true });
-    document.addEventListener("touchend", onUp);
+    navLinks.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) return;
+        if (!startDrag(e.touches[0].clientX, e.touches[0].clientY, e)) return;
+        document.addEventListener("touchmove", onDragMove, { passive: false });
+        document.addEventListener("touchend", endDrag);
+    }, { passive: true });
+
     items.forEach(item => {
         item.addEventListener("click", (e) => {
-            if (suppressClick) {
-                e.preventDefault();
-                e.stopPropagation();
-                return;
-            }
+            if (suppressClick) { e.preventDefault(); e.stopPropagation(); return; }
             if (item.id === "navSettings") return;
             if (item === pageItem && item === uiItem) {
                 applyActiveClass(pageItem);
-                positionIndicator(pageItem, true);
+                positionIndicator(pageItem, false);
                 return;
             }
             pageItem = item;
             setUiItem(item);
-            snapIndicator(item);
+            positionIndicator(item, false);
             const href = item.getAttribute("href");
             if (href && !href.endsWith("#") && !window.location.pathname.endsWith(href)) {
-                setTimeout(() => navigateTo(href), 380);
+                setTimeout(() => navigateTo(href), 420);
             }
         });
     });
 }
+
+function initDevelopers() {
+    const list = document.getElementById("developerList");
+    if (!list) return;
+    if (list.dataset.loaded === "1") return;
+    list.dataset.loaded = "1";
+    const cacheKey = "fuey-contributors";
+    let cachedData = null;
+    function render(data) {
+        if (data !== undefined) cachedData = data;
+        let useData = cachedData;
+        if (!Array.isArray(useData) || useData.length === 0) {
+            useData = [{ login: "FueySeek", html_url: "https://github.com/FueySeek", avatar_url: "https://github.com/FueySeek.png" }];
+        }
+        const maintainerText = typeof t === "function" ? t("maintainer") : "Maintainer";
+        list.innerHTML = useData.map((user, index) => {
+            const isMaintainer = index === 0 || user.login.toLowerCase() === "fueyseek";
+            return `
+            <a href="${user.html_url}" target="_blank" rel="noopener" class="developer-item">
+                ${isMaintainer ? `<span class="maintainer-badge">${maintainerText}</span>` : ""}
+                <img src="${user.avatar_url}" alt="${user.login}" class="developer-avatar">
+                <span class="developer-name">${user.login}</span>
+            </a>`;
+        }).join("");
+    }
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+        try { cachedData = JSON.parse(cached); render(cachedData); } catch (e) {}
+    } else {
+        fetch("https://api.github.com/repos/FueySeek/FueySeek.github.io/contributors")
+            .then(res => res.ok ? res.json() : Promise.reject())
+            .then(data => {
+                sessionStorage.setItem(cacheKey, JSON.stringify(data));
+                render(data);
+            })
+            .catch(() => render(null));
+    }
+    document.addEventListener("fuey-settings-changed", () => render());
+}
+
 function initFooterYear() {
     const yearEl = document.getElementById("footerYear");
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+    }
+    initTheme();
+    initHanded();
+    initNavSlider();
+    initSettingsPanel();
+    initNavHome();
+    initFooterYear();
+    initPageExitOverlay();
+    initSegmented();
+    initDevelopers();
+    initLangDropdown();
+    initSettingsIO();
+    initDataSource();
+    if (typeof applyLang === "function") applyLang();
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+            if (window.__refreshNavIndicator) window.__refreshNavIndicator(true);
+            syncAllSegmented();
+        });
+    }
+});

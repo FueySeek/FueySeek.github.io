@@ -3,243 +3,890 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embed</title>
+    <title>Game</title>
     <link rel="stylesheet" href="css/common.css">
     <style>
         html, body {
             background: transparent !important;
-            padding: 0 !important;
-            margin: 0 !important;
+            padding:0 !important;
+            margin:0 !important;
             overflow: hidden;
             scrollbar-width: none;
             -ms-overflow-style: none;
             height: auto;
+            min-height: 0 !important;
+            border-radius: var(--radius-sm);
         }
-        html::-webkit-scrollbar,
-        body::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
-        }
-        .embed-content {
-            padding: 24px 0;
-            color: var(--text);
-            transition: color 0.4s ease;
-        }
-        .embed-content h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: var(--text);
-        }
-        .embed-content p {
-            font-size: 16px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .changelog-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .changelog-item {
-            padding: 16px 20px;
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        body::before { display: none !important; }
+        .embed-content { padding: 0; border-radius: var(--radius-sm); overflow: hidden; }
+        .notes-card {
+            position: relative;
+            padding: 48px 24px;
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
             border: 0.5px solid var(--border);
             border-radius: var(--radius-sm);
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-        }
-        [data-theme="dark"] .changelog-item {
-            background: rgba(255, 255, 255, 0.06);
-        }
-        .changelog-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent);
-            box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15);
-        }
-        .changelog-header {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .changelog-version {
-            display: inline-block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-            background: var(--accent-soft);
-            padding: 2px 10px;
-            border-radius: var(--radius-pill);
-        }
-        .changelog-date {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .changelog-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-        .changelog-section {
-            margin-top: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        .changelog-desc {
-            list-style: none;
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .changelog-desc li {
-            position: relative;
-            padding-left: 16px;
-            margin-top: 4px;
-        }
-        .changelog-desc li::before {
-            content: "·";
-            position: absolute;
-            left: 4px;
-            color: var(--accent);
-            font-weight: 700;
-        }
-        .embed-sub {
-            margin-top: 24px;
-        }
-        .embed-sub-frame {
-            display: block;
-            width: 100%;
-            border: none;
-            background: transparent;
+            text-align: center;
+            transition: border-color 0.25s var(--smooth), box-shadow 0.3s var(--smooth);
+            user-select: none;
+            -webkit-user-select: none;
             overflow: hidden;
+            outline: none !important;
+        }
+        [data-theme="dark"] .notes-card { background: rgba(255, 255, 255, 0.06); }
+        .notes-card:hover { border-color: var(--accent); box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15); }
+        .notes-card-text { font-size: 18px; font-weight: 500; color: var(--text-secondary); letter-spacing: 1px; }
+        .dino-canvas {
+            display: none;
+            width: 100%;
+            height: 180px;
+            background: transparent;
+            image-rendering: pixelated;
+            outline: none !important;
+            margin-top: 8px;
+            border-radius: var(--radius-sm);
         }
     </style>
 </head>
 <body>
-    <div class="embed-content" id="embedContent">
-        <h2 id="embedTitle"></h2>
-        <p id="embedDesc"></p>
-        <ul id="changelogList" class="changelog-list"></ul>
-        <div class="embed-sub">
-            <iframe id="notesFrame" class="embed-sub-frame" scrolling="no" frameborder="0" src="embed-notes.html"></iframe>
+    <div class="embed-content">
+        <div class="notes-card" id="notesCard">
+            <span class="notes-card-text" id="notesText">Under Construction . . .</span>
+            <canvas id="dinoCanvas" class="dino-canvas"></canvas>
         </div>
     </div>
     <script src="js/rule.js"></script>
+    <script src="js/common.js"></script>
     <script>
-        const notesFrame = document.getElementById("notesFrame");
-        const titleEl = document.getElementById("embedTitle");
-        const descEl = document.getElementById("embedDesc");
-        const listEl = document.getElementById("changelogList");
-        let currentEmbedLang = "en";
-        let logData = null;
-        let dataReady = false;
+        const NOTES_TEXT = {
+            zh: "正在施工中 . . .", en: "Under Construction . . .",
+            ja: "工事中 . . .", ko: "공사 중 . . .",
+            fr: "En construction . . .", de: "Im Bau . . .",
+            es: "En construcción . . ."
+        };
+        let currentLang = localStorage.getItem("fuey-lang") || "en";
+        let gameRunning = false;
+        let gameInstance = null;
 
-        function formatEmbedDate(isoDate) {
-            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate || "");
-            if (!m) return isoDate || "";
-            const [, y, mo, d] = m;
-            return currentEmbedLang === "zh" ? `${y}/${mo}/${d}` : `${d}/${mo}/${y}`;
+        function applyNotesLang() {
+            const el = document.getElementById("notesText");
+            if (el && !gameRunning) el.textContent = NOTES_TEXT[currentLang] || NOTES_TEXT.en;
         }
-
-        function renderLogs() {
-            if (!logData) return;
-            const pack = logData[currentEmbedLang] || logData.en;
-            titleEl.textContent = pack.embedTitle;
-            descEl.textContent = pack.embedDesc;
-            listEl.innerHTML = pack.logs.map(log => {
-                const sections = log.sections.map(sec => {
-                    const sectionTitle = pack[sec.key] || sec.key;
-                    const items = sec.items.map(text => `<li>${text}</li>`).join("");
-                    return `<div class="changelog-section">${sectionTitle}</div><ul class="changelog-desc">${items}</ul>`;
-                }).join("");
-                return `<li class="changelog-item"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatEmbedDate(log.date)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
-            }).join("");
-        }
-
-        function applyEmbedLang(lang) {
-            if (!logData) return;
-            if (!logData[lang]) lang = "en";
-            currentEmbedLang = lang;
-            renderLogs();
-            syncNotes();
-        }
-
         function reportHeight() {
             if (!window.parent || window.parent === window) return;
             const h = Math.max(
-                document.body.scrollHeight,
-                document.body.offsetHeight,
-                document.documentElement.scrollHeight,
-                document.documentElement.offsetHeight
+                document.body.scrollHeight, document.body.offsetHeight,
+                document.documentElement.scrollHeight, document.documentElement.offsetHeight
             );
             window.parent.postMessage({ type: "fuey-embed-resize", height: h }, "*");
         }
-
-        function syncNotes() {
-            if (!notesFrame || !notesFrame.contentWindow) return;
-            try {
-                notesFrame.contentWindow.postMessage({
-                    type: "fuey-embed-sync",
-                    theme: document.documentElement.getAttribute("data-theme") || "light",
-                    lang: currentEmbedLang
-                }, "*");
-            } catch (e) {}
+        function syncState(payload) {
+            if (payload.theme) {
+                document.documentElement.setAttribute("data-theme", payload.theme);
+                document.documentElement.style.colorScheme = payload.theme;
+            }
+            if (payload.handed) document.documentElement.setAttribute("data-handed", payload.handed);
+            if (payload.lang && payload.lang !== currentLang) {
+                currentLang = payload.lang;
+                localStorage.setItem("fuey-lang", currentLang);
+                applyNotesLang();
+                if (gameInstance && gameInstance.updateLang) gameInstance.updateLang(currentLang);
+                reportHeight();
+            }
         }
 
         window.addEventListener("message", (e) => {
-            if (!e.data) return;
-            if (e.data.type === "fuey-embed-sync") {
-                if (e.data.theme) {
-                    document.documentElement.setAttribute("data-theme", e.data.theme);
-                    document.documentElement.style.colorScheme = e.data.theme;
-                }
-                if (e.data.lang && dataReady) applyEmbedLang(e.data.lang);
-            } else if (e.data.type === "fuey-embed-ready" && e.source === notesFrame.contentWindow) {
-                syncNotes();
-            } else if (e.data.type === "fuey-embed-resize" && e.source === notesFrame.contentWindow) {
-                if (typeof e.data.height === "number" && e.data.height > 0) {
-                    notesFrame.style.height = e.data.height + "px";
-                }
-            } else if (e.data.type === "fuey-security-toast") {
-                if (window.parent && window.parent !== window) {
-                    window.parent.postMessage({ type: "fuey-security-toast" }, "*");
-                }
+            if (e.data && e.data.type === "fuey-sync") syncState(e.data);
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            applyNotesLang();
+            reportHeight();
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
             }
         });
 
-        window.__applyFueyLang = function (lang) {
-            if (dataReady) applyEmbedLang(lang);
-        };
-
-        function onLogDataReady() {
-            logData = window.__EMBED_UPDATE_LOGS__;
-            dataReady = true;
-            if (!logData) return;
-            applyEmbedLang(localStorage.getItem("fuey-lang") || "en");
-            requestAnimationFrame(reportHeight);
-            setTimeout(reportHeight, 100);
-            setTimeout(reportHeight, 500);
+        function initNotesClick() {
+            const notesCard = document.getElementById("notesCard");
+            if (!notesCard) return;
+            let count = 0;
+            let timer = null;
+            notesCard.addEventListener("click", (e) => {
+                if (gameRunning || e.target.closest("canvas")) return;
+                count++;
+                clearTimeout(timer);
+                timer = setTimeout(() => { count = 0; }, 2000);
+                if (count >= 3) {
+                    count = 0;
+                    clearTimeout(timer);
+                    startDinoGame();
+                }
+            });
         }
 
-        const s = document.createElement("script");
-        s.src = "data/embed-update-logs.js?_=" + Date.now();
-        s.onload = onLogDataReady;
-        s.onerror = () => {
-            dataReady = true;
-            reportHeight();
-        };
-        document.head.appendChild(s);
-
-        if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
+        function startDinoGame() {
+            if (gameRunning) return;
+            gameRunning = true;
+            const notesText = document.getElementById("notesText");
+            const dinoCanvas = document.getElementById("dinoCanvas");
+            const notesCard = document.getElementById("notesCard");
+            if (!dinoCanvas || !notesCard) return;
+            if (notesText) notesText.style.display = "none";
+            dinoCanvas.style.display = "block";
+            notesCard.style.padding = "0";
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    gameInstance = initDinoGame();
+                    reportHeight();
+                });
+            });
         }
+
+        function initDinoGame() {
+            const dinoCanvas = document.getElementById("dinoCanvas");
+            if (!dinoCanvas) return null;
+            const ctx = dinoCanvas.getContext("2d");
+            const width = Math.max(dinoCanvas.clientWidth, 320);
+            const height = Math.max(dinoCanvas.clientHeight, 180);
+            dinoCanvas.width = width;
+            dinoCanvas.height = height;
+
+            let isJumping = false;
+            let velocity = 0;
+            const gravity = 0.6;
+            const jumpStrength = -9.5;
+            const groundY = height - 25;
+            const dinoW = 40;
+            const dinoH = 44;
+            let speed = 3.8;
+            let score = 0;
+            let highScore = parseFloat(localStorage.getItem("fuey-dino-hi") || "0");
+            let gameOver = false;
+            let isNewRecord = false;
+            let obstacleTimer = 0;
+            let nextSpawn = 40;
+            let legFrame = 0;
+            let deathMessage = "";
+            let currentGameLang = currentLang;
+            let lastRenderWasGameOver = false;
+            let rafId = 0;
+            let obstacles = [];
+            let powerups = [];
+            let tumbleweeds = [];
+            let decorScroll = 0;
+            let boostUntil = 0;
+            let boostMode = null;
+            let totalBoostGained = 0;
+            let invincibleQualified = false;
+            let nightness = 0;
+            const BOOST_SCORE_PER_SEC = 6;
+            const BOOST_DURATION = 600;
+            const INVINCIBLE_THRESHOLD = 900;
+            const QUALIFY_THRESHOLD = 1800;
+
+            const SPEED_TABLE = {
+                easy:   { base: 3.8, range: 0.9, span: 500,   start: 0 },
+                normal: { base: 4.7, range: 0.6, span: 1000,  start: 500 },
+                hard:   { base: 5.3, range: 0.6, span: 3500,  start: 1500 },
+                hell:   { base: 5.9, range: 0.6, span: 20000, start: 5000 }
+            };
+            const MIN_PIXEL_GAP = { easy: 210, normal: 170, hard: 150, hell: 140 };
+            const DIFF_LABELS = { easy: "EASY", normal: "NORMAL", hard: "HARD", hell: "HELL" };
+            const DIFF_COLORS = { easy: "#34c759", normal: "#0071e3", hard: "#ff9f0a", hell: "#ff3b30" };
+
+            const C = {
+                bgLight: 0xf2f2f4, bgDark: 0x1c1c1e,
+                fgLight: 0x000000, fgDark: 0xffffff,
+                textLight: 0x6e6e73, textDark: 0xc7c7cc,
+                scoreTextLight: 0x333333, scoreTextDark: 0xffffff,
+                cactusDayLight: 0x22c55e, cactusDayDark: 0x4ade80, cactusNight: 0x9ca3af,
+                rockDay: 0x9e9e9e, rockNight: 0xb0b0b0,
+                grassDay: 0x22a355, grassNight: 0x5bcf6e,
+                tumbleDayLight: 0xa88758, tumbleDayDark: 0xc0a880, tumbleNight: 0x9ca3af,
+                tumbleLightDayLight: 0xc4a877, tumbleLightDayDark: 0xd8c090, tumbleLightNight: 0xb8b8b8,
+                shadowDay: 0x003c14, shadowNight: 0x000000,
+                sunColor: 0xFBBF24, moonColor: 0xE0E0E0
+            };
+
+            function lerpColor(c1, c2, t) {
+                if (t <= 0) return `rgb(${(c1 >> 16) & 0xff},${(c1 >> 8) & 0xff},${c1 & 0xff})`;
+                if (t >= 1) return `rgb(${(c2 >> 16) & 0xff},${(c2 >> 8) & 0xff},${c2 & 0xff})`;
+                const r = Math.round(((c1 >> 16) & 0xff) + (((c2 >> 16) & 0xff) - ((c1 >> 16) & 0xff)) * t);
+                const g = Math.round(((c1 >> 8) & 0xff) + (((c2 >> 8) & 0xff) - ((c1 >> 8) & 0xff)) * t);
+                const b = Math.round((c1 & 0xff) + ((c2 & 0xff) - (c1 & 0xff)) * t);
+                return `rgb(${r},${g},${b})`;
+            }
+            function lerpRgba(c1, c2, a1, a2, t) {
+                const r = Math.round(((c1 >> 16) & 0xff) + (((c2 >> 16) & 0xff) - ((c1 >> 16) & 0xff)) * t);
+                const g = Math.round(((c1 >> 8) & 0xff) + (((c2 >> 8) & 0xff) - ((c1 >> 8) & 0xff)) * t);
+                const b = Math.round((c1 & 0xff) + ((c2 & 0xff) - (c1 & 0xff)) * t);
+                const a = a1 + (a2 - a1) * t;
+                return `rgba(${r},${g},${b},${a})`;
+            }
+
+            function getMessages(lang) {
+                const all = {
+                    zh: { deaths: ["看来力不从心啊，使用空格重新开始！", "游戏结束，使用空格重新开始", "看来你死了，使用空格重新开始", "你死了！使用空格重新开始"], score: "当前分数", hi: "最高记录", newRecord: "新纪录！！", separator: " 丨 " },
+                    en: { deaths: ["Out of breath! Press Space to restart!", "Game over, press Space to restart", "Looks like you died, press Space to restart", "You died! Press Space to restart"], score: "Score", hi: "HI", newRecord: "New Record!!", separator: " | " },
+                    ja: { deaths: ["息切れ！スペースで再開！", "ゲームオーバー、スペースで再開", "死んだようです、スペースで再開", "あなたは死にました！スペースで再開"], score: "スコア", hi: "最高", newRecord: "新記録！！", separator: " 丨 " },
+                    ko: { deaths: ["숨이 차네요! 스페이스로 재시작!", "게임 오버, 스페이스로 재시작", "죽은 것 같네요, 스페이스로 재시작", "당신은 죽었습니다! 스페이스로 재시작"], score: "점수", hi: "최고", newRecord: "신기록！！", separator: " 丨 " },
+                    fr: { deaths: ["À bout de souffle ! Espace pour recommencer !", "Partie terminée, appuyez sur Espace pour recommencer", "On dirait que vous êtes mort, appuyez sur Espace pour recommencer", "Vous êtes mort ! Appuyez sur Espace pour recommencer"], score: "Score", hi: "Meilleur", newRecord: "Nouveau record !!", separator: " 丨 " },
+                    de: { deaths: ["Außer Atem! Leertaste zum Neustart!", "Spiel vorbei, Leertaste zum Neustart", "Sieht aus, als wärst du gestorben, Leertaste zum Neustart", "Du bist gestorben! Leertaste zum Neustart"], score: "Punkte", hi: "Best", newRecord: "Neuer Rekord!!", separator: " 丨 " },
+                    es: { deaths: ["¡Sin aliento! ¡Espacio para reiniciar!", "Fin del juego, pulsa Espacio para reiniciar", "Parece que moriste, pulsa Espacio para reiniciar", "¡Moriste! Pulsa Espacio para reiniciar"], score: "Puntuación", hi: "Mejor", newRecord: "¡Nuevo récord!", separator: " 丨 " }
+                };
+                return all[lang] || all.en;
+            }
+
+            const imgLift = new Image();
+            imgLift.src = "images/dinosaur/dinosaur-leglift.png";
+            const imgClosed = new Image();
+            imgClosed.src = "images/dinosaur/dinosaur-legsclosed.png";
+            const imgDeath = new Image();
+            imgDeath.src = "images/dinosaur/dinosaur-death.png";
+            let dinoLoaded = false;
+            let loadedCount = 0;
+            function onImgLoad() { loadedCount++; if (loadedCount === 3) dinoLoaded = true; }
+            imgLift.onload = onImgLoad;
+            imgClosed.onload = onImgLoad;
+            imgDeath.onload = onImgLoad;
+
+            const DINO_BOXES_RUNNING = [
+                { x: 22, y: 0, w: 17, h: 16 },
+                { x: 1, y: 18, w: 30, h: 9 },
+                { x: 10, y: 35, w: 14, h: 8 },
+                { x: 1, y: 24, w: 29, h: 5 },
+                { x: 5, y: 30, w: 21, h: 4 },
+                { x: 9, y: 34, w: 15, h: 4 }
+            ];
+
+            function getDinoBoxes(absX, absY) {
+                return DINO_BOXES_RUNNING.map(b => ({ x: absX + b.x, y: absY + b.y, w: b.w, h: b.h }));
+            }
+
+            function getCactusBoxes(cx, cy, cw, ch) {
+                const trunkW = Math.max(4, Math.round(cw * 0.34));
+                const trunkX = cx + Math.floor((cw - trunkW) / 2);
+                const boxes = [{ x: trunkX, y: cy, w: trunkW, h: ch }];
+                if (ch >= 18) {
+                    const armY = cy + Math.floor(ch * 0.42);
+                    const leftLen = trunkX - cx;
+                    if (leftLen > 1) {
+                        boxes.push({ x: cx, y: armY, w: leftLen + 1, h: 3 });
+                        boxes.push({ x: cx, y: armY - 6, w: 3, h: 10 });
+                    }
+                }
+                if (ch >= 26) {
+                    const armY = cy + Math.floor(ch * 0.62);
+                    const armStart = trunkX + trunkW;
+                    const rightLen = cx + cw - armStart;
+                    if (rightLen > 1) {
+                        boxes.push({ x: armStart - 1, y: armY, w: rightLen + 1, h: 3 });
+                        boxes.push({ x: cx + cw - 3, y: armY - 6, w: 3, h: 10 });
+                    }
+                }
+                return boxes;
+            }
+
+            function boxHit(a, b) {
+                return a.x < b.x + b.w && a.x + a.w > b.x &&
+                       a.y < b.y + b.h && a.y + a.h > b.y;
+            }
+
+            function checkCollision(dinoBoxes, obstacle) {
+                const obsBoxes = obstacle.kind === "cluster"
+                    ? obstacle.parts.flatMap(p => getCactusBoxes(obstacle.x + p.offsetX, groundY - p.h + 2, p.w, p.h))
+                    : getCactusBoxes(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                for (const db of dinoBoxes) {
+                    for (const ob of obsBoxes) {
+                        if (boxHit(db, ob)) return true;
+                    }
+                }
+                return false;
+            }
+
+            function getIsNight() { return Math.floor(score / 300) % 2 === 1; }
+            function isBoostActive() { return score < boostUntil; }
+            function isGroundMode() { return isBoostActive() && boostMode === "ground"; }
+            function isInvincible() {
+                if (!invincibleQualified || !isGroundMode()) return false;
+                const remain = boostUntil - score;
+                return remain > 0 && remain < INVINCIBLE_THRESHOLD;
+            }
+            function getBoostRemainSeconds() {
+                return Math.max(0, Math.ceil((boostUntil - score) / BOOST_SCORE_PER_SEC));
+            }
+
+            function getBaseDifficulty() {
+                if (score < 500) return "easy";
+                if (score < 1500) return "normal";
+                if (score < 5000) return "hard";
+                return "hell";
+            }
+            function getDifficulty() {
+                return isBoostActive() ? "easy" : getBaseDifficulty();
+            }
+            function computeSpeed() {
+                const cfg = SPEED_TABLE[getDifficulty()];
+                let base = cfg.base + Math.min((score - cfg.start) / cfg.span, 1) * cfg.range;
+                if (getIsNight()) base += isBoostActive() ? 0.15 : 0.5;
+                return base;
+            }
+
+            const dino = {
+                x: 30, y: groundY - dinoH, width: dinoW, height: dinoH,
+                draw() {
+                    if (gameOver) {
+                        if (imgDeath.complete && imgDeath.naturalWidth > 0) {
+                            ctx.drawImage(imgDeath, this.x, this.y, this.width, this.height);
+                        }
+                        return;
+                    }
+                    const inv = isInvincible();
+                    if (inv) {
+                        const glow = 0.55 + Math.sin(legFrame * 0.35) * 0.45;
+                        const cx = this.x + this.width / 2;
+                        const cy = this.y + this.height / 2;
+                        ctx.save();
+                        const grad = ctx.createRadialGradient(cx, cy, 12, cx, cy, 34);
+                        grad.addColorStop(0, `rgba(52, 199, 89, ${0.35 * glow})`);
+                        grad.addColorStop(1, "rgba(52, 199, 89, 0)");
+                        ctx.fillStyle = grad;
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 34, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.strokeStyle = `rgba(52, 199, 89, ${0.4 + glow * 0.5})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                    const blink = inv && Math.floor(legFrame / 4) % 2 === 0;
+                    ctx.globalAlpha = blink ? 0.55 : 1;
+                    const useLift = !isJumping && (Math.floor(legFrame / 5) % 2 === 0);
+                    if (dinoLoaded) {
+                        ctx.drawImage(useLift ? imgLift : imgClosed, this.x, this.y, this.width, this.height);
+                    }
+                    ctx.globalAlpha = 1;
+                }
+            };
+
+            const sunMatrix = [[0,0,0,1,0,0,0],[0,1,0,1,0,1,0],[0,0,1,1,1,0,0],[1,1,1,1,1,1,1],[0,0,1,1,1,0,0],[0,1,0,1,0,1,0],[0,0,0,1,0,0,0]];
+            const moonMatrix = [[0,0,1,1,1,0,0],[0,1,1,0,0,0,0],[1,1,0,0,0,0,0],[1,1,0,0,0,0,0],[1,1,0,0,0,0,0],[0,1,1,0,0,0,0],[0,0,1,1,1,0,0]];
+
+            function computeNextSpawn(obsWidth) {
+                const diff = getDifficulty();
+                let frames = (MIN_PIXEL_GAP[diff] + (obsWidth || 20)) / speed;
+                frames *= 0.85 + Math.random() * 0.45;
+                if (isGroundMode()) frames *= 1.35;
+                else if (isBoostActive()) frames *= 1.25;
+                return Math.max(30, frames);
+            }
+
+            function makeCluster(spanWidth, maxCacti, minW, maxW, minH, maxH) {
+                const count = 2 + Math.floor(Math.random() * (maxCacti - 1));
+                const parts = [];
+                let maxRight = 0;
+                let maxHeight = 0;
+                for (let i = 0; i < count; i++) {
+                    const w = minW + Math.round(Math.random() * (maxW - minW));
+                    const h = minH + Math.round(Math.random() * (maxH - minH));
+                    const offsetX = Math.round(Math.random() * Math.max(1, spanWidth - w));
+                    parts.push({ offsetX, w, h });
+                    if (offsetX + w > maxRight) maxRight = offsetX + w;
+                    if (h > maxHeight) maxHeight = h;
+                }
+                return { kind: "cluster", parts, width: Math.round(maxRight), height: maxHeight };
+            }
+
+            function makeSingle(kind, wMin, wRange, hMin, hRange) {
+                const w = wMin + Math.round(Math.random() * wRange);
+                const h = hMin + Math.round(Math.random() * hRange);
+                return { kind, width: w, height: h };
+            }
+
+            function spawnObstacle() {
+                let obs;
+                if (isGroundMode()) {
+                    if (Math.random() < 0.30) {
+                        nextSpawn = computeNextSpawn(20);
+                        return;
+                    }
+                    obs = makeSingle("mid", 8, 4, 14, 8);
+                } else {
+                    const roll = Math.random();
+                    if (getDifficulty() === "easy") {
+                        if (roll < 0.08) obs = makeCluster(22 + Math.random() * 10, 3, 8, 12, 16, 24);
+                        else if (roll < 0.38) obs = makeSingle("tall", 10, 4, 24, 6);
+                        else if (roll < 0.68) obs = makeSingle("wide", 16, 6, 12, 4);
+                        else obs = makeSingle("mid", 12, 6, 18, 8);
+                    } else {
+                        if (roll < 0.10) obs = makeCluster(30 + Math.random() * 15, 4, 8, 13, 20, 30);
+                        else if (roll < 0.28) obs = makeCluster(22 + Math.random() * 12, 3, 8, 12, 18, 26);
+                        else if (roll < 0.48) obs = makeSingle("tall", 10, 4, 28, 6);
+                        else if (roll < 0.74) obs = makeSingle("wide", 16, 6, 12, 4);
+                        else obs = makeSingle("mid", 12, 6, 18, 8);
+                    }
+                }
+                obs.x = width + 10;
+                obs.y = groundY - obs.height + 2;
+                obstacles.push(obs);
+                nextSpawn = computeNextSpawn(obs.width);
+            }
+
+            function getPowerupChance() {
+                const diff = getDifficulty();
+                if (diff === "easy") return isBoostActive() ? 0.002 : 0.003;
+                if (diff === "normal") return 0.008;
+                if (diff === "hard") return 0.015;
+                return 0.025;
+            }
+
+            function spawnPowerup() {
+                if (powerups.length >= 2 || Math.random() > getPowerupChance()) return;
+                powerups.push({
+                    x: width + 20,
+                    baseY: groundY - 20 - Math.random() * 55,
+                    radius: 7,
+                    bobPhase: Math.random() * Math.PI * 2,
+                    bobAmp: 1.5 + Math.random() * 2,
+                    spinPhase: 0
+                });
+            }
+
+            function updatePowerups() {
+                for (let i = powerups.length - 1; i >= 0; i--) {
+                    const p = powerups[i];
+                    p.x -= speed;
+                    p.bobPhase += 0.08;
+                    p.spinPhase += 0.05;
+                    if (p.x < -30) { powerups.splice(i, 1); continue; }
+                    if (gameOver) continue;
+                    const dx = (dino.x + dino.width / 2) - p.x;
+                    const dy = (dino.y + dino.height / 2) - (p.baseY + Math.sin(p.bobPhase) * p.bobAmp);
+                    if (Math.sqrt(dx * dx + dy * dy) < p.radius + 18) {
+                        if (!isBoostActive()) {
+                            boostMode = (getBaseDifficulty() === "easy") ? "ground" : "normal";
+                            boostUntil = score + BOOST_DURATION;
+                        } else {
+                            boostUntil += BOOST_DURATION;
+                        }
+                        totalBoostGained += BOOST_DURATION;
+                        if (totalBoostGained >= QUALIFY_THRESHOLD) invincibleQualified = true;
+                        powerups.splice(i, 1);
+                    }
+                }
+            }
+
+            function drawPowerups() {
+                powerups.forEach(p => {
+                    const drawY = p.baseY + Math.sin(p.bobPhase) * p.bobAmp;
+                    ctx.save();
+                    ctx.translate(p.x, drawY);
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.radius + 3, 0, Math.PI * 2);
+                    ctx.fillStyle = "rgba(52, 199, 89, 0.25)";
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = "#34c759";
+                    ctx.fill();
+                    ctx.strokeStyle = "rgba(255,255,255,0.9)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    const pulse = 0.85 + Math.sin(p.spinPhase * 4) * 0.15;
+                    const armLen = p.radius * 0.55 * pulse;
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(-armLen, -1, armLen * 2, 2);
+                    ctx.fillRect(-1, -armLen, 2, armLen * 2);
+                    ctx.restore();
+                });
+            }
+
+            function spawnTumbleweed() {
+                if (tumbleweeds.length >= 2 || Math.random() > 0.006) return;
+                tumbleweeds.push({
+                    x: width + 40,
+                    baseY: groundY - 10 - Math.random() * 14,
+                    speed: 2.2 + Math.random() * 1.8,
+                    radius: 5 + Math.random() * 3,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotSpeed: 0.12 + Math.random() * 0.1,
+                    bobPhase: Math.random() * Math.PI * 2,
+                    bobAmp: 1.5 + Math.random() * 2.5
+                });
+            }
+
+            function updateTumbleweeds() {
+                for (let i = tumbleweeds.length - 1; i >= 0; i--) {
+                    const t = tumbleweeds[i];
+                    t.x -= t.speed;
+                    t.rotation += t.rotSpeed;
+                    t.bobPhase += 0.12;
+                    if (t.x < -t.radius * 3) tumbleweeds.splice(i, 1);
+                }
+            }
+
+            function drawTumbleweeds(isDark) {
+                const dayBase = isDark ? C.tumbleDayDark : C.tumbleDayLight;
+                const dayLight = isDark ? C.tumbleLightDayDark : C.tumbleLightDayLight;
+                const baseColor = lerpColor(dayBase, C.tumbleNight, nightness);
+                const lightColor = lerpColor(dayLight, C.tumbleLightNight, nightness);
+                tumbleweeds.forEach(t => {
+                    const drawY = t.baseY + Math.sin(t.bobPhase) * t.bobAmp;
+                    ctx.save();
+                    ctx.translate(t.x, drawY);
+                    ctx.rotate(t.rotation);
+                    ctx.strokeStyle = baseColor;
+                    ctx.lineWidth = 1;
+                    for (let k = 0; k < 3; k++) {
+                        ctx.beginPath();
+                        ctx.moveTo(-t.radius, 0);
+                        ctx.lineTo(t.radius, 0);
+                        ctx.stroke();
+                        ctx.rotate(Math.PI / 3);
+                    }
+                    ctx.strokeStyle = lightColor;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, t.radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.strokeStyle = baseColor;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, t.radius * 0.55, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                });
+            }
+
+            function drawDecor(bgDark, isFlat) {
+                const period = isFlat ? 62 : 46;
+                const spread = isFlat ? 30 : 20;
+                const stoneColor = lerpColor(C.rockDay, C.rockNight, bgDark);
+                const grassColor = lerpColor(C.grassDay, C.grassNight, bgDark);
+                const bumpColor = lerpRgba(C.fgLight, C.fgDark, 0.22, 0.35, bgDark);
+                const sandColor = lerpRgba(C.fgLight, C.fgDark, 0.09, 0.18, bgDark);
+
+                const startI = Math.floor(decorScroll / period) - 1;
+                const endI = Math.ceil((decorScroll + width) / period) + 1;
+                for (let i = startI; i <= endI; i++) {
+                    const s1 = ((i * 9301 + 49297) % 233280) / 233280;
+                    const s2 = ((i * 49297 + 9301) % 233280) / 233280;
+                    const s3 = ((i * 7 + 17) % 1000) / 1000;
+                    const x = i * period - decorScroll + s1 * spread;
+                    if (x < -12 || x > width + 12) continue;
+
+                    if (isFlat) {
+                        if (s2 < 0.55) {
+                            ctx.fillStyle = sandColor;
+                            ctx.fillRect(x, groundY + 3, 1, 1);
+                        }
+                        continue;
+                    }
+
+                    if (s2 < 0.22) {
+                        ctx.fillStyle = stoneColor;
+                        const w = 2 + Math.floor(s3 * 2);
+                        ctx.fillRect(x, groundY + 2, w, 1);
+                        if (s3 > 0.55) ctx.fillRect(x + 1, groundY + 1, 1, 1);
+                    } else if (s2 < 0.42) {
+                        ctx.fillStyle = bumpColor;
+                        const bh = 1 + Math.floor(s3 * 2);
+                        ctx.fillRect(x, groundY + 2 - bh, 3, bh);
+                    } else if (s2 < 0.55) {
+                        ctx.strokeStyle = grassColor;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(x, groundY + 2);
+                        ctx.lineTo(x + 1, groundY - 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x + 3, groundY + 2);
+                        ctx.lineTo(x + 4, groundY - 1);
+                        ctx.stroke();
+                    } else if (s2 < 0.62) {
+                        ctx.fillStyle = stoneColor;
+                        ctx.fillRect(x, groundY + 2, 1, 1);
+                        ctx.fillRect(x + 2, groundY + 2, 1, 1);
+                    }
+                }
+            }
+
+            function drawGround(bgDark) {
+                ctx.strokeStyle = lerpRgba(C.fgLight, C.fgDark, 0.15, 0.35, bgDark);
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, groundY + 2);
+                ctx.lineTo(width, groundY + 2);
+                ctx.stroke();
+                drawDecor(bgDark, isGroundMode());
+            }
+
+            function drawCactusShape(cx, cy, cw, ch) {
+                const trunkW = Math.max(4, Math.round(cw * 0.34));
+                const trunkX = cx + Math.floor((cw - trunkW) / 2);
+                ctx.fillRect(trunkX, cy, trunkW, ch);
+                if (ch >= 18) {
+                    const armY = cy + Math.floor(ch * 0.42);
+                    const leftLen = trunkX - cx;
+                    if (leftLen > 1) {
+                        ctx.fillRect(cx, armY, leftLen + 1, 3);
+                        ctx.fillRect(cx, armY - 6, 3, 10);
+                    }
+                }
+                if (ch >= 26) {
+                    const armY = cy + Math.floor(ch * 0.62);
+                    const armStart = trunkX + trunkW;
+                    const rightLen = cx + cw - armStart;
+                    if (rightLen > 1) {
+                        ctx.fillRect(armStart - 1, armY, rightLen + 1, 3);
+                        ctx.fillRect(cx + cw - 3, armY - 6, 3, 10);
+                    }
+                }
+            }
+
+            function drawObstacle(obs, isDark) {
+                const dayCactus = isDark ? C.cactusDayDark : C.cactusDayLight;
+                const dayR = (dayCactus >> 16) & 0xff;
+                const dayG = (dayCactus >> 8) & 0xff;
+                const dayB = dayCactus & 0xff;
+                const nightR = (C.cactusNight >> 16) & 0xff;
+                const nightG = (C.cactusNight >> 8) & 0xff;
+                const nightB = C.cactusNight & 0xff;
+                const t = nightness;
+                const r = Math.round(dayR + (nightR - dayR) * t);
+                const g = Math.round(dayG + (nightG - dayG) * t);
+                const b = Math.round(dayB + (nightB - dayB) * t);
+                const color = `rgb(${r},${g},${b})`;
+                const shadowColor = isDark ? "rgba(0,0,0,0.55)" : "rgba(0,60,20,0.35)";
+                const parts = obs.kind === "cluster"
+                    ? obs.parts.map(p => ({ x: obs.x + p.offsetX, y: groundY - p.h + 2, w: p.w, h: p.h }))
+                    : [{ x: obs.x, y: obs.y, w: obs.width, h: obs.height }];
+
+                ctx.save();
+                ctx.fillStyle = shadowColor;
+                ctx.translate(1.2, 1.6);
+                parts.forEach(p => drawCactusShape(p.x, p.y, p.w, p.h));
+                ctx.restore();
+
+                ctx.fillStyle = color;
+                parts.forEach(p => drawCactusShape(p.x, p.y, p.w, p.h));
+            }
+
+            function drawSunMoon() {
+                const pSize = 2;
+                const startX = width - 50 - (7 * pSize) / 2;
+                const startY = 60 - (7 * pSize) / 2;
+                if (nightness < 0.99) {
+                    ctx.globalAlpha = 1 - nightness;
+                    ctx.fillStyle = `rgb(${(C.sunColor >> 16) & 0xff},${(C.sunColor >> 8) & 0xff},${C.sunColor & 0xff})`;
+                    for (let r = 0; r < 7; r++) {
+                        for (let c = 0; c < 7; c++) {
+                            if (sunMatrix[r][c] === 1) ctx.fillRect(startX + c * pSize, startY + r * pSize, pSize, pSize);
+                        }
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                if (nightness > 0.01) {
+                    ctx.globalAlpha = nightness;
+                    ctx.fillStyle = `rgb(${(C.moonColor >> 16) & 0xff},${(C.moonColor >> 8) & 0xff},${C.moonColor & 0xff})`;
+                    for (let r = 0; r < 7; r++) {
+                        for (let c = 0; c < 7; c++) {
+                            if (moonMatrix[r][c] === 1) ctx.fillRect(startX + c * pSize, startY + r * pSize, pSize, pSize);
+                        }
+                    }
+                    ctx.globalAlpha = 1;
+                }
+            }
+
+            function drawDifficultyLabel(textColor) {
+                const boosted = isBoostActive();
+                const inv = isInvincible();
+                const diff = getDifficulty();
+                let label;
+                let color;
+                if (inv) { label = "OASIS ✦"; color = "#34d399"; }
+                else if (!boosted) { label = DIFF_LABELS[diff] || "EASY"; color = DIFF_COLORS[diff] || "#34c759"; }
+                else if (isGroundMode()) { label = "OASIS"; color = "#34d399"; }
+                else { label = "BOOST"; color = "#34c759"; }
+                ctx.textAlign = "left";
+                ctx.font = "bold 12px monospace";
+                ctx.fillStyle = textColor;
+                ctx.fillText("v26.11.1.0", 20, 30);
+                const vw = ctx.measureText("v26.11.1.0").width;
+                ctx.fillStyle = color;
+                ctx.fillText(label, 20 + vw + 10, 30);
+                if (boosted) {
+                    ctx.fillStyle = textColor;
+                    ctx.fillText(getBoostRemainSeconds() + "s", 20 + vw + 10 + ctx.measureText(label).width + 6, 30);
+                }
+            }
+
+            function reset() {
+                isJumping = false;
+                velocity = 0;
+                obstacles = [];
+                powerups = [];
+                tumbleweeds = [];
+                decorScroll = 0;
+                score = 0;
+                gameOver = false;
+                isNewRecord = false;
+                lastRenderWasGameOver = false;
+                boostUntil = 0;
+                boostMode = null;
+                totalBoostGained = 0;
+                invincibleQualified = false;
+                speed = 3.8;
+                obstacleTimer = 0;
+                nextSpawn = computeNextSpawn(20);
+                dino.y = groundY - dino.height;
+                nightness = getIsNight() ? 1 : 0;
+            }
+
+            function jump() {
+                if (!isJumping && !gameOver) {
+                    isJumping = true;
+                    velocity = jumpStrength;
+                }
+            }
+
+            function handleInput(e) {
+                if (e.type === "keydown") {
+                    if (e.code !== "Space" && e.code !== "ArrowUp") return;
+                    e.preventDefault();
+                    if (e.repeat) return;
+                }
+                if (e.type === "pointerdown") {
+                    if (e.isPrimary === false) return;
+                    if (e.pointerType === "mouse" && e.button !== 0) return;
+                }
+                if (gameOver) {
+                    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+                    reset();
+                    loop();
+                } else {
+                    jump();
+                }
+            }
+
+            window.addEventListener("keydown", handleInput);
+            dinoCanvas.addEventListener("pointerdown", handleInput, { passive: false });
+
+            function step() {
+                if (!gameOver) {
+                    legFrame++;
+                    decorScroll += speed;
+                    if (isJumping) {
+                        velocity += gravity;
+                        dino.y += velocity;
+                        if (dino.y >= groundY - dino.height) {
+                            dino.y = groundY - dino.height;
+                            isJumping = false;
+                            velocity = 0;
+                        }
+                    }
+                    score += 0.1;
+                    speed = computeSpeed();
+                    obstacleTimer++;
+                    spawnTumbleweed();
+                    updateTumbleweeds();
+                    spawnPowerup();
+                    updatePowerups();
+                    if (obstacleTimer > nextSpawn) {
+                        obstacleTimer = 0;
+                        spawnObstacle();
+                    }
+                }
+
+                const targetNight = getIsNight() ? 1 : 0;
+                nightness += (targetNight - nightness) * 0.08;
+                if (Math.abs(targetNight - nightness) < 0.005) nightness = targetNight;
+
+                const dinoBoxes = getDinoBoxes(dino.x, dino.y);
+                const inv = isInvincible();
+
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    const obs = obstacles[i];
+                    if (!gameOver) obs.x -= speed;
+                    if (!gameOver && !inv && checkCollision(dinoBoxes, obs)) {
+                        gameOver = true;
+                        isNewRecord = Math.floor(score) > Math.floor(highScore);
+                        const msg = getMessages(currentGameLang);
+                        deathMessage = msg.deaths[Math.floor(Math.random() * msg.deaths.length)];
+                        if (score > highScore) {
+                            highScore = score;
+                            localStorage.setItem("fuey-dino-hi", Math.floor(highScore).toString());
+                        }
+                    }
+                    if (obs.x + obs.width < -30) obstacles.splice(i, 1);
+                }
+            }
+
+            function render() {
+                const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+                const bgDark = isDark ? 1 : nightness;
+                const textColor = lerpColor(C.textLight, C.textDark, bgDark);
+                const scoreTextColor = lerpColor(C.scoreTextLight, C.scoreTextDark, bgDark);
+
+                ctx.fillStyle = lerpColor(C.bgLight, C.bgDark, bgDark);
+                ctx.fillRect(0, 0, width, height);
+
+                drawSunMoon();
+                drawGround(bgDark);
+                drawTumbleweeds(isDark);
+                obstacles.forEach(obs => drawObstacle(obs, isDark));
+                dino.draw();
+                drawPowerups();
+                drawDifficultyLabel(textColor);
+
+                const msg = getMessages(currentGameLang);
+                ctx.fillStyle = textColor;
+                ctx.textAlign = "right";
+                ctx.font = "bold 12px monospace";
+                const scoreStr = Math.floor(score).toString().padStart(5, "0");
+                const hiStr = Math.floor(highScore).toString().padStart(5, "0");
+                ctx.fillText(`HI ${hiStr}  ${scoreStr}`, width - 20, 30);
+
+                if (gameOver) {
+                    ctx.textAlign = "center";
+                    ctx.font = "bold 14px 'Script', sans-serif";
+                    ctx.fillStyle = scoreTextColor;
+                    ctx.fillText(deathMessage, width / 2, height / 2 - 25);
+                    const recordStr = isNewRecord ? msg.newRecord : `${msg.hi} : ${Math.floor(highScore)}`;
+                    ctx.fillText(`${msg.score} : ${Math.floor(score)}${msg.separator}${recordStr}`, width / 2, height / 2 - 5);
+                }
+            }
+
+            function loop() {
+                if (!gameRunning) return;
+                step();
+                render();
+                lastRenderWasGameOver = gameOver;
+                if (!gameOver) rafId = requestAnimationFrame(loop);
+                else rafId = 0;
+            }
+
+            reset();
+            loop();
+
+            return {
+                updateLang(lang) {
+                    currentGameLang = lang;
+                    if (lastRenderWasGameOver) {
+                        const msg = getMessages(currentGameLang);
+                        deathMessage = msg.deaths[Math.floor(Math.random() * msg.deaths.length)];
+                        render();
+                    }
+                }
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initNotesClick();
+        });
 
         if (window.ResizeObserver) {
             new ResizeObserver(reportHeight).observe(document.body);

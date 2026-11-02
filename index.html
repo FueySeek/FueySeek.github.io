@@ -32,11 +32,34 @@
                 </div>
             </div>
             <div class="setting-group">
+                <label data-lang-key="dataSource">Data Source</label>
+                <div class="data-source-options">
+                    <button id="dataSourceGithub" class="theme-btn data-source-btn" data-source="github" data-lang-key="dataSourceGithub">GitHub</button>
+                    <button id="dataSourceLocal" class="theme-btn data-source-btn" data-source="local" data-lang-key="dataSourceLocal">Local</button>
+                </div>
+                <p class="data-source-warning" id="dataSourceWarning"></p>
+            </div>
+            <div class="setting-group">
                 <label data-lang-key="language">Language</label>
                 <div class="lang-options">
                     <button id="langEn" class="lang-btn" data-lang="en">English</button>
                     <button id="langZh" class="lang-btn" data-lang="zh">中文</button>
+                    <button id="langOther" class="lang-btn" data-lang="other">Other</button>
                 </div>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button type="button" class="lang-dropdown-toggle" id="langDropdownToggle">
+                        <span class="lang-dropdown-label" id="langDropdownLabel" data-lang-key="otherLang">Other Languages</span>
+                        <svg class="lang-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="lang-dropdown-panel" id="langDropdownPanel">
+                        <button type="button" class="lang-dropdown-item" data-code="ja">日本語</button>
+                        <button type="button" class="lang-dropdown-item" data-code="ko">한국어</button>
+                        <button type="button" class="lang-dropdown-item" data-code="fr">Français</button>
+                        <button type="button" class="lang-dropdown-item" data-code="de">Deutsch</button>
+                        <button type="button" class="lang-dropdown-item" data-code="es">Español</button>
+                    </div>
+                </div>
+                <p class="lang-hint" data-lang-key="langHint">* Translation may not be 100% accurate, please choose as needed</p>
             </div>
             <div class="setting-group">
                 <label data-lang-key="handed">Left-handed Mode</label>
@@ -50,6 +73,11 @@
             </div>
         </div>
         <div class="settings-footer">
+            <div class="settings-io-row">
+                <button id="exportSettings" class="io-btn" data-lang-key="exportSettings">Export Settings</button>
+                <button id="importSettings" class="io-btn" data-lang-key="importSettings">Import Settings</button>
+                <input type="file" id="importFile" accept=".js" style="display: none;">
+            </div>
             <button id="resetSettings" class="reset-btn" data-lang-key="resetSettings">Reset Settings</button>
         </div>
     </aside>
@@ -65,7 +93,22 @@
         </section>
     </main>
 
-    <div id="homeEmbed" class="home-embed"></div>
+    <div id="homeEmbed" class="home-embed">
+        <div class="fuey-embed-container">
+            <h2 id="embedTitle"></h2>
+            <p id="embedDesc"></p>
+            <ul id="changelogList" class="changelog-list"></ul>
+            <div class="embed-sub">
+                <div class="embed-sub-title" data-lang-key="others">Others</div>
+                <iframe id="gameEmbed" class="embed-frame" src="embed.html" scrolling="no" frameborder="0"></iframe>
+                <iframe id="notesEmbed" class="embed-frame" src="embed-notes.html" scrolling="no" frameborder="0"></iframe>
+            </div>
+            <section class="developer-section" id="developerSection">
+                <div class="developer-title" data-lang-key="developers">Developers</div>
+                <div class="developer-list" id="developerList"></div>
+            </section>
+        </div>
+    </div>
 
     <button id="scrollDownBtn" class="scroll-down-btn" aria-label="Scroll Down">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -77,6 +120,7 @@
         <span class="footer-text">© 2020-<span id="footerYear">2026</span> Fuey All Rights Reserved</span>
     </footer>
 
+    <script src="data/update-logs.js"></script>
     <script src="js/lang.js"></script>
     <script src="js/rule.js"></script>
     <script src="js/common.js"></script>
