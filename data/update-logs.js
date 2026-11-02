@@ -7,6 +7,29 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.11.2.0",
+                date: "2026-11-02",
+                title: "功能扩展与交互修复",
+                sections: [
+                    {
+                        key: "sectionAdded",
+                        items: [
+                            "新增数据源选择功能，可在设置面板中切换 GitHub 云端与本地数据。",
+                            "新增更多语言支持，可在设置面板的语言选项中选择更多语言。",
+                            "新增设置导入导出功能，可将当前设置导出为文件，也可从文件导入设置。",
+                            "新增开发者名单展示，位于主页底部，自动拉取 GitHub 贡献者的用户名与头像。",
+                            "将扩展界面统一归入“其它”分类下展示。"
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了主界面扩展框部分位置会导致鼠标图标失效的问题。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.10.31.2",
                 date: "2026-10-31",
                 title: "主视觉图片渲染与排版优化",
@@ -315,32 +338,24 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "Fixed",
         logs: [
             {
-                version: "v26.11.1.0",
-                date: "2026-11-01",
-                title: "Architecture Adjustment, Multi-language Expansion & Game Fixes",
+                version: "v26.11.2.0",
+                date: "2026-11-02",
+                title: "Feature Expansion & Interaction Fixes",
                 sections: [
                     {
                         key: "sectionAdded",
                         items: [
+                            "Added a data source selector, allowing users to switch between GitHub cloud and local data in the settings panel.",
+                            "Added support for more languages, selectable in the settings panel's language options.",
+                            "Added settings import/export, allowing the current settings to be exported to a file and imported from a file.",
                             "Added a developer list at the bottom of the homepage, automatically fetching GitHub contributors' usernames and avatars.",
-                            "Added support for Japanese, Korean, French, German, and Spanish, selectable via a dropdown in the settings panel.",
-                            "Added cactus cluster obstacles to enrich the game's obstacle variety."
-                        ]
-                    },
-                    {
-                        key: "sectionChanged",
-                        items: [
-                            "Ported the dinosaur game code from the sub-page into the main embed page, removing nested iframes to improve loading and rendering efficiency.",
-                            "The sub-page (embed-notes.html) now displays a 'Something good is coming!' placeholder.",
-                            "Renamed the update log data file to update-logs.js."
+                            "Moved the embed section under the 'Others' category."
                         ]
                     },
                     {
                         key: "sectionFixed",
                         items: [
-                            "Fixed the issue where game obstacles lacked randomness; cacti and cactus clusters now alternate.",
-                            "Fixed the issue where the 'New Record!!' prompt was not displayed after breaking the high score.",
-                            "Fixed the mouse cursor synchronization issue in the embed page under multi-language environments."
+                            "Fixed the issue where the cursor icon failed over certain areas of the embed frame on the homepage."
                         ]
                     }
                 ]
