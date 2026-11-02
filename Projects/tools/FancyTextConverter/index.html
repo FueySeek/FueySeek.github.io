@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fancy Text Converter</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+background:#000;color:#eee;padding:24px 16px;min-height:100vh;
+font-family:
+system-ui,
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Roboto,
+Oxygen,
+Ubuntu,
+Cantarell,
+"Fira Sans",
+"Droid Sans",
+"Helvetica Neue",
+sans-serif;
+}
+@media(min-width:768px){
+body{padding:40px max(20px,calc(50vw - 600px))}
+}
+.header-wrap{display:flex;align-items:center;margin-bottom:24px;width:100%}
+.main-title{font-size:24px;color:#2ecc71;font-weight:bold}
+.box-input{display:flex;gap:12px;align-items:center;margin-bottom:32px;flex-wrap:wrap}
+#textInput{
+flex:1;min-width:100%;
+font-family:inherit;
+background:#0a0a0a;border:1px solid #2ecc71;color:#fff;padding:14px 18px;border-radius:999px;outline:none;font-size:16px;white-space:pre-wrap;
+}
+@media(min-width:600px){
+#textInput{min-width:260px}
+}
+#langSelect{
+width:100%;
+font-family:inherit;
+background:#0a0a0a;border:1px solid #2ecc71;color:#2ecc71;padding:14px 12px;border-radius:999px;font-size:16px;outline:none
+}
+@media(min-width:600px){
+#langSelect{width:auto}
+}
+#convertBtn{
+width:100%;
+font-family:inherit;
+background:#2ecc71;border:none;color:#fff;padding:14px 32px;border-radius:999px;font-size:16px;cursor:pointer;transition:0.3s
+}
+@media(min-width:600px){
+#convertBtn{width:auto}
+}
+#convertBtn:active{opacity:0.85}
+.result-container{
+width:100%;
+opacity:0;
+transform:translateX(-30px);
+transition:opacity 0.4s ease,transform 0.4s ease;
+display:none;
+}
+.result-container.show{
+display:block;
+opacity:1;
+transform:translateX(0);
+}
+.font-card{
+border:1px solid #222;
+border-radius:8px;
+overflow:hidden;
+margin-bottom:12px;
+opacity:0;
+transform:translateX(-20px);
+transition:opacity 0.3s ease,transform 0.3s ease;
+}
+.font-card.animate-in{
+opacity:1;
+transform:translateX(0);
+}
+.card-header{
+padding:12px 16px;
+background:#111;
+border-bottom:1px solid #222;
+font-size:15px;
+color:#aaa;
+}
+.card-header.highlight{
+color:#39ff97;
+font-weight:bold;
+}
+.card-body{
+padding:14px 16px;
+display:flex;
+align-items:flex-start;
+gap:12px;
+}
+.card-text{
+flex:1;
+font-size:18px;
+word-break:break-all;
+word-wrap:break-word;
+white-space:pre-wrap;
+min-width:0;
+}
+.copy-btn{
+background:#2ecc71;color:#000;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px;white-space:nowrap;flex-shrink:0
+}
+.copy-btn:active{opacity:0.8}
+</style>
+</head>
+<body>
+<div class="header-wrap">
+<h1 class="main-title">Fancy Text Converter</h1>
+</div>
+<div class="box-input">
+<select id="langSelect">
+<option value="en" selected>English</option>
+<option value="zh">中文</option>
+<option value="ja">日本語</option>
+</select>
+<input id="textInput" placeholder="Enter text, support space, long text, duplicate chars">
+<button id="convertBtn">Convert</button>
+</div>
+<div class="result-container" id="resultBox"></div>
+<script>
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0a0a0a" stroke="#2ecc71" stroke-width="1.5"/><path d="M9 26.5C8 20 8.5 12 11 7.5C12 5.8 14.5 5 16 6.8C17 8 16 10 14 10.5M11.5 16.5C15 15.5 18 15.5 21.5 17" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const faviconBlob = new Blob([faviconSvg], {type: "image/svg+xml"});
+const faviconUrl = URL.createObjectURL(faviconBlob);
+const faviconLink = document.createElement("link");
+faviconLink.rel = "icon";
+faviconLink.type = "image/svg+xml";
+faviconLink.href = faviconUrl;
+document.head.appendChild(faviconLink);
+
+const i18n = {
+  zh: {
+    placeholder: "输入文字/句子，支持空格、长文本、重复字符",
+    btn: "转换",
+    copy: "复制",
+    copySuccess: "复制成功",
+    fontNames: [
+      "手写花体 Script",
+      "粗手写花体 Bold Script",
+      "斜体花体 Italic",
+      "粗斜体 Bold Italic",
+      "哥特 Fraktur",
+      "双线黑板体 Double-Struck"
+    ]
+  },
+  en: {
+    placeholder: "Enter text, support space, long text, duplicate chars",
+    btn: "Convert",
+    copy: "Copy",
+    copySuccess: "Copied",
+    fontNames: [
+      "Cursive Script",
+      "Bold Cursive Script",
+      "Italic Script",
+      "Bold Italic Script",
+      "Fraktur Gothic",
+      "Double-Struck Board Font"
+    ]
+  },
+  ja: {
+    placeholder: "テキスト入力、スペース・長文・重複文字対応",
+    btn: "変換",
+    copy: "コピー",
+    copySuccess: "コピー完了",
+    fontNames: [
+      "筆記体 Script",
+      "太字筆記体 Bold Script",
+      "斜体 Italic",
+      "太斜体 Bold Italic",
+      "ゴシック Fraktur",
+      "二重線ボード文字 Double-Struck"
+    ]
+  }
+};
+const fontMappingList = [
+  {
+    nameIdx:0,
+    lower:{a:"𝓪",b:"𝓫",c:"𝓬",d:"𝓭",e:"𝓮",f:"𝓯",g:"𝓰",h:"𝓱",i:"𝓲",j:"𝓳",k:"𝓴",l:"𝓵",m:"𝓶",n:"𝓷",o:"𝓸",p:"𝓹",q:"𝓺",r:"𝓻",s:"𝓼",t:"𝓽",u:"𝓾",v:"𝓿",w:"𝔀",x:"𝔁",y:"𝔂",z:"𝔃"},
+    upper:{A:"𝓐",B:"𝓑",C:"𝓒",D:"𝓓",E:"𝓔",F:"𝓕",G:"𝓖",H:"𝓗",I:"𝓘",J:"𝓙",K:"𝓚",L:"𝓛",M:"𝓜",N:"𝓝",O:"𝓞",P:"𝓟",Q:"𝓠",R:"𝓡",S:"𝓢",T:"𝓣",U:"𝓤",V:"𝓥",W:"𝓦",X:"𝓧",Y:"𝓨",Z:"𝓩"}
+  },
+  {
+    nameIdx:1,
+    lower:{a:"𝖆",b:"𝖇",c:"𝖈",d:"𝖉",e:"𝖊",f:"𝖋",g:"𝖌",h:"𝖍",i:"𝖎",j:"𝖏",k:"𝖐",l:"𝖑",m:"𝖒",n:"𝖓",o:"𝖔",p:"𝖕",q:"𝖖",r:"𝖗",s:"𝖘",t:"𝖙",u:"𝖚",v:"𝖛",w:"𝖜",x:"𝖝",y:"𝖞",z:"𝖟"},
+    upper:{A:"𝖠",B:"𝖡",C:"𝖢",D:"𝖣",E:"𝖤",F:"𝖥",G:"𝖦",H:"𝖧",I:"𝖨",J:"𝖩",K:"𝖪",L:"𝖫",M:"𝖬",N:"𝖭",O:"𝖮",P:"𝖯",Q:"𝖰",R:"𝖱",S:"𝖲",T:"𝖳",U:"𝖴",V:"𝖵",W:"𝖶",X:"𝖷",Y:"𝖸",Z:"𝖹"}
+  },
+  {
+    nameIdx:2,
+    lower:{a:"𝒶",b:"𝒷",c:"𝒸",d:"𝒹",e:"𝑒",f:"𝒻",g:"𝑔",h:"𝒽",i:"𝒾",j:"𝒿",k:"𝓀",l:"𝓁",m:"𝓂",n:"𝓃",o:"ℴ",p:"𝓅",q:"𝓆",r:"𝓇",s:"𝓈",t:"𝓉",u:"𝓊",v:"𝓋",w:"𝓌",x:"𝓍",y:"𝓎",z:"𝓏"},
+    upper:{A:"𝒜",B:"𝐵",C:"𝒞",D:"𝒟",E:"𝐸",F:"𝐹",G:"𝒢",H:"𝐻",I:"𝐼",J:"𝒥",K:"𝒦",L:"𝐿",M:"𝑀",N:"𝒩",O:"𝒪",P:"𝒫",Q:"𝒬",R:"𝑅",S:"𝒮",T:"𝒯",U:"𝒰",V:"𝒱",W:"𝒲",X:"𝒳",Y:"𝒴",Z:"𝒵"}
+  },
+  {
+    nameIdx:3,
+    lower:{a:"𝘢",b:"𝘣",c:"𝘤",d:"𝘥",e:"𝘦",f:"𝘧",g:"𝘨",h:"𝘩",i:"𝘪",j:"𝘫",k:"𝘬",l:"𝘭",m:"𝘮",n:"𝘯",o:"𝘰",p:"𝘱",q:"𝘲",r:"𝘳",s:"𝘴",t:"𝘵",u:"𝘶",v:"𝘷",w:"𝘸",x:"𝘹",y:"𝘺",z:"𝘻"},
+    upper:{A:"𝘈",B:"𝘉",C:"𝘊",D:"𝘋",E:"𝘌",F:"𝘍",G:"𝘎",H:"𝘏",I:"𝘐",J:"𝘑",K:"𝘒",L:"𝘓",M:"𝘔",N:"𝘕",O:"𝘖",P:"𝘗",Q:"𝘘",R:"𝘙",S:"𝘚",T:"𝘛",U:"𝘜",V:"𝘝",W:"𝘞",X:"𝘟",Y:"𝘠",Z:"𝘡"}
+  },
+  {
+    nameIdx:4,
+    lower:{a:"𝔞",b:"𝔟",c:"𝔠",d:"𝔡",e:"𝔢",f:"𝔣",g:"𝔤",h:"𝔥",i:"𝔦",j:"𝔧",k:"𝔨",l:"𝔩",m:"𝔪",n:"𝔫",o:"𝔬",p:"𝔭",q:"𝔮",r:"𝔯",s:"𝔰",t:"𝔱",u:"𝔲",v:"𝔳",w:"𝔴",x:"𝔵",y:"𝔶",z:"𝔷"},
+    upper:{A:"𝔄",B:"𝔅",C:"ℭ",D:"𝔇",E:"𝔈",F:"𝔉",G:"𝔊",H:"ℋ",I:"ℑ",J:"𝔍",K:"𝔎",L:"𝔏",M:"𝔐",N:"𝔑",O:"𝔒",P:"𝔓",Q:"𝔔",R:"ℜ",S:"𝔖",T:"𝔗",U:"𝔘",V:"𝔙",W:"𝔚",X:"𝔛",Y:"𝔜",Z:"𝔝"}
+  },
+  {
+    nameIdx:5,
+    lower:{a:"𝕒",b:"𝕓",c:"𝕔",d:"𝕕",e:"𝕖",f:"𝕗",g:"𝕘",h:"𝕙",i:"𝕚",j:"𝕛",k:"𝕜",l:"𝕝",m:"𝕞",n:"𝕟",o:"𝕠",p:"𝕡",q:"𝕢",r:"𝕣",s:"𝕤",t:"𝕥",u:"𝕦",v:"𝕧",w:"𝕨",x:"𝕩",y:"𝕪",z:"𝕫"},
+    upper:{A:"𝔸",B:"𝔹",C:"ℂ",D:"𝔻",E:"𝔼",F:"𝔽",G:"𝔾",H:"ℍ",I:"𝕀",J:"𝕁",K:"𝕂",L:"𝕃",M:"𝕄",N:"ℕ",O:"𝕆",P:"ℙ",Q:"ℚ",R:"ℝ",S:"𝕊",T:"𝕋",U:"𝕌",V:"𝕍",W:"𝕎",X:"𝕏",Y:"𝕐",Z:"ℤ"}
+  }
+];
+const numMap={"0":"𝟘","1":"𝟙","2":"𝟚","3":"𝟛","4":"𝟜","5":"𝟝","6":"𝟞","7":"𝟟","8":"𝟠","9":"𝟡"};
+const DEFAULT_LANG = "en";
+let currentLang = DEFAULT_LANG;
+let renderToken = 0;
+function syncCards(langData){
+  document.querySelectorAll(".font-card").forEach(card=>{
+    const idx = Number(card.dataset.fontIdx);
+    const header = card.querySelector(".card-header");
+    const copyBtn = card.querySelector(".copy-btn");
+    const fontName = langData.fontNames[idx];
+    if(header && fontName) header.textContent = fontName;
+    if(copyBtn) copyBtn.textContent = langData.copy;
+  });
+}
+function updateInterface(langCode){
+  const langKey = i18n[langCode] ? langCode : DEFAULT_LANG;
+  const langData = i18n[langKey];
+  currentLang = langKey;
+  const langSelect = document.getElementById("langSelect");
+  if(langSelect.value !== langKey) langSelect.value = langKey;
+  document.getElementById("textInput").placeholder = langData.placeholder;
+  document.getElementById("convertBtn").innerText = langData.btn;
+  document.documentElement.lang = langKey === "zh" ? "zh-CN" : langKey;
+  syncCards(langData);
+}
+function transformRaw(input, fontItem){
+  let out = "";
+  for(let ch of input){
+    if(fontItem.lower[ch]) out += fontItem.lower[ch];
+    else if(fontItem.upper[ch]) out += fontItem.upper[ch];
+    else if(numMap[ch]) out += numMap[ch];
+    else out += ch;
+  }
+  return out;
+}
+function flashButton(btn, text){
+  btn.textContent = text;
+  setTimeout(()=>{
+    if(btn.isConnected) btn.textContent = i18n[currentLang].copy;
+  }, 1200);
+}
+function fallbackCopy(text, btn){
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  temp.style.position = "fixed";
+  temp.style.left = "-9999px";
+  document.body.appendChild(temp);
+  temp.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(temp);
+  flashButton(btn, i18n[currentLang].copySuccess);
+}
+function copyHandler(text, btn){
+  const successTxt = i18n[currentLang].copySuccess;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>{
+      flashButton(btn, successTxt);
+    }).catch(()=>fallbackCopy(text, btn));
+  }else{
+    fallbackCopy(text, btn);
+  }
+}
+function buildCard(fontIdx, converted, isChanged, langData){
+  const cardEl = document.createElement("div");
+  cardEl.className = "font-card";
+  cardEl.dataset.fontIdx = fontIdx;
+  const header = document.createElement("div");
+  header.className = isChanged ? "card-header highlight" : "card-header";
+  header.textContent = langData.fontNames[fontIdx];
+  const body = document.createElement("div");
+  body.className = "card-body";
+  const textEl = document.createElement("div");
+  textEl.className = "card-text";
+  textEl.textContent = converted;
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = langData.copy;
+  copyBtn.onclick = ()=>copyHandler(converted, copyBtn);
+  body.appendChild(textEl);
+  body.appendChild(copyBtn);
+  cardEl.appendChild(header);
+  cardEl.appendChild(body);
+  return cardEl;
+}
+async function renderResult(){
+  const inputVal = document.getElementById("textInput").value;
+  const resultBox = document.getElementById("resultBox");
+  const langData = i18n[currentLang];
+  const token = ++renderToken;
+  resultBox.classList.remove("show");
+  resultBox.innerHTML = "";
+  if(inputVal.trim().length === 0){
+    resultBox.style.display = "none";
+    return;
+  }
+  await new Promise(res=>setTimeout(res, 100));
+  if(token !== renderToken) return;
+  resultBox.style.display = "block";
+  resultBox.classList.add("show");
+  let delay = 120;
+  for(let i = 0; i < fontMappingList.length; i++){
+    const converted = transformRaw(inputVal, fontMappingList[i]);
+    const cardEl = buildCard(i, converted, converted !== inputVal, langData);
+    resultBox.appendChild(cardEl);
+    await new Promise(res=>setTimeout(()=>{
+      if(token === renderToken) cardEl.classList.add("animate-in");
+      res();
+    }, delay));
+    delay += 100;
+  }
+}
+document.getElementById("langSelect").addEventListener("change", e=>{
+  updateInterface(e.target.value);
+});
+document.getElementById("convertBtn").addEventListener("click", renderResult);
+document.getElementById("textInput").addEventListener("keydown", e=>{
+  if(e.key === "Enter") renderResult();
+});
+updateInterface(DEFAULT_LANG);
+</script>
+<div style="clear:both;margin-top:50px;text-align:center;">© 2020-2026 fuey All Rights Reserved</div>
+</body>
+</html>
