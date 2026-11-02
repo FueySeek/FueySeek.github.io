@@ -1,29 +1,5 @@
-const NOTES_TEXT = {
-    zh: "正在施工中 . . .",
-    en: "Under Construction . . .",
-    ja: "工事中 . . .",
-    ko: "공사 중 . . .",
-    fr: "En construction . . .",
-    de: "Im Bau . . .",
-    es: "En construcción . . ."
-};
-
-const PLACEHOLDER_TEXT = {
-    zh: "好东西要来了！",
-    en: "Something good is coming!",
-    ja: "良いものが来ます！",
-    ko: "좋은 것이 오고 있어요!",
-    fr: "De bonnes choses arrivent !",
-    de: "Gute Dinge kommen!",
-    es: "¡Buenas cosas están por venir!"
-};
-
 const OTHERS_TEXT = {
     zh: "其它", en: "Others", ja: "その他", ko: "기타", fr: "Autres", de: "Andere", es: "Otros"
-};
-
-const DEVELOPERS_TEXT = {
-    zh: "开发者名单", en: "Developers", ja: "開発者", ko: "개발자", fr: "Développeurs", de: "Entwickler", es: "Desarrolladores"
 };
 
 const MAINTAINER_TEXT = {
@@ -72,13 +48,14 @@ function renderEmbed() {
     if (titleEl) titleEl.textContent = pack.embedTitle;
     if (descEl) descEl.textContent = pack.embedDesc;
     if (listEl) {
-        listEl.innerHTML = pack.logs.map(log => {
+        listEl.innerHTML = pack.logs.map((log, index) => {
             const sections = log.sections.map(sec => {
                 const sectionTitle = pack[sec.key] || sec.key;
                 const items = sec.items.map(text => `<li>${text}</li>`).join("");
                 return `<div class="changelog-section">${sectionTitle}</div><ul class="changelog-desc">${items}</ul>`;
             }).join("");
-            return `<li class="changelog-item"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatDate(log.date, lang)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
+            const delay = 0.08 + index * 0.08;
+            return `<li class="changelog-item" style="animation-delay: ${delay}s"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatDate(log.date, lang)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
         }).join("");
     }
 }

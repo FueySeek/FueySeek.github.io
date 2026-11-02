@@ -7,6 +7,39 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.11.2.1",
+                date: "2026-11-02",
+                title: "其它项目页面与交互优化",
+                sections: [
+                    {
+                        key: "sectionAdded",
+                        items: [
+                            "新增“其它项目”页面，入口位于导航栏“下载”与“关于我们”之间，集中展示其它项目的名称和打开入口。",
+                            "“其它项目”页面采用与下载页一致的卡片风格与搜索框，支持中英文名称搜索。",
+                            "“其它项目”列表支持 GitHub 云端与本地两种数据源，可在设置面板中切换。",
+                            "设置面板新增“检测版本”按钮，可对比本地版本与云端版本号，支持版本号后的自定义标签显示。",
+                            "更新日志卡片改为逐条弹入动画，加载完成后按顺序依次出现，不再一次性显示。"
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了开发者名单中鼠标悬停在头像或名字边缘时，头像、名字与标签反复上下抖动的问题。",
+                            "修复了电脑端拖动顶部导航条指示器无效的问题。",
+                            "修复了导航条指示器在边缘区域按下时无法触发拖动的问题。",
+                            "修复了设置面板分段控件被直接点击时指示器槽出现短暂形变的问题。",
+                            "修复了设置面板分段控件拖动时指示器跟手延迟、位置漂移的问题。",
+                            "修复了“其它”按钮在中文、日文、韩文、法文、德文、西班牙文环境下未翻译的问题。",
+                            "修复了语言选择“其它”后不选择任何语言直接关闭仍锁定在“其它”的问题。",
+                            "修复了数据源选择 GitHub 时实际加载本地数据的问题。",
+                            "修复了数据文件加载时浏览器缓存旧内容的问题。",
+                            "修复了主页面部分元素在鼠标悬停时出现向上偏移、导致页面高度抖动的问题。",
+                            "尝试修复了主页面扩展区域空白处鼠标光标退化为系统默认光标的问题，大部分位置已恢复自定义光标，极少数边缘区域仍在排查中。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.11.2.0",
                 date: "2026-11-02",
                 title: "功能扩展与交互修复",
@@ -337,6 +370,39 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionChanged: "Changed",
         sectionFixed: "Fixed",
         logs: [
+            {
+                version: "v26.11.2.1",
+                date: "2026-11-02",
+                title: "Other Projects Page & Interaction Refinements",
+                sections: [
+                    {
+                        key: "sectionAdded",
+                        items: [
+                            "Added the 'Other Projects' page, with its entry between 'Download' and 'About Us' in the navigation bar, listing other projects' names and open entries.",
+                            "The 'Other Projects' page uses the same card style and search bar as the download page, and supports searching by Chinese or English names.",
+                            "The 'Other Projects' list supports both GitHub cloud and local data sources, switchable in the settings panel.",
+                            "Added a 'Check Version' button in the settings panel, comparing the local version with the cloud version, with support for custom labels after the version number.",
+                            "Update log cards now play a staggered entrance animation, appearing one after another instead of all at once."
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed the issue where hovering over the edge of a developer avatar or name caused the avatar, name and badge to jitter up and down repeatedly.",
+                            "Fixed the issue where dragging the navigation indicator was unresponsive on desktop.",
+                            "Fixed the issue where pressing on the edge of the navigation indicator failed to start dragging.",
+                            "Fixed the issue where directly clicking a segmented control in the settings panel briefly deformed the indicator slot.",
+                            "Fixed the delay and drift of the segmented control indicator while dragging in the settings panel.",
+                            "Fixed the issue where the 'Other' button was not translated in Chinese, Japanese, Korean, French, German or Spanish.",
+                            "Fixed the issue where closing the language dropdown after selecting 'Other' without picking a language kept 'Other' locked.",
+                            "Fixed the issue where the GitHub data source still loaded local data.",
+                            "Fixed the issue where the browser cached old data files.",
+                            "Fixed the issue where some homepage elements shifted upward on hover, causing the page height to jitter.",
+                            "Attempted to fix the issue where the cursor degraded to the system default in some blank areas of the homepage embed section; most areas now show the custom cursor, with a few edge regions still under investigation."
+                        ]
+                    }
+                ]
+            },
             {
                 version: "v26.11.2.0",
                 date: "2026-11-02",

@@ -615,6 +615,92 @@ function showIOToast(text, typeOrBool) {
 }
 window.__showIOToast = showIOToast;
 
+function parseVersionNum(str) {
+    const s = String(str == null ? "" : str).trim();
+    const m = /^v?(\d+(?:\.\d+)*)/i.exec(s);
+    if (!m) return null;
+    return m[1].split(".").map(n => parseInt(n, 10) || 0);
+}
+function compareVersion(a, b) {
+    const A = parseVersionNum(a);
+    const B = parseVersionNum(b);
+    if (!A || !B) return 0;
+    const len = Math.max(A.length, B.length);
+    for (let i = 0; i < len; i++) {
+        const an = A[i] || 0;
+        const bn = B[i] || 0;
+        if (an !== bn) return an > bn ? 1 : -1;
+    }
+    return 0;
+}
+function formatVersionMsg(key, ver) {
+    const raw = (typeof t === "function") ? t(key) : key;
+    return String(raw).replace(/\{v\}/g, ver);
+}
+async function fetchCloudVersion(url) {
+    const full = url + (url.indexOf("?") === -1 ? "?" : "&") + "_=" + Date.now();
+    const res = await fetch(full, { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const text = await res.text();
+    const scope = { __FUEY_VERSION__: null, __FUEY_VERSION_TAG__: null };
+    const fn = new Function("window", text + "\nreturn { v: window.__FUEY_VERSION__, tag: window.__FUEY_VERSION_TAG__ };");
+    const result = fn(scope);
+    if (!result || typeof result.v !== "string" || !result.v) throw new Error("no version");
+    return { version: result.v, tag: typeof result.tag === "string" ? result.tag : "" };
+}
+let versionCheckRunning = false;
+async function checkVersion() {
+    if (versionCheckRunning) return;
+    versionCheckRunning = true;
+    const btn = document.getElementById("checkVersion");
+    if (btn) btn.disabled = true;
+    const localVer = (typeof window.__FUEY_VERSION__ === "string") ? window.__FUEY_VERSION__ : "";
+    const localTag = (typeof window.__FUEY_VERSION_TAG__ === "string") ? window.__FUEY_VERSION_TAG__ : "";
+    const displayLocal = localTag ? localVer + " " + localTag : localVer;
+    const urls = [
+        "https://fueyseek.github.io/data/version.js",
+        "https://raw.githubusercontent.com/FueySeek/FueySeek.github.io/main/data/version.js",
+        "https://cdn.jsdelivr.net/gh/FueySeek/FueySeek.github.io@main/data/version.js"
+    ];
+    let cloud = null;
+    for (let i = 0; i < urls.length; i++) {
+        try {
+            cloud = await fetchCloudVersion(urls[i]);
+            break;
+        } catch (e) {}
+    }
+    versionCheckRunning = false;
+    if (btn) btn.disabled = false;
+    if (!cloud) {
+        showIOToast(typeof t === "function" ? t("versionFetchFailed") : "Unable to reach the cloud to check the version", "err");
+        return;
+    }
+    const cmp = compareVersion(cloud.version, localVer);
+    if (cmp > 0) {
+        showIOToast(formatVersionMsg("versionLow", displayLocal), "warn");
+    } else if (cmp === 0) {
+        if (localTag) {
+            showIOToast(formatVersionMsg("versionBeta", displayLocal), "ok");
+        } else {
+            showIOToast(formatVersionMsg("versionLatest", displayLocal), "ok");
+        }
+    } else {
+        if (localTag) {
+            showIOToast(formatVersionMsg("versionBeta", displayLocal), "ok");
+        } else {
+            showIOToast(formatVersionMsg("versionNewer", displayLocal), "ok");
+        }
+    }
+}
+window.__fueyCheckVersion = checkVersion;
+function initVersionCheck() {
+    const btn = document.getElementById("checkVersion");
+    if (!btn) return;
+    if (btn.dataset.built === "1") return;
+    btn.dataset.built = "1";
+    btn.addEventListener("click", checkVersion);
+}
+
 let onSettingsCloseCallback = null;
 
 function initSettingsPanel() {
@@ -859,12 +945,12 @@ function initNavSlider() {
         let left = targetRect.left - navRect.left;
         if (left < 0) left = 0;
         if (left + w > maxW) left = maxW - w;
+        indicator.classList.remove("no-anim", "snap");
         if (instant) {
-            indicator.classList.add("no-anim");
+            indicator.classList.remove("animate");
             indicator.style.transform = `translateX(${left}px)`;
             indicator.style.width = `${w}px`;
             void indicator.offsetWidth;
-            indicator.classList.remove("no-anim");
             indicator.classList.add("animate");
         } else {
             indicator.classList.add("animate");
@@ -905,6 +991,7 @@ function initNavSlider() {
         if (!hasMoved) {
             hasMoved = true;
             lockBodyScroll();
+            indicator.classList.add("no-anim");
         }
         const maxLeft = Math.max(0, navLinks.clientWidth - dragStartWidth);
         let newLeft = dragStartLeft + dx;
@@ -930,18 +1017,19 @@ function initNavSlider() {
         if (!dragging) return;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         dragState.lastClientX = clientX;
+        if (hasMoved && e.cancelable) e.preventDefault();
         if (dragState.raf) return;
         dragState.raf = requestAnimationFrame(() => {
             dragState.raf = 0;
             updateDragPosition(dragState.lastClientX);
         });
-        if (hasMoved && e.cancelable) e.preventDefault();
     }
 
     function endDrag() {
         if (!dragging) return;
         dragging = false;
         navLinks.classList.remove("dragging");
+        indicator.classList.remove("no-anim");
         document.body.style.userSelect = "";
         if (dragState.raf) {
             cancelAnimationFrame(dragState.raf);
@@ -990,36 +1078,31 @@ function initNavSlider() {
         document.removeEventListener("touchend", endDrag);
     }
 
-    function startDrag(clientX, clientY, e) {
+    function startDrag(clientX, clientY) {
         if (!taskLock.acquire("nav")) return false;
-        const r = indicator.getBoundingClientRect();
-        if (clientX < r.left - 10 || clientX > r.right + 10 || clientY < r.top - 8 || clientY > r.bottom + 8) {
-            taskLock.release("nav");
-            return false;
-        }
         dragging = true;
         hasMoved = false;
         dragStartX = clientX;
         dragStartLeft = readIndicatorLeft();
         dragStartWidth = readIndicatorWidth();
         dragState.lastClientX = clientX;
-        indicator.classList.remove("animate", "snap", "no-anim");
+        indicator.classList.remove("animate", "snap");
+        indicator.classList.add("no-anim");
         indicator.style.transform = `translateX(${dragStartLeft}px)`;
         navLinks.classList.add("dragging");
         document.body.style.userSelect = "none";
-        if (e && e.cancelable) e.preventDefault();
         return true;
     }
 
     navLinks.addEventListener("mousedown", (e) => {
         if (e.button !== 0) return;
-        if (!startDrag(e.clientX, e.clientY, e)) return;
+        if (!startDrag(e.clientX, e.clientY)) return;
         document.addEventListener("mousemove", onDragMove);
         document.addEventListener("mouseup", endDrag);
     });
     navLinks.addEventListener("touchstart", (e) => {
         if (e.touches.length !== 1) return;
-        if (!startDrag(e.touches[0].clientX, e.touches[0].clientY, e)) return;
+        if (!startDrag(e.touches[0].clientX, e.touches[0].clientY)) return;
         document.addEventListener("touchmove", onDragMove, { passive: false });
         document.addEventListener("touchend", endDrag);
     }, { passive: true });
@@ -1103,6 +1186,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initDevelopers();
     initLangDropdown();
     initSettingsIO();
+    initVersionCheck();
     initDataSource();
     if (typeof applyLang === "function") applyLang();
     if (document.fonts && document.fonts.ready) {

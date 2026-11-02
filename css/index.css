@@ -121,6 +121,55 @@ html[data-handed="left"] .hero-left {
     padding-left: 40px;
 }
 html[data-handed="left"] .hero-right { justify-content: flex-start; }
+
+.home-embed .fuey-embed-container {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .changelog-list {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .embed-sub {
+    margin-top: 0;
+    padding-top: 48px;
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .embed-sub-title {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .developer-section {
+    margin-top: 0;
+    padding-top: 56px;
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .developer-title {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .developer-list {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
+.home-embed .developer-item,
+.home-embed .developer-item:hover {
+    transform: none !important;
+    transition: none !important;
+}
+.home-embed .developer-avatar,
+.home-embed .developer-name,
+.home-embed .maintainer-badge {
+    transition: top 0.25s var(--spring), transform 0.25s var(--spring), border-color 0.25s var(--smooth);
+    top: 0;
+}
+.home-embed .developer-item:hover .developer-avatar {
+    top: -4px;
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+.home-embed .developer-item:hover .developer-name {
+    top: -4px;
+}
+.home-embed .developer-item:hover .maintainer-badge {
+    top: -4px;
+}
+
 @media (max-width: 768px) {
     .home-container {
         flex-direction: column;

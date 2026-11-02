@@ -8,8 +8,8 @@
     <style>
         html, body {
             background: transparent !important;
-            padding:0 !important;
-            margin:0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
             overflow: hidden;
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -17,7 +17,8 @@
             min-height: 0 !important;
             border-radius: var(--radius-sm);
         }
-        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar { display: none; width: 0; height: 0; }
         body::before { display: none !important; }
         .embed-content { padding: 0; border-radius: var(--radius-sm); overflow: hidden; }
         .notes-card {
@@ -36,8 +37,16 @@
             outline: none !important;
         }
         [data-theme="dark"] .notes-card { background: rgba(255, 255, 255, 0.06); }
-        .notes-card:hover { border-color: var(--accent); box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15); }
-        .notes-card-text { font-size: 18px; font-weight: 500; color: var(--text-secondary); letter-spacing: 1px; }
+        .notes-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 6px 20px rgba(0, 113, 227, 0.15);
+        }
+        .notes-card-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
         .dino-canvas {
             display: none;
             width: 100%;

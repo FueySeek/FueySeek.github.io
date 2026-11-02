@@ -68,6 +68,7 @@
             es: "¡Buenas cosas están por venir!"
         };
         let currentLang = localStorage.getItem("fuey-lang") || "en";
+
         function apply() {
             const el = document.getElementById("notesText");
             if (el) el.textContent = TEXTS[currentLang] || TEXTS.en;
@@ -82,6 +83,7 @@
             );
             window.parent.postMessage({ type: "fuey-embed-resize", height: h }, "*");
         }
+
         window.addEventListener("message", (e) => {
             if (!e.data) return;
             if (e.data.type === "fuey-sync") {
@@ -89,9 +91,7 @@
                     document.documentElement.setAttribute("data-theme", e.data.theme);
                     document.documentElement.style.colorScheme = e.data.theme;
                 }
-                if (e.data.handed) {
-                    document.documentElement.setAttribute("data-handed", e.data.handed);
-                }
+                if (e.data.handed) document.documentElement.setAttribute("data-handed", e.data.handed);
                 if (e.data.lang && e.data.lang !== currentLang) {
                     currentLang = e.data.lang;
                     localStorage.setItem("fuey-lang", currentLang);
@@ -100,13 +100,19 @@
                 }
             }
         });
+
+        apply();
+        document.documentElement.setAttribute("data-theme", localStorage.getItem("fuey-theme") || "light");
+
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             apply();
             reportHeight();
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: "fuey-embed-ready" }, "*");
-            }
         });
+
         if (window.ResizeObserver) {
             new ResizeObserver(reportHeight).observe(document.body);
         } else {
