@@ -826,7 +826,7 @@ html[data-handed="left"] .handed-desc { text-align: right; }
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 4px 0;
+    padding: 4px 6px;
     min-height: 22px;
 }
 html[data-handed="left"] .security-indicator-row { flex-direction: row-reverse; }
@@ -835,7 +835,7 @@ html[data-handed="left"] .security-indicator-row { flex-direction: row-reverse; 
     height: 10px;
     border-radius: 50%;
     background: var(--switch-on);
-    box-shadow: 0 0 8px var(--switch-on), 0 0 16px rgba(52, 199, 89, 0.55);
+    box-shadow: 0 0 6px var(--switch-on), 0 0 12px rgba(52, 199, 89, 0.5);
     transition: background 0.3s var(--smooth), box-shadow 0.3s var(--smooth);
     flex-shrink: 0;
 }
