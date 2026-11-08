@@ -184,12 +184,14 @@ function renderDownloadList(data) {
         return;
     }
     const lang = getCurrentLang();
+    const isZhGroup = lang === "zh" || lang === "zh-Hant" || lang === "lzh";
+    
     listEl.innerHTML = data.items.map((item, index) => {
         const name = typeof item.name === "object"
-            ? (item.name[lang] || item.name.zh || item.name.en || "")
+            ? (item.name[lang] || (isZhGroup ? item.name.zh : item.name.en) || "")
             : (item.name || "");
         const date = typeof item.date === "object"
-            ? (item.date[lang] || item.date.zh || item.date.en || "")
+            ? (item.date[lang] || (isZhGroup ? item.date.zh : item.date.en) || "")
             : (item.date || "");
         const systemsHtml = Array.isArray(item.systems)
             ? item.systems.map(sys => `<span class="system-tag">${sys}</span>`).join("")

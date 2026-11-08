@@ -56,17 +56,13 @@ function unlockBodyScroll() {
 }
 
 function updateSettingsBodyScroll() {
-    const panel = document.getElementById("settingsPanel");
-    if (!panel || !panel.classList.contains("open")) return;
     const body = document.querySelector(".settings-body");
     if (!body) return;
     body.classList.remove("scrollable");
-    const prev = body.style.overflowY;
-    body.style.overflowY = "auto";
     void body.offsetHeight;
-    const canScroll = body.scrollHeight > body.clientHeight + 2;
-    body.style.overflowY = prev;
-    if (canScroll) body.classList.add("scrollable");
+    if (body.scrollHeight > body.clientHeight + 1) {
+        body.classList.add("scrollable");
+    }
 }
 window.__fueyUpdateSettingsBodyScroll = updateSettingsBodyScroll;
 
@@ -181,14 +177,9 @@ window.__fueySetCustomProtocolsEnabled = function (enabled) {
     localStorage.setItem("fuey-enable-custom-protocols", enabled ? "true" : "false");
     updateSecurityIndicator();
 };
-
-function hasCustomContent(custom) {
-    if (!custom || typeof custom !== "object") return false;
-    if (custom.vars && typeof custom.vars === "object" && Object.keys(custom.vars).length > 0) return true;
-    if (typeof custom.css === "string" && custom.css.trim()) return true;
-    if (typeof custom.js === "string" && custom.js.trim()) return true;
-    return false;
-}
+window.__fueyGetPermanent = function (key) {
+    return localStorage.getItem("fuey-perm-" + key);
+};
 
 function initTheme() {
     const savedTheme = localStorage.getItem("fuey-theme") || "light";
@@ -379,6 +370,7 @@ function initSegmented() {
             let left = targetRect.left - groupRect.left;
             if (left < 0) left = 0;
             if (left + w > maxW) left = maxW - w;
+            
             if (instant) {
                 indicator.classList.add("no-anim");
                 indicator.style.transform = `translateX(${left}px)`;
@@ -439,9 +431,15 @@ function initSegmented() {
                 setTimeout(() => { suppressClick = false; }, 60);
                 if (pendingItem) {
                     if (pendingItem.id === "langOther") {
-                        syncActiveClass(pendingItem);
-                        positionIndicator(pendingItem, false);
-                        openLangDropdown();
+                        const dropdown = document.getElementById("langDropdown");
+                        if (dropdown && dropdown.classList.contains("open")) {
+                            lastOpenLangTime = 0;
+                            closeLangDropdown();
+                        } else {
+                            syncActiveClass(pendingItem);
+                            positionIndicator(pendingItem, false);
+                            openLangDropdown();
+                        }
                     } else {
                         closeLangDropdown();
                         syncActiveClass(pendingItem);
@@ -504,9 +502,15 @@ function initSegmented() {
             item.addEventListener("click", (e) => {
                 if (suppressClick) { e.preventDefault(); return; }
                 if (item.id === "langOther") {
-                    syncActiveClass(item);
-                    positionIndicator(item, false);
-                    openLangDropdown();
+                    const dropdown = document.getElementById("langDropdown");
+                    if (dropdown && dropdown.classList.contains("open")) {
+                        lastOpenLangTime = 0;
+                        closeLangDropdown();
+                    } else {
+                        syncActiveClass(item);
+                        positionIndicator(item, false);
+                        openLangDropdown();
+                    }
                     return;
                 }
                 closeLangDropdown();
@@ -524,47 +528,18 @@ function applyLangChoice(lang) {
 }
 
 let lastOpenLangTime = 0;
-function positionLangPanel() {
-    const panel = document.getElementById("langDropdownPanel");
-    const toggle = document.getElementById("langDropdownToggle");
-    if (!panel || !toggle) return;
-    const rect = toggle.getBoundingClientRect();
-    const viewportH = window.innerHeight;
-    const viewportW = window.innerWidth;
-    const padding = 16;
-    const gap = 6;
-    let maxH = Math.min(320, viewportH - padding * 2);
-    let left = rect.left;
-    if (left + rect.width > viewportW - padding) left = viewportW - padding - rect.width;
-    if (left < padding) left = padding;
-    let top = rect.bottom + gap;
-    if (top + maxH > viewportH - padding) {
-        const topSpace = rect.top - gap - padding;
-        const bottomSpace = viewportH - padding - (rect.bottom + gap);
-        if (topSpace > bottomSpace) {
-            maxH = Math.max(120, Math.min(maxH, topSpace));
-            top = rect.top - gap - maxH;
-        } else {
-            maxH = Math.max(120, Math.min(maxH, bottomSpace));
-        }
-    }
-    panel.style.top = top + "px";
-    panel.style.left = left + "px";
-    panel.style.width = rect.width + "px";
-    panel.style.maxHeight = maxH + "px";
-}
-window.__positionLangPanel = positionLangPanel;
-
 function openLangDropdown() {
     const dropdown = document.getElementById("langDropdown");
+    const toggle = document.getElementById("langDropdownToggle");
     const panel = document.getElementById("langDropdownPanel");
-    const otherBtn = document.getElementById("langOther");
-    if (!dropdown || !panel) return;
+    if (!dropdown || !toggle || !panel) return;
     lastOpenLangTime = Date.now();
-    if (panel.classList.contains("open")) return;
-    positionLangPanel();
-    panel.classList.add("open");
+    if (dropdown.classList.contains("open")) return;
+    
     dropdown.classList.add("open");
+    panel.classList.add("show");
+
+    const otherBtn = document.getElementById("langOther");
     if (otherBtn) {
         const group = otherBtn.parentElement;
         if (group) {
@@ -572,20 +547,44 @@ function openLangDropdown() {
             otherBtn.classList.add("active");
         }
     }
+
+    const rect = toggle.getBoundingClientRect();
+    const isRTL = document.documentElement.getAttribute("dir") === "rtl";
+    
+    panel.style.width = rect.width + "px";
+    panel.style.top = (rect.bottom + 6) + "px";
+    
+    if (isRTL) {
+        panel.style.left = "auto";
+        panel.style.right = (document.documentElement.clientWidth - rect.right) + "px";
+    } else {
+        panel.style.right = "auto";
+        panel.style.left = rect.left + "px";
+    }
+    
+    const availableHeight = window.innerHeight - rect.bottom - 20;
+    panel.style.maxHeight = Math.max(120, Math.min(320, availableHeight)) + "px";
+
     lockBodyScroll();
-    syncAllSegmented();
+    requestAnimationFrame(() => {
+        syncAllSegmented();
+        updateSettingsBodyScroll();
+    });
 }
 function closeLangDropdown() {
     const dropdown = document.getElementById("langDropdown");
     const panel = document.getElementById("langDropdownPanel");
     if (!dropdown || !panel) return;
-    if (!panel.classList.contains("open")) return;
-    panel.classList.remove("open");
+    if (!dropdown.classList.contains("open")) return;
     dropdown.classList.remove("open");
+    panel.classList.remove("show");
     unlockBodyScroll();
     if (typeof syncLangButtons === "function") syncLangButtons();
     if (typeof window.__syncLangDropdown === "function") window.__syncLangDropdown();
-    syncAllSegmented();
+    requestAnimationFrame(() => {
+        syncAllSegmented();
+        updateSettingsBodyScroll();
+    });
 }
 window.__openLangDropdown = openLangDropdown;
 window.__closeLangDropdown = closeLangDropdown;
@@ -599,6 +598,10 @@ function initLangDropdown() {
     if (dropdown.dataset.built === "1") return;
     dropdown.dataset.built = "1";
 
+    if (panel.parentNode !== document.body) {
+        document.body.appendChild(panel);
+    }
+
     let scrollEl = panel.querySelector(".lang-dropdown-scroll");
     if (!scrollEl) {
         scrollEl = document.createElement("div");
@@ -607,10 +610,6 @@ function initLangDropdown() {
             scrollEl.appendChild(panel.firstChild);
         }
         panel.appendChild(scrollEl);
-    }
-
-    if (panel.parentNode !== document.body) {
-        document.body.appendChild(panel);
     }
 
     function syncActive() {
@@ -625,16 +624,18 @@ function initLangDropdown() {
     }
     window.__syncLangDropdown = syncActive;
     syncActive();
+    
     toggle.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (panel.classList.contains("open")) {
+        if (dropdown.classList.contains("open")) {
             lastOpenLangTime = 0;
             closeLangDropdown();
         } else {
             openLangDropdown();
         }
     });
+    
     scrollEl.querySelectorAll(".lang-dropdown-item").forEach(item => {
         item.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -645,29 +646,35 @@ function initLangDropdown() {
             closeLangDropdown();
         });
     });
+    
     document.addEventListener("click", (ev) => {
-        if (!panel.classList.contains("open")) return;
+        if (!dropdown.classList.contains("open")) return;
         if (Date.now() - lastOpenLangTime < 500) return;
-        if (panel.contains(ev.target)) return;
-        if (toggle.contains(ev.target)) return;
+        if (dropdown.contains(ev.target) || panel.contains(ev.target)) return;
         const otherBtn = document.getElementById("langOther");
         if (ev.target === otherBtn) return;
         lastOpenLangTime = 0;
         closeLangDropdown();
     });
+    
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             lastOpenLangTime = 0;
             closeLangDropdown();
         }
     });
-    document.addEventListener("fuey-settings-changed", syncActive);
+    
+    const settingsBody = document.querySelector(".settings-body");
+    if (settingsBody) {
+        settingsBody.addEventListener("scroll", () => {
+            if (dropdown.classList.contains("open")) closeLangDropdown();
+        });
+    }
     window.addEventListener("resize", () => {
-        if (panel.classList.contains("open")) positionLangPanel();
+        if (dropdown.classList.contains("open")) closeLangDropdown();
     });
-    window.addEventListener("scroll", () => {
-        if (panel.classList.contains("open")) positionLangPanel();
-    }, true);
+
+    document.addEventListener("fuey-settings-changed", syncActive);
 }
 
 function initSecurityIndicator() {
@@ -692,6 +699,7 @@ function initSecurityIndicator() {
     langGroup.parentNode.insertBefore(wrap, langGroup.nextSibling);
     updateSecurityIndicator();
     document.addEventListener("fuey-settings-changed", updateSecurityIndicator);
+    requestAnimationFrame(updateSettingsBodyScroll);
 }
 function updateSecurityIndicator() {
     const dot = document.getElementById("securityDot");
@@ -713,31 +721,12 @@ function initSettingsIO() {
 }
 
 const VALID_LANGS = ["en", "zh", "zh-Hant", "lzh", "ja", "ko", "fr", "de", "es", "ru", "ar"];
-const UI_SETTING_KEYS = [
-    "fuey-theme",
-    "fuey-lang",
-    "fuey-handed",
-    "fuey-data-source",
-    "fuey-apply-customization",
-    "fuey-enable-custom-protocols",
-    "fuey-custom"
-];
-
-function collectPersistent() {
-    const out = {};
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key || key.indexOf("fuey-") !== 0) continue;
-        if (UI_SETTING_KEYS.indexOf(key) !== -1) continue;
-        out[key.substring("fuey-".length)] = localStorage.getItem(key);
-    }
-    return out;
-}
 
 function exportSettings() {
     const settings = {
         __meta__: {
-            protocol: "Fuey EULA"
+            protocol: "Fuey EULA",
+            version: (typeof window.__FUEY_VERSION__ === "string") ? window.__FUEY_VERSION__ : ""
         },
         theme: localStorage.getItem("fuey-theme") || "light",
         lang: localStorage.getItem("fuey-lang") || "en",
@@ -745,10 +734,33 @@ function exportSettings() {
         dataSource: getDataSource(),
         "apply-customization": isCustomizationEnabled(),
         "enable-custom-protocols": isCustomProtocolsEnabled(),
-        custom: getCustomization(),
-        __persistent__: collectPersistent()
+        custom: getCustomization()
     };
-    const content = `window.__FUEY_SETTINGS__ = ${JSON.stringify(settings, null, 2)};\n`;
+    const disclaimer = [
+        "",
+        "// ============================================================",
+        "// Fuey Settings - Customization Disclaimer",
+        "// ------------------------------------------------------------",
+        "// apply-customization and enable-custom-protocols are advanced",
+        "// options that allow injecting custom CSS variables, CSS rules",
+        "// and JavaScript into the Fuey interface.",
+        "//",
+        "// When apply-customization is true, the content inside",
+        "// \"custom\" will be applied globally to every page of the",
+        "// Fuey site and will be persisted in local storage until",
+        "// \"Reset Settings\" is used. When enable-custom-protocols",
+        "// is true, the custom JavaScript will also be executed.",
+        "//",
+        "// The Fuey Team is not responsible or liable for any visual",
+        "// issues, broken layouts, security risks, data loss, device",
+        "// malfunction or any other damage that may result from",
+        "// editing, importing or applying custom content through",
+        "// these options. You, the user, assume full responsibility",
+        "// for every customization you apply. Use at your own risk.",
+        "// ============================================================",
+        ""
+    ].join("\n");
+    const content = `window.__FUEY_SETTINGS__ = ${JSON.stringify(settings, null, 2)};\n` + disclaimer;
     const blob = new Blob([content], { type: "application/javascript" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -775,70 +787,64 @@ function validateImportFormat(settings) {
     if (settings.custom !== undefined && settings.custom !== null) {
         if (typeof settings.custom !== "object" || Array.isArray(settings.custom)) return false;
     }
-    if (settings.__persistent__ !== undefined && settings.__persistent__ !== null) {
-        if (typeof settings.__persistent__ !== "object" || Array.isArray(settings.__persistent__)) return false;
+    if (settings.__permanent__ !== undefined && settings.__permanent__ !== null) {
+        if (typeof settings.__permanent__ !== "object" || Array.isArray(settings.__permanent__)) return false;
     }
     return true;
 }
 
-function applySettings(settings) {
-    localStorage.setItem("fuey-theme", settings.theme);
-    localStorage.setItem("fuey-lang", settings.lang);
-    localStorage.setItem("fuey-handed", settings.handed);
-    localStorage.setItem("fuey-data-source", settings.dataSource);
-
-    if (settings.__persistent__ && typeof settings.__persistent__ === "object") {
-        Object.keys(settings.__persistent__).forEach(k => {
-            const val = settings.__persistent__[k];
-            const fullKey = "fuey-" + k;
-            if (UI_SETTING_KEYS.indexOf(fullKey) !== -1) return;
-            if (val === null || val === undefined) {
-                localStorage.removeItem(fullKey);
-            } else {
-                try { localStorage.setItem(fullKey, String(val)); } catch (e) {}
-            }
-        });
+function needsImportWarning(settings) {
+    if (!settings) return false;
+    if (settings["apply-customization"] === true) return true;
+    if (settings["enable-custom-protocols"] === true) return true;
+    const c = settings.custom;
+    if (c && typeof c === "object") {
+        if (c.vars && typeof c.vars === "object" && Object.keys(c.vars).length > 0) return true;
+        if (typeof c.css === "string" && c.css.trim()) return true;
+        if (typeof c.js === "string" && c.js.trim()) return true;
     }
+    return false;
+}
 
-    const wantsCustom = settings["apply-customization"] === true;
-    const customCode = settings.custom;
-    const hasCode = hasCustomContent(customCode);
-    const wantsProtocols = settings["enable-custom-protocols"] === true;
-
-    if (customCode && typeof customCode === "object") {
-        saveCustomization(customCode);
+function applySettings(settings) {
+    if (settings.theme === "light" || settings.theme === "dark") localStorage.setItem("fuey-theme", settings.theme);
+    if (VALID_LANGS.indexOf(settings.lang) !== -1) localStorage.setItem("fuey-lang", settings.lang);
+    if (settings.handed === "left" || settings.handed === "right") localStorage.setItem("fuey-handed", settings.handed);
+    if (settings.dataSource === "github" || settings.dataSource === "local") localStorage.setItem("fuey-data-source", settings.dataSource);
+    localStorage.setItem("fuey-apply-customization", settings["apply-customization"] ? "true" : "false");
+    localStorage.setItem("fuey-enable-custom-protocols", settings["enable-custom-protocols"] ? "true" : "false");
+    if (settings.custom && typeof settings.custom === "object") {
+        saveCustomization(settings.custom);
+        const c = settings.custom;
+        const hasContent =
+            (c.vars && typeof c.vars === "object" && Object.keys(c.vars).length > 0) ||
+            (typeof c.css === "string" && c.css.trim()) ||
+            (typeof c.js === "string" && c.js.trim());
+        if (hasContent) {
+            localStorage.setItem("fuey-apply-customization", "true");
+        }
     } else {
         localStorage.removeItem("fuey-custom");
     }
-
-    if (wantsCustom && hasCode) {
-        localStorage.setItem("fuey-apply-customization", "false");
-        localStorage.setItem("fuey-enable-custom-protocols", "false");
-        showImportConfirm(() => {
-            localStorage.setItem("fuey-apply-customization", "true");
-            localStorage.setItem("fuey-enable-custom-protocols", wantsProtocols ? "true" : "false");
-            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
-            setTimeout(() => {
-                window.location.replace(window.location.href.split("#")[0]);
-            }, 600);
-        }, () => {
-            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
-            setTimeout(() => {
-                window.location.replace(window.location.href.split("#")[0]);
-            }, 600);
+    if (settings.__permanent__ && typeof settings.__permanent__ === "object") {
+        Object.keys(settings.__permanent__).forEach(k => {
+            const val = settings.__permanent__[k];
+            if (val === null || val === undefined) {
+                localStorage.removeItem("fuey-perm-" + k);
+            } else {
+                try {
+                    localStorage.setItem("fuey-perm-" + k, typeof val === "string" ? val : JSON.stringify(val));
+                } catch (e) {}
+            }
         });
-        return;
     }
-
-    localStorage.setItem("fuey-apply-customization", wantsCustom ? "true" : "false");
-    localStorage.setItem("fuey-enable-custom-protocols", wantsProtocols ? "true" : "false");
     showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
     setTimeout(() => {
         window.location.replace(window.location.href.split("#")[0]);
     }, 600);
 }
 
-function showImportConfirm(onConfirm, onCancel) {
+function showImportConfirm(onConfirm) {
     const existing = document.querySelector(".confirm-overlay");
     if (existing) existing.remove();
     const overlay = document.createElement("div");
@@ -855,17 +861,11 @@ function showImportConfirm(onConfirm, onCancel) {
     document.body.appendChild(overlay);
     overlay.querySelector(".confirm-btn.no").addEventListener("click", () => {
         overlay.classList.remove("show");
-        setTimeout(() => {
-            overlay.remove();
-            if (typeof onCancel === "function") onCancel();
-        }, 300);
+        setTimeout(() => overlay.remove(), 300);
     });
     overlay.querySelector(".confirm-btn.yes").addEventListener("click", () => {
         overlay.classList.remove("show");
-        setTimeout(() => {
-            overlay.remove();
-            onConfirm();
-        }, 300);
+        setTimeout(() => { overlay.remove(); onConfirm(); }, 300);
     });
     requestAnimationFrame(() => overlay.classList.add("show"));
 }
@@ -887,7 +887,11 @@ function importSettingsFile(e) {
                 e.target.value = "";
                 return;
             }
-            applySettings(settings);
+            if (needsImportWarning(settings)) {
+                showImportConfirm(() => applySettings(settings));
+            } else {
+                applySettings(settings);
+            }
             e.target.value = "";
         } catch (err) {
             showIOToast(typeof t === "function" ? t("importFailedFormat") : "Invalid settings file format", "err");
@@ -903,10 +907,8 @@ function importSettingsFile(e) {
 
 function showIOToast(text, typeOrBool) {
     let type = "ok";
-    if (typeOrBool === false) type = "err";
+    if (typeOrBool === false || typeOrBool === "err") type = "err";
     else if (typeOrBool === "warn") type = "warn";
-    else if (typeOrBool === "err") type = "err";
-    else if (typeOrBool === "ok" || typeOrBool === true) type = "ok";
     const icons = { ok: "✓", err: "⊘", warn: "⚠" };
     let el = document.getElementById("ioToast");
     if (!el) {
@@ -1077,7 +1079,9 @@ function initSettingsPanel() {
     const resetBtn = document.getElementById("resetSettings");
     if (resetBtn) resetBtn.addEventListener("click", () => showResetConfirm());
     window.addEventListener("resize", () => {
-        if (settingsPanel.classList.contains("open")) updateSettingsBodyScroll();
+        if (settingsPanel.classList.contains("open")) {
+            updateSettingsBodyScroll();
+        }
     });
     let panelDragInited = false;
     let dragging = false;
@@ -1461,39 +1465,68 @@ function initNavSlider() {
 function initDevelopers() {
     const list = document.getElementById("developerList");
     if (!list) return;
-    if (list.dataset.loaded === "1") return;
     list.dataset.loaded = "1";
-    const cacheKey = "fuey-contributors";
+    
+    const cacheKey = "fuey-contributors-v2";
     let cachedData = null;
+    const fallbackAvatar = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23e0e0e0'/%3E%3Cpath d='M24 12c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 18c-5.3 0-16 2.7-16 8v2h32v-2c0-5.3-10.7-8-16-8z' fill='%239e9e9e'/%3E%3C/svg%3E";
+
     function render(data) {
         if (data !== undefined) cachedData = data;
         let useData = cachedData;
         if (!Array.isArray(useData) || useData.length === 0) {
             useData = [{ login: "FueySeek", html_url: "https://github.com/FueySeek", avatar_url: "https://github.com/FueySeek.png" }];
         }
+        
         const maintainerText = typeof t === "function" ? t("maintainer") : "Maintainer";
+        
         list.innerHTML = useData.map((user, index) => {
             const isMaintainer = index === 0 || user.login.toLowerCase() === "fueyseek";
             return `
             <a href="${user.html_url}" target="_blank" rel="noopener" class="developer-item">
                 ${isMaintainer ? `<span class="maintainer-badge">${maintainerText}</span>` : ""}
-                <img src="${user.avatar_url}" alt="${user.login}" class="developer-avatar">
+                <img src="${user.avatar_url}" alt="${user.login}" class="developer-avatar" referrerpolicy="no-referrer">
                 <span class="developer-name">${user.login}</span>
             </a>`;
         }).join("");
+        
+        list.querySelectorAll('.developer-avatar').forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = fallbackAvatar;
+            });
+        });
     }
+    
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
-        try { cachedData = JSON.parse(cached); render(cachedData); } catch (e) {}
-    } else {
-        fetch("https://api.github.com/repos/FueySeek/FueySeek.github.io/contributors")
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                sessionStorage.setItem(cacheKey, JSON.stringify(data));
-                render(data);
-            })
-            .catch(() => render(null));
+        try { 
+            const parsed = JSON.parse(cached); 
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                cachedData = parsed; 
+                render(cachedData); 
+            }
+        } catch (e) {}
     }
+    
+    if (!cachedData) {
+        fetch("https://api.github.com/repos/FueySeek/FueySeek.github.io/contributors")
+            .then(res => {
+                if (!res.ok) throw new Error("API Error");
+                return res.json();
+            })
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    sessionStorage.setItem(cacheKey, JSON.stringify(data));
+                    render(data);
+                } else {
+                    render(null);
+                }
+            })
+            .catch(() => {
+                render(null);
+            });
+    }
+    
     document.addEventListener("fuey-settings-changed", () => render());
 }
 

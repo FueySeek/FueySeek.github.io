@@ -119,10 +119,12 @@ function renderAboutList(data) {
         return;
     }
     const lang = getCurrentLang();
+    const isZhGroup = lang === "zh" || lang === "zh-Hant" || lang === "lzh";
+    
     listEl.innerHTML = data.items.map((item, index) => {
         let name = "";
         if (item.name && typeof item.name === "object") {
-            name = item.name[lang] || item.name.zh || item.name.en || "";
+            name = item.name[lang] || (isZhGroup ? item.name.zh : item.name.en) || "";
         } else if (typeof item.name === "string") {
             name = item.name;
         }

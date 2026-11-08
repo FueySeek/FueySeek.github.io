@@ -42,8 +42,11 @@ function formatDate(isoDate, lang) {
 
 function pickLogPack(data, lang) {
     if (!data) return null;
-    if (lang === "en") return data.en || data.zh || null;
-    return data[lang] || data.zh || data.en || null;
+    const isZhGroup = lang === "zh" || lang === "zh-Hant" || lang === "lzh";
+    if (isZhGroup) {
+        return data[lang] || data.zh || data.en || null;
+    }
+    return data[lang] || data.en || null;
 }
 
 function renderEmbed() {

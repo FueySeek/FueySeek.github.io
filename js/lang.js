@@ -245,7 +245,7 @@ const TRANSLATIONS = {
         copyCode: "Copier", openLink: "Ouvrir", copied: "Copié",
         aboutTitle: "À propos", aboutDesc: "Contenu à propos ici", noAboutData: "Aucune donnée",
         otherTitle: "Autres projets", otherDesc: "Contenu des autres projets ici", noOtherData: "Aucune donnée",
-        weAreMaking: "Nous faisons des ", interesting: "intéressants ", projects: "projets",
+        weAreMaking: "Nous faisons des ", interesting: "projets ", projects: "intéressants",
         others: "Autres", developers: "Développeurs", maintainer: "Mainteneur",
         dataSourceFallback: "Repli de la source de données vers le local",
         importWarnDesc: "Ce fichier de paramètres contient des personnalisations pouvant affecter le comportement et la sécurité du site. Continuer l'importation ?",
@@ -317,7 +317,7 @@ const TRANSLATIONS = {
         copyCode: "Copiar", openLink: "Abrir", copied: "Copiado",
         aboutTitle: "Sobre nosotros", aboutDesc: "Contenido sobre nosotros aquí", noAboutData: "Sin datos",
         otherTitle: "Otros proyectos", otherDesc: "Contenido de otros proyectos aquí", noOtherData: "Sin datos",
-        weAreMaking: "Estamos haciendo algunos ", interesting: "interesantes ", projects: "proyectos",
+        weAreMaking: "Estamos haciendo algunos ", interesting: "proyectos ", projects: "interesantes",
         others: "Otros", developers: "Desarrolladores", maintainer: "Mantenedor",
         dataSourceFallback: "Fuente de datos revertida a local",
         importWarnDesc: "Este archivo de ajustes contiene personalizaciones que pueden afectar el comportamiento y la seguridad del sitio. ¿Continuar importando?",
@@ -389,7 +389,7 @@ const TRANSLATIONS = {
         copyCode: "نسخ", openLink: "فتح", copied: "تم النسخ",
         aboutTitle: "من نحن", aboutDesc: "محتوى من نحن هنا", noAboutData: "لا توجد بيانات",
         otherTitle: "مشاريع أخرى", otherDesc: "محتوى المشاريع الأخرى هنا", noOtherData: "لا توجد بيانات",
-        weAreMaking: "نحن نصنع بعض ", interesting: "المثير ", projects: "المشاريع",
+        weAreMaking: "نحن نصنع بعض ", interesting: "المشاريع ", projects: "المثيرة",
         others: "أخرى", developers: "المطورون", maintainer: "المشرف",
         dataSourceFallback: "تم الرجوع إلى مصدر البيانات المحلي",
         importWarnDesc: "يحتوي ملف الإعدادات هذا على تخصيصات قد تؤثر على سلوك الموقع وأمانه. هل تريد متابعة الاستيراد؟",
@@ -449,6 +449,8 @@ function syncLangButtons() {
 function applyLang() {
     const lang = getLang();
     document.documentElement.setAttribute("data-lang", lang);
+    document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+
     document.querySelectorAll("[data-lang-key]").forEach(el => {
         if (el.id === "langOther") return;
         const key = el.getAttribute("data-lang-key");
