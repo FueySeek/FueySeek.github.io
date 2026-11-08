@@ -1,11 +1,10 @@
-markdown
 <div align="center">
 
 # ✨ FueySeek.github.io
 
-**Fuey Project 的官方网站与项目展示页**
+**The official website and project showcase for the Fuey Project.**
 
-纯原生 HTML / CSS / JavaScript 实现，无框架、无构建步骤，直接部署在 GitHub Pages。
+Built with pure vanilla HTML / CSS / JavaScript, no frameworks, no build steps, directly deployed on GitHub Pages.
 
 [![Online](https://img.shields.io/badge/Online-fueyseek.github.io-blue?style=flat-square&logo=googlechrome&logoColor=white)](https://fueyseek.github.io)
 [![Repo](https://img.shields.io/badge/GitHub-FueySeek%2FFueySeek.github.io-black?style=flat-square&logo=github)](https://github.com/FueySeek/FueySeek.github.io)
@@ -18,133 +17,133 @@ markdown
 
 ---
 
-## 📖 目录
+## 📖 Table of Contents
 
-- [🌟 核心功能](#-核心功能)
-- [🛠️ 技术栈](#️-技术栈)
-- [📁 目录结构](#-目录结构)
-- [🚀 本地运行](#-本地运行)
-- [🗄️ 数据源机制](#️-数据源机制)
-- [🌍 多语言支持](#-多语言支持)
-- [📦 设置导入与导出](#-设置导入与导出)
-- [🛡️ 安全策略](#️-安全策略)
-- [🧩 版本说明](#-版本说明)
-- [📄 许可与声明](#-许可与声明)
-
----
-
-## 🌟 核心功能
-
-### 📄 页面展示
-- **首页**：动态主视觉、更新日志、开发者名单、内嵌扩展区（小游戏 + 提示框）。
-- **下载页**：项目下载列表，支持名称 / 日期 / 系统 / 提取码搜索，支持一键复制提取码。
-- **其它项目页**：列表 + 搜索，与下载页保持一致的卡片风格。
-- **关于我们页**：可配置的外部链接列表（GitHub、皮肤、仓库、许可证、字体证书、EULA 等）。
-
-### ⚙️ 设置面板
-- 🌓 **主题切换**：浅色 / 深色模式，带有平滑液态过渡动画。
-- 🔄 **数据源切换**：支持从 GitHub 云端或本地加载数据。
-- 🌐 **多语言支持**：内置 11 种语言，实时无缝切换。
-- 🖐️ **左撇子模式**：全局布局镜像，设置面板、主视觉、页面卡片、下滑按钮等自动靠左。
-- 📥 **设置导入/导出**：将本地配置导出为 `.js` 文件，或导入外部配置（附带严格校验与高危确认）。
-- 🔍 **版本检测**：一键对比本地与云端的版本号。
-- 🟢 **安全环境指示器**：实时监控是否开启了自定义注入，开启时指示灯由绿色变为灰色暗置。
-
-### 🎮 隐藏彩蛋
-在首页扩展区的 "Under Construction" 卡片上**连续点击 3 次**，即可启动内置的**小恐龙跑酷游戏**。
-> 游戏支持空格/点击跳跃，包含难度递进、昼夜交替、道具加速、无敌状态等机制，最高分保存在 `localStorage` 中。
+- [🌟 Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📁 Directory Structure](#-directory-structure)
+- [🚀 Local Development](#-local-development)
+- [🗄️ Data Source Mechanism](#️-data-source-mechanism)
+- [🌍 Multi-language Support](#-multi-language-support)
+- [📦 Settings Import & Export](#-settings-import--export)
+- [🛡️ Security Policy](#️-security-policy)
+- [🧩 Versioning](#-versioning)
+- [📄 License & Disclaimer](#-license--disclaimer)
 
 ---
 
-## 🛠️ 技术栈
+## 🌟 Features
 
-- **核心**：原生 HTML5 / CSS3 / ES2018+
-- **架构**：无框架、无打包工具、无外部依赖
-- **数据**：以 `window.__XXX__` 全局变量形式通过 `<script>` 注入
-- **通信**：使用 `postMessage` 实现主页面与两个 `iframe` 扩展页的双向通信（同步主题、语言、惯用手、高度）
+### 📄 Pages
+- **Home**: Dynamic hero section, update logs, developer list, and embedded expansion area (mini-game + notes).
+- **Download**: Project download list, supporting search by name / date / system / access code, with one-click code copy.
+- **Other Projects**: List + search, consistent card style with the download page.
+- **About Us**: Configurable external links (GitHub, Minecraft skins, repository, licenses, font certificate, EULA, etc.).
+
+### ⚙️ Settings Panel
+- 🌓 **Theme Switch**: Light / Dark mode with smooth liquid transition animations.
+- 🔄 **Data Source**: Switch between loading data from GitHub Cloud or Local.
+- 🌐 **Multi-language**: 11 built-in languages, switching seamlessly in real-time.
+- 🖐️ **Left-handed Mode**: Global layout mirroring for the settings panel, hero section, cards, and scroll buttons.
+- 📥 **Settings Import/Export**: Export local configurations as a `.js` file or import external configurations (with strict validation and high-risk confirmation).
+- 🔍 **Version Check**: One-click comparison between local and cloud version numbers.
+- 🟢 **Security Environment Indicator**: Real-time monitoring of custom injections; the indicator dims from bright green to gray when enabled.
+
+### 🎮 Hidden Easter Egg
+Click the "Under Construction" card in the homepage expansion area **3 times consecutively** to launch the built-in **Dino Run mini-game**.
+> The game supports spacebar/click jumping, features progressive difficulty, day/night cycles, speed boosts, and invincibility, with the high score saved in `localStorage`.
 
 ---
 
-## 📁 目录结构
+## 🛠️ Tech Stack
+
+- **Core**: Vanilla HTML5 / CSS3 / ES2018+
+- **Architecture**: No frameworks, no build tools, no external dependencies.
+- **Data**: Injected via `<script>` as global variables (`window.__XXX__`).
+- **Communication**: Uses `postMessage` for bidirectional communication between the main page and two `iframe` expansion pages (syncing theme, language, handedness, and height).
+
+---
+
+## 📁 Directory Structure
 
 <details>
-<summary>点击展开查看完整目录树</summary>
+<summary>Click to expand the full directory tree</summary>
 
 ```text
 FueySeek.github.io/
-├── index.html              首页
-├── download.html           下载页
-├── open.html               关于我们页
-├── other.html              其它项目页
-├── embed.html              内嵌扩展：小恐龙游戏
-├── embed-notes.html        内嵌扩展：提示框
+├── index.html              Home page
+├── download.html           Download page
+├── open.html               About Us page
+├── other.html              Other Projects page
+├── embed.html              Embedded expansion: Dino game
+├── embed-notes.html        Embedded expansion: Notes box
 ├── css/
-│   ├── common.css          全局样式（变量、导航、设置面板等）
-│   ├── index.css           首页专属样式
-│   ├── download.css        下载页专属样式
-│   └── open.css            关于页 / 其它项目页专属样式
+│   ├── common.css          Global styles (variables, nav, settings, etc.)
+│   ├── index.css           Home page styles
+│   ├── download.css        Download page styles
+│   └── open.css            About / Other Projects styles
 ├── js/
-│   ├── common.js           全局逻辑（设置面板、导航、导入导出等）
-│   ├── lang.js             多语言翻译表
-│   ├── rule.js             安全策略（禁用操作拦截等）
-│   ├── index.js            首页逻辑（更新日志、iframe 通信等）
-│   ├── download.js         下载页逻辑
-│   ├── open.js             关于页逻辑
-│   └── other.js            其它项目页逻辑
+│   ├── common.js           Global logic (settings, nav, import/export, etc.)
+│   ├── lang.js             Multi-language dictionary
+│   ├── rule.js             Security policy (action interception, etc.)
+│   ├── index.js            Home logic (logs, iframe comms, etc.)
+│   ├── download.js         Download page logic
+│   ├── open.js             About page logic
+│   └── other.js            Other projects logic
 ├── data/
-│   ├── version.js          界面版本号
-│   ├── update-logs.js      更新日志数据
-│   ├── download-list.js    下载列表数据
-│   ├── open-list.js        关于页链接数据
-│   ├── other-list.js       其它项目数据
-│   └── eula.txt            最终用户许可协议
-├── images/                 图标、光标、人物图、小恐龙素材
-├── fonts/                  手写风格字体
+│   ├── version.js          UI version number
+│   ├── update-logs.js      Update logs data
+│   ├── download-list.js    Download list data
+│   ├── open-list.js        About page links data
+│   ├── other-list.js       Other projects data
+│   └── eula.txt            End User License Agreement
+├── images/                 Icons, cursors, hero image, dino assets
+├── fonts/                  Handwriting-style font
 └── README.md
 ```
 </details>
 
 ---
 
-## 🚀 本地运行
+## 🚀 Local Development
 
-项目没有构建步骤，但部分功能（如版本检测的 `fetch`、跨 `iframe` 通信）需要 HTTP 环境。推荐使用任意静态服务器启动：
+There is no build step, but some features (like `fetch` for version check and cross-`iframe` communication) require an HTTP environment. Use any static server:
 
 ```bash
 # Python 3
 python -m http.server 8080
 
-# Node.js (需先安装 http-server)
+# Node.js (requires http-server)
 npx http-server -p 8080
 
 # PHP
 php -S localhost:8080
 ```
 
-启动后访问 `http://localhost:8080`。
-*(注：直接用 `file://` 打开首页可以显示基本内容，但版本检测会失败，且部分 `fetch` 行为受浏览器限制。)*
+Visit `http://localhost:8080`.
+*(Note: Opening the homepage directly via `file://` will render basic content, but version checks will fail and some `fetch` behaviors will be restricted by the browser.)*
 
 ---
 
-## 🗄️ 数据源机制
+## 🗄️ Data Source Mechanism
 
-设置面板中可自由切换两种数据源：
+You can switch between two data sources in the settings panel:
 
-| 数据源 | 说明 |
+| Data Source | Description |
 | :--- | :--- |
-| `github`（默认） | 按顺序尝试 `fueyseek.github.io` → `raw.githubusercontent.com` → `cdn.jsdelivr.net`，任一成功即使用 |
-| `local` | 直接加载仓库内 `data/` 目录下的同名文件 |
+| `github` (Default) | Tries `fueyseek.github.io` → `raw.githubusercontent.com` → `cdn.jsdelivr.net` in order. Uses the first successful response. |
+| `local` | Loads the files directly from the `data/` directory in the repository. |
 
-- 如果 GitHub 数据源全部失败，会自动回退到本地，并弹出提示。
-- 所有数据文件均带有时间戳缓存破坏参数（Cache Busting），确保每次访问加载最新内容。
+- If all GitHub sources fail, it automatically falls back to local and shows a toast notification.
+- All data files are loaded with cache-busting timestamps to ensure the latest content is fetched every time.
 
 ---
 
-## 🌍 多语言支持
+## 🌍 Multi-language Support
 
-内置 11 种语言的完整翻译，可在设置面板中实时切换：
+Features full translations for 11 languages, switchable in the settings panel:
 
-| 代码 | 语言 | 本地名称 |
+| Code | Language | Native Name |
 | :--- | :--- | :--- |
 | `en` | English | English |
 | `zh` | Chinese (Simplified) | 简体中文 |
@@ -158,84 +157,95 @@ php -S localhost:8080
 | `ru` | Russian | Русский |
 | `ar` | Arabic | العربية |
 
-- 首次访问默认英文，语言选择保存在 `localStorage` 的 `fuey-lang` 中。
-- 切换后导航、内容、按钮、提示、更新日志及内嵌扩展页全部同步更新。
-- 列表类数据（下载、关于、其它项目）优先使用当前语言，缺失时回退中文，再缺失回退英文。
-- 更新日志 `data/update-logs.js` 目前仅提供 `zh` 与 `en` 两套内容，其他语言会按上述规则回退。
+- Defaults to English on first visit. Language choice is saved in `localStorage` under `fuey-lang`.
+- Switching updates the navigation, content, buttons, toasts, update logs, and embedded expansions instantly.
+- List-based data (downloads, about, others) prioritizes the current language, falling back to Chinese, then English.
+- Update logs (`data/update-logs.js`) currently only provide `zh` and `en` packs. Other languages will fall back as described above.
 
 ---
 
-## 📦 设置导入与导出
+## 📦 Settings Import & Export
 
-导出文件为 `FueySettings.js`，包含当前所有的配置状态。
+Exported files are named `FueySettings.js` and contain the current configuration state.
 
-**导出规则**
-- 不包含导出时间戳。
-- 不包含隐藏的持久化设置（如小恐龙最高分 `fuey-dino-hi`，仅在导入时接受写入）。
+**Export Rules**
+- No export timestamps are included.
+- Hidden persistent settings (like the Dino high score `fuey-dino-hi`) are excluded (only accepted during import).
 
-**导入规则**
-1. **严格校验**：解析后先做格式校验（缺少 `__meta__`、字段类型不符、语言不在白名单等），任一不满足将直接拒绝并提示「格式不正确」。
-2. **风险确认**：若检测到文件包含自定义代码（`custom.css`、`custom.js`、开启自定义开关等），会弹出高危确认框。用户确认后才应用并刷新页面。
-3. **智能修正**：若 `custom` 有实际内容但文件里 `apply-customization` 为 `false`，系统会自动将其置为 `true`，避免「导入了内容却不生效」。
-
----
-
-## 🛡️ 安全策略
-
-`js/rule.js` 在页面加载时立即初始化，拦截以下操作并弹出提示：
-
-- 右键菜单、文本选中（输入框除外）、图片拖拽
-- 复制 / 剪切（可编辑元素除外）
-- 开发者工具快捷键（`F12`、`Ctrl+Shift+I/J/C/K/E` 等）
-- 源码/打印快捷键（`Ctrl+U`、`Ctrl+S`、`Ctrl+P`）
-
-> 正常的浏览行为（`F5`、`Ctrl+R`、`F11`、缩放、查找等）不会被拦截。
-> 内嵌扩展页中的拦截提示会通过 `postMessage` 转发到主页面统一弹出，保证样式与语言一致。
+**Import Rules**
+1. **Strict Validation**: Immediately rejects and prompts "Invalid format" if `__meta__` is missing, field types mismatch, or the language is not in the whitelist.
+2. **Risk Confirmation**: If custom code is detected (`custom.css`, `custom.js`, or custom switches enabled), a high-risk confirmation dialog appears. The settings are applied only after user confirmation.
+3. **Smart Correction**: If `custom` has actual content but `apply-customization` is `false` in the file, it is automatically set to `true` upon applying to prevent "importing content that doesn't take effect".
 
 ---
 
-## 🧩 版本说明
+## 🛡️ Security Policy
 
-项目存在两个独立的版本号，互不影响：
+`js/rule.js` initializes immediately on page load to intercept the following actions with a toast notification:
 
-| 版本类型 | 位置 | 用途 |
+- Right-click menu, text selection (except for inputs), image dragging.
+- Copy / Cut (except for editable elements).
+- Developer tools shortcuts (`F12`, `Ctrl+Shift+I/J/C/K/E`, etc.).
+- Source code / print shortcuts (`Ctrl+U`, `Ctrl+S`, `Ctrl+P`).
+
+> Normal browsing behaviors (`F5`, `Ctrl+R`, `F11`, zoom, find, etc.) are not intercepted.
+> Interception toasts in the embedded expansion pages are forwarded via `postMessage` to the main page to ensure consistent styling and language.
+
+---
+
+## 🧩 Versioning
+
+The project maintains two independent version numbers:
+
+| Type | Location | Purpose |
 | :--- | :--- | :--- |
-| **界面版本** | `data/version.js` 中的 `__FUEY_VERSION__` | 设置面板「检测版本」按钮对比云端使用 |
-| **游戏版本** | `embed.html` 中的 `GAME_VERSION` | 小恐龙游戏左上角显示，纯硬编码解耦 |
+| **UI Version** | `__FUEY_VERSION__` in `data/version.js` | Used by the "Check Version" button to compare with the cloud. |
+| **Game Version** | `GAME_VERSION` in `embed.html` | Displayed in the top-left of the Dino game, hardcoded and decoupled. |
 
 ---
 
-## 📄 许可与声明
+## 📄 License & Disclaimer
 
-- 项目代码：[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
-- 字体授权：[SIL OFL 1.1](https://github.com/Warren2060/ChillRound/)
-- 最终用户许可协议：[`data/eula.txt`](data/eula.txt)
+- **Code**: [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)
+- **Fonts**: [SIL OFL 1.1](https://github.com/Warren2060/ChillRound/)
+- **EULA**: [`data/eula.txt`](data/eula.txt)
 
 <details>
-<summary><b>🌐 涉及其它服务相关的内容及多语言声明 (点击展开)</b></summary>
+<summary><b>🌐 Disclaimer for Other Services (Multi-language)</b></summary>
 
 <br>
 
-**English:** Content related to other services is prioritized subject to the terms of service and user agreements of the respective service providers.
+**English:**
+Content related to other services is prioritized subject to the terms of service and user agreements of the respective service providers.
 
-**简体中文:** 涉及其它服务相关的内容，优先受对应服务提供商的用户协议与服务条款约束。
+**简体中文:**
+涉及其它服务相关的内容，优先受对应服务提供商的用户协议与服务条款约束。
 
-**繁體中文:** 涉及其它服務相關的內容，優先受對應服務提供者的使用者協議與服務條款約束。
+**繁體中文:**
+涉及其它服務相關的內容，優先受對應服務提供者的使用者協議與服務條款約束。
 
-**文言:** 涉及其它服務之事，優先受其提供者之約、款所約束。
+**文言:**
+涉及其它服務之事，優先受其提供者之約、款所約束。
 
-**日本語:** その他のサービスに関連するコンテンツは、それぞれのサービス提供者の利用規約およびサービス条件に優先的に従うものとします。
+**日本語:**
+その他のサービスに関連するコンテンツは、それぞれのサービス提供者の利用規約およびサービス条件に優先的に従うものとします。
 
-**한국어:** 기타 서비스와 관련된 콘텐츠는 해당 서비스 제공업체의 이용 약관 및 서비스 조건의 적용을 우선적으로 받습니다.
+**한국어:**
+기타 서비스와 관련된 콘텐츠는 해당 서비스 제공업체의 이용 약관 및 서비스 조건의 적용을 우선적으로 받습니다.
 
-**Français:** Le contenu lié à d'autres services est prioritairement soumis aux conditions d'utilisation et aux accords de service des fournisseurs concernés.
+**Français:**
+Le contenu lié à d'autres services est prioritairement soumis aux conditions d'utilisation et aux accords de service des fournisseurs concernés.
 
-**Deutsch:** Inhalte, die sich auf andere Dienste beziehen, unterliegen vorrangig den Nutzungsbedingungen und Servicevereinbarungen der jeweiligen Dienstanbieter.
+**Deutsch:**
+Inhalte, die sich auf andere Dienste beziehen, unterliegen vorrangig den Nutzungsbedingungen und Servicevereinbarungen der jeweiligen Dienstanbieter.
 
-**Español:** El contenido relacionado con otros servicios está sujeto prioritariamente a los términos de servicio y acuerdos de usuario de los respectivos proveedores.
+**Español:**
+El contenido relacionado con otros servicios está sujeto prioritariamente a los términos de servicio y acuerdos de usuario de los respectivos proveedores.
 
-**Русский:** Контент, связанный с другими сервисами, в первую очередь регулируется условиями обслуживания и пользовательскими соглашениями соответствующих поставщиков услуг.
+**Русский:**
+Контент, связанный с другими сервисами, в первую очередь регулируется условиями обслуживания и пользовательскими соглашениями соответствующих поставщиков услуг.
 
-**العربية:** تخضع المحتويات المتعلقة بالخدمات الأخرى بشكل أساسي لشروط الخدمة واتفاقيات المستخدم الخاصة بمقدمي الخدمات المعنيين.
+**العربية:**
+تخضع المحتويات المتعلقة بالخدمات الأخرى بشكل أساسي لشروط الخدمة واتفاقيات المستخدم الخاصة بمقدمي الخدمات المعنيين.
 
 </details>
