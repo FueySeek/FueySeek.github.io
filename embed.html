@@ -16,6 +16,7 @@
             height: auto;
             min-height: 0 !important;
             border-radius: var(--radius-sm);
+            cursor: url("images/mouse.png") 4 4, auto;
         }
         html::-webkit-scrollbar,
         body::-webkit-scrollbar { display: none; width: 0; height: 0; }
@@ -70,10 +71,17 @@
     <script src="js/common.js"></script>
     <script>
         const NOTES_TEXT = {
-            zh: "正在施工中 . . .", en: "Under Construction . . .",
-            ja: "工事中 . . .", ko: "공사 중 . . .",
-            fr: "En construction . . .", de: "Im Bau . . .",
-            es: "En construcción . . ."
+            zh: "正在施工中 . . .",
+            "zh-Hant": "正在施工中 . . .",
+            lzh: "營建中 . . .",
+            en: "Under Construction . . .",
+            ja: "工事中 . . .",
+            ko: "공사 중 . . .",
+            fr: "En construction . . .",
+            de: "Im Bau . . .",
+            es: "En construcción . . .",
+            ru: "Идёт строительство . . .",
+            ar: "قيد الإنشاء . . ."
         };
         let currentLang = localStorage.getItem("fuey-lang") || "en";
         let gameRunning = false;
@@ -163,6 +171,8 @@
             dinoCanvas.width = width;
             dinoCanvas.height = height;
 
+            const GAME_VERSION = "v26.11.8.0";
+
             let isJumping = false;
             let velocity = 0;
             const gravity = 0.6;
@@ -239,12 +249,16 @@
             function getMessages(lang) {
                 const all = {
                     zh: { deaths: ["看来力不从心啊，使用空格重新开始！", "游戏结束，使用空格重新开始", "看来你死了，使用空格重新开始", "你死了！使用空格重新开始"], score: "当前分数", hi: "最高记录", newRecord: "新纪录！！", separator: " 丨 " },
+                    "zh-Hant": { deaths: ["看來力不從心啊，使用空格重新開始！", "遊戲結束，使用空格重新開始", "看來你死了，使用空格重新開始", "你死了！使用空格重新開始"], score: "當前分數", hi: "最高記錄", newRecord: "新紀錄！！", separator: " 丨 " },
+                    lzh: { deaths: ["力有不逮矣，按空格以復！", "局終，按空格以復", "觀汝死矣，按空格以復", "汝死矣！按空格以復"], score: "今分", hi: "高錄", newRecord: "新錄！！", separator: " 丨 " },
                     en: { deaths: ["Out of breath! Press Space to restart!", "Game over, press Space to restart", "Looks like you died, press Space to restart", "You died! Press Space to restart"], score: "Score", hi: "HI", newRecord: "New Record!!", separator: " | " },
                     ja: { deaths: ["息切れ！スペースで再開！", "ゲームオーバー、スペースで再開", "死んだようです、スペースで再開", "あなたは死にました！スペースで再開"], score: "スコア", hi: "最高", newRecord: "新記録！！", separator: " 丨 " },
                     ko: { deaths: ["숨이 차네요! 스페이스로 재시작!", "게임 오버, 스페이스로 재시작", "죽은 것 같네요, 스페이스로 재시작", "당신은 죽었습니다! 스페이스로 재시작"], score: "점수", hi: "최고", newRecord: "신기록！！", separator: " 丨 " },
                     fr: { deaths: ["À bout de souffle ! Espace pour recommencer !", "Partie terminée, appuyez sur Espace pour recommencer", "On dirait que vous êtes mort, appuyez sur Espace pour recommencer", "Vous êtes mort ! Appuyez sur Espace pour recommencer"], score: "Score", hi: "Meilleur", newRecord: "Nouveau record !!", separator: " 丨 " },
                     de: { deaths: ["Außer Atem! Leertaste zum Neustart!", "Spiel vorbei, Leertaste zum Neustart", "Sieht aus, als wärst du gestorben, Leertaste zum Neustart", "Du bist gestorben! Leertaste zum Neustart"], score: "Punkte", hi: "Best", newRecord: "Neuer Rekord!!", separator: " 丨 " },
-                    es: { deaths: ["¡Sin aliento! ¡Espacio para reiniciar!", "Fin del juego, pulsa Espacio para reiniciar", "Parece que moriste, pulsa Espacio para reiniciar", "¡Moriste! Pulsa Espacio para reiniciar"], score: "Puntuación", hi: "Mejor", newRecord: "¡Nuevo récord!", separator: " 丨 " }
+                    es: { deaths: ["¡Sin aliento! ¡Espacio para reiniciar!", "Fin del juego, pulsa Espacio para reiniciar", "Parece que moriste, pulsa Espacio para reiniciar", "¡Moriste! Pulsa Espacio para reiniciar"], score: "Puntuación", hi: "Mejor", newRecord: "¡Nuevo récord!", separator: " 丨 " },
+                    ru: { deaths: ["Задыхаетесь! Нажмите пробел для рестарта!", "Игра окончена, нажмите пробел для рестарта", "Похоже, вы умерли, нажмите пробел для рестарта", "Вы умерли! Нажмите пробел для рестарта"], score: "Счёт", hi: "Рекорд", newRecord: "Новый рекорд!!", separator: " 丨 " },
+                    ar: { deaths: ["لا نفس! اضغط مسافة لإعادة البدء!", "انتهت اللعبة، اضغط مسافة لإعادة البدء", "يبدو أنك مت، اضغط مسافة لإعادة البدء", "لقد مت! اضغط مسافة لإعادة البدء"], score: "النقاط", hi: "أعلى", newRecord: "رقم قياسي جديد!!", separator: " 丨 " }
                 };
                 return all[lang] || all.en;
             }
@@ -723,8 +737,8 @@
                 ctx.textAlign = "left";
                 ctx.font = "bold 12px monospace";
                 ctx.fillStyle = textColor;
-                ctx.fillText("v26.11.1.0", 20, 30);
-                const vw = ctx.measureText("v26.11.1.0").width;
+                ctx.fillText(GAME_VERSION, 20, 30);
+                const vw = ctx.measureText(GAME_VERSION).width;
                 ctx.fillStyle = color;
                 ctx.fillText(label, 20 + vw + 10, 30);
                 if (boosted) {

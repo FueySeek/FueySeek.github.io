@@ -16,6 +16,7 @@
             height: auto;
             min-height: 0 !important;
             border-radius: var(--radius-sm);
+            cursor: url("images/mouse.png") 4 4, auto;
         }
         html::-webkit-scrollbar,
         body::-webkit-scrollbar { display: none; width: 0; height: 0; }
@@ -60,12 +61,16 @@
     <script>
         const TEXTS = {
             zh: "好东西要来了！",
+            "zh-Hant": "好東西要來了！",
+            lzh: "佳物將至！",
             en: "Something good is coming!",
             ja: "良いものが来ます！",
             ko: "좋은 것이 오고 있어요!",
             fr: "De bonnes choses arrivent !",
             de: "Gute Dinge kommen!",
-            es: "¡Buenas cosas están por venir!"
+            es: "¡Buenas cosas están por venir!",
+            ru: "Скоро будет что-то хорошее!",
+            ar: "شيء جيد قادم!"
         };
         let currentLang = localStorage.getItem("fuey-lang") || "en";
 

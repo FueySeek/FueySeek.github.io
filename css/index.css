@@ -136,6 +136,9 @@ html[data-handed="left"] .hero-right { justify-content: flex-start; }
 .home-embed .embed-sub-title {
     cursor: url("../images/mouse.png") 4 4, auto;
 }
+.home-embed .embed-frame {
+    cursor: url("../images/mouse.png") 4 4, auto;
+}
 .home-embed .developer-section {
     margin-top: 0;
     padding-top: 56px;

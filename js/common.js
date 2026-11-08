@@ -22,14 +22,14 @@ let scrollLocked = false;
 function onWheelBlock(e) {
     if (!scrollLocked) return;
     const t = e.target;
-    if (t && t.closest && (t.closest(".settings-body") || t.closest(".lang-dropdown-panel"))) return;
+    if (t && t.closest && (t.closest(".settings-body.scrollable") || t.closest(".lang-dropdown-scroll"))) return;
     e.preventDefault();
 }
 function onTouchBlock(e) {
     if (!scrollLocked) return;
     if (e.touches && e.touches.length > 1) { e.preventDefault(); return; }
     const t = e.target;
-    if (t && t.closest && (t.closest(".settings-body") || t.closest(".lang-dropdown-panel"))) return;
+    if (t && t.closest && (t.closest(".settings-body.scrollable") || t.closest(".lang-dropdown-scroll"))) return;
     e.preventDefault();
 }
 function lockBodyScroll() {
@@ -38,6 +38,8 @@ function lockBodyScroll() {
     scrollLocked = true;
     document.documentElement.classList.add("locked");
     document.body.classList.add("locked");
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
     document.addEventListener("wheel", onWheelBlock, { passive: false });
     document.addEventListener("touchmove", onTouchBlock, { passive: false });
 }
@@ -47,9 +49,26 @@ function unlockBodyScroll() {
     scrollLocked = false;
     document.documentElement.classList.remove("locked");
     document.body.classList.remove("locked");
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
     document.removeEventListener("wheel", onWheelBlock, { passive: false });
     document.removeEventListener("touchmove", onTouchBlock, { passive: false });
 }
+
+function updateSettingsBodyScroll() {
+    const panel = document.getElementById("settingsPanel");
+    if (!panel || !panel.classList.contains("open")) return;
+    const body = document.querySelector(".settings-body");
+    if (!body) return;
+    body.classList.remove("scrollable");
+    const prev = body.style.overflowY;
+    body.style.overflowY = "auto";
+    void body.offsetHeight;
+    const canScroll = body.scrollHeight > body.clientHeight + 2;
+    body.style.overflowY = prev;
+    if (canScroll) body.classList.add("scrollable");
+}
+window.__fueyUpdateSettingsBodyScroll = updateSettingsBodyScroll;
 
 function clearAllFueyStorage() {
     const keys = [];
@@ -108,6 +127,68 @@ function notifyFrames(payload) {
     });
 }
 window.__fueyNotifyFrames = notifyFrames;
+
+function getCustomization() {
+    const raw = localStorage.getItem("fuey-custom");
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+}
+function isCustomizationEnabled() {
+    return localStorage.getItem("fuey-apply-customization") === "true";
+}
+function isCustomProtocolsEnabled() {
+    return localStorage.getItem("fuey-enable-custom-protocols") === "true";
+}
+function saveCustomization(custom) {
+    if (!custom || typeof custom !== "object") return;
+    try { localStorage.setItem("fuey-custom", JSON.stringify(custom)); } catch (e) {}
+}
+function applyCustomization(custom) {
+    if (!custom || typeof custom !== "object") return;
+    if (custom.vars && typeof custom.vars === "object") {
+        Object.keys(custom.vars).forEach(k => {
+            try { document.documentElement.style.setProperty(k, String(custom.vars[k])); } catch (e) {}
+        });
+    }
+    if (typeof custom.css === "string" && custom.css) {
+        let s = document.getElementById("fuey-custom-style");
+        if (!s) {
+            s = document.createElement("style");
+            s.id = "fuey-custom-style";
+            document.head.appendChild(s);
+        }
+        s.textContent = custom.css;
+    }
+    if (typeof custom.js === "string" && custom.js && isCustomProtocolsEnabled()) {
+        try { new Function("window", "document", custom.js)(window, document); } catch (e) {}
+    }
+}
+function initCustomization() {
+    if (!isCustomizationEnabled()) return;
+    applyCustomization(getCustomization());
+}
+window.__fueyApplyCustomization = function (custom) {
+    saveCustomization(custom);
+    applyCustomization(custom);
+};
+window.__fueyGetCustomization = getCustomization;
+window.__fueySetCustomizationEnabled = function (enabled) {
+    localStorage.setItem("fuey-apply-customization", enabled ? "true" : "false");
+    if (enabled) initCustomization();
+    updateSecurityIndicator();
+};
+window.__fueySetCustomProtocolsEnabled = function (enabled) {
+    localStorage.setItem("fuey-enable-custom-protocols", enabled ? "true" : "false");
+    updateSecurityIndicator();
+};
+
+function hasCustomContent(custom) {
+    if (!custom || typeof custom !== "object") return false;
+    if (custom.vars && typeof custom.vars === "object" && Object.keys(custom.vars).length > 0) return true;
+    if (typeof custom.css === "string" && custom.css.trim()) return true;
+    if (typeof custom.js === "string" && custom.js.trim()) return true;
+    return false;
+}
 
 function initTheme() {
     const savedTheme = localStorage.getItem("fuey-theme") || "light";
@@ -248,6 +329,7 @@ function applyHanded(handed) {
                 syncAllSegmented();
                 requestAnimationFrame(syncAllSegmented);
                 setTimeout(syncAllSegmented, 250);
+                updateSettingsBodyScroll();
             }
         }, 500);
     }, 520);
@@ -314,8 +396,8 @@ function initSegmented() {
             else if (target.id === "themeDark") applyTheme("dark");
             else if (target.id === "dataSourceGithub") setDataSource("github");
             else if (target.id === "dataSourceLocal") setDataSource("local");
-            else if (target.id === "langZh") applyLangChoice("zh");
-            else if (target.id === "langEn") applyLangChoice("en");
+            else if (target.id === "langZh") { closeLangDropdown(); applyLangChoice("zh"); }
+            else if (target.id === "langEn") { closeLangDropdown(); applyLangChoice("en"); }
         }
         function syncInstant() { positionIndicator(getActiveItem(), true); }
         function syncAnimated() { positionIndicator(getActiveItem(), false); }
@@ -361,6 +443,7 @@ function initSegmented() {
                         positionIndicator(pendingItem, false);
                         openLangDropdown();
                     } else {
+                        closeLangDropdown();
                         syncActiveClass(pendingItem);
                         positionIndicator(pendingItem, false);
                         applyChoice(pendingItem);
@@ -441,12 +524,46 @@ function applyLangChoice(lang) {
 }
 
 let lastOpenLangTime = 0;
+function positionLangPanel() {
+    const panel = document.getElementById("langDropdownPanel");
+    const toggle = document.getElementById("langDropdownToggle");
+    if (!panel || !toggle) return;
+    const rect = toggle.getBoundingClientRect();
+    const viewportH = window.innerHeight;
+    const viewportW = window.innerWidth;
+    const padding = 16;
+    const gap = 6;
+    let maxH = Math.min(320, viewportH - padding * 2);
+    let left = rect.left;
+    if (left + rect.width > viewportW - padding) left = viewportW - padding - rect.width;
+    if (left < padding) left = padding;
+    let top = rect.bottom + gap;
+    if (top + maxH > viewportH - padding) {
+        const topSpace = rect.top - gap - padding;
+        const bottomSpace = viewportH - padding - (rect.bottom + gap);
+        if (topSpace > bottomSpace) {
+            maxH = Math.max(120, Math.min(maxH, topSpace));
+            top = rect.top - gap - maxH;
+        } else {
+            maxH = Math.max(120, Math.min(maxH, bottomSpace));
+        }
+    }
+    panel.style.top = top + "px";
+    panel.style.left = left + "px";
+    panel.style.width = rect.width + "px";
+    panel.style.maxHeight = maxH + "px";
+}
+window.__positionLangPanel = positionLangPanel;
+
 function openLangDropdown() {
     const dropdown = document.getElementById("langDropdown");
+    const panel = document.getElementById("langDropdownPanel");
     const otherBtn = document.getElementById("langOther");
-    if (!dropdown) return;
+    if (!dropdown || !panel) return;
     lastOpenLangTime = Date.now();
-    if (dropdown.classList.contains("open")) return;
+    if (panel.classList.contains("open")) return;
+    positionLangPanel();
+    panel.classList.add("open");
     dropdown.classList.add("open");
     if (otherBtn) {
         const group = otherBtn.parentElement;
@@ -460,8 +577,10 @@ function openLangDropdown() {
 }
 function closeLangDropdown() {
     const dropdown = document.getElementById("langDropdown");
-    if (!dropdown) return;
-    if (!dropdown.classList.contains("open")) return;
+    const panel = document.getElementById("langDropdownPanel");
+    if (!dropdown || !panel) return;
+    if (!panel.classList.contains("open")) return;
+    panel.classList.remove("open");
     dropdown.classList.remove("open");
     unlockBodyScroll();
     if (typeof syncLangButtons === "function") syncLangButtons();
@@ -479,9 +598,24 @@ function initLangDropdown() {
     if (!dropdown || !toggle || !panel) return;
     if (dropdown.dataset.built === "1") return;
     dropdown.dataset.built = "1";
+
+    let scrollEl = panel.querySelector(".lang-dropdown-scroll");
+    if (!scrollEl) {
+        scrollEl = document.createElement("div");
+        scrollEl.className = "lang-dropdown-scroll";
+        while (panel.firstChild) {
+            scrollEl.appendChild(panel.firstChild);
+        }
+        panel.appendChild(scrollEl);
+    }
+
+    if (panel.parentNode !== document.body) {
+        document.body.appendChild(panel);
+    }
+
     function syncActive() {
         const lang = localStorage.getItem("fuey-lang") || "en";
-        panel.querySelectorAll(".lang-dropdown-item").forEach(item => {
+        scrollEl.querySelectorAll(".lang-dropdown-item").forEach(item => {
             item.classList.toggle("active", item.dataset.code === lang);
         });
         if (label) {
@@ -494,14 +628,14 @@ function initLangDropdown() {
     toggle.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (dropdown.classList.contains("open")) {
+        if (panel.classList.contains("open")) {
             lastOpenLangTime = 0;
             closeLangDropdown();
         } else {
             openLangDropdown();
         }
     });
-    panel.querySelectorAll(".lang-dropdown-item").forEach(item => {
+    scrollEl.querySelectorAll(".lang-dropdown-item").forEach(item => {
         item.addEventListener("click", (e) => {
             e.stopPropagation();
             const code = item.dataset.code;
@@ -512,9 +646,10 @@ function initLangDropdown() {
         });
     });
     document.addEventListener("click", (ev) => {
-        if (!dropdown.classList.contains("open")) return;
+        if (!panel.classList.contains("open")) return;
         if (Date.now() - lastOpenLangTime < 500) return;
-        if (dropdown.contains(ev.target)) return;
+        if (panel.contains(ev.target)) return;
+        if (toggle.contains(ev.target)) return;
         const otherBtn = document.getElementById("langOther");
         if (ev.target === otherBtn) return;
         lastOpenLangTime = 0;
@@ -527,7 +662,44 @@ function initLangDropdown() {
         }
     });
     document.addEventListener("fuey-settings-changed", syncActive);
+    window.addEventListener("resize", () => {
+        if (panel.classList.contains("open")) positionLangPanel();
+    });
+    window.addEventListener("scroll", () => {
+        if (panel.classList.contains("open")) positionLangPanel();
+    }, true);
 }
+
+function initSecurityIndicator() {
+    const settingsBody = document.querySelector(".settings-body");
+    if (!settingsBody) return;
+    if (document.getElementById("securityIndicator")) return;
+    const groups = settingsBody.querySelectorAll(".setting-group");
+    let langGroup = null;
+    groups.forEach(g => {
+        if (!langGroup && g.querySelector(".lang-options")) langGroup = g;
+    });
+    if (!langGroup) return;
+    const wrap = document.createElement("div");
+    wrap.className = "security-indicator-group";
+    wrap.id = "securityIndicator";
+    wrap.innerHTML = `
+        <div class="security-indicator-row">
+            <span class="security-label" id="securityLabel" data-lang-key="secureEnv">Secure Environment</span>
+            <span class="security-dot" id="securityDot"></span>
+        </div>
+    `;
+    langGroup.parentNode.insertBefore(wrap, langGroup.nextSibling);
+    updateSecurityIndicator();
+    document.addEventListener("fuey-settings-changed", updateSecurityIndicator);
+}
+function updateSecurityIndicator() {
+    const dot = document.getElementById("securityDot");
+    if (!dot) return;
+    const unsafe = isCustomizationEnabled() || isCustomProtocolsEnabled();
+    dot.classList.toggle("unsafe", unsafe);
+}
+window.__fueyUpdateSecurityIndicator = updateSecurityIndicator;
 
 function initSettingsIO() {
     const exportBtn = document.getElementById("exportSettings");
@@ -539,12 +711,42 @@ function initSettingsIO() {
         fileInput.addEventListener("change", importSettingsFile);
     }
 }
+
+const VALID_LANGS = ["en", "zh", "zh-Hant", "lzh", "ja", "ko", "fr", "de", "es", "ru", "ar"];
+const UI_SETTING_KEYS = [
+    "fuey-theme",
+    "fuey-lang",
+    "fuey-handed",
+    "fuey-data-source",
+    "fuey-apply-customization",
+    "fuey-enable-custom-protocols",
+    "fuey-custom"
+];
+
+function collectPersistent() {
+    const out = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key || key.indexOf("fuey-") !== 0) continue;
+        if (UI_SETTING_KEYS.indexOf(key) !== -1) continue;
+        out[key.substring("fuey-".length)] = localStorage.getItem(key);
+    }
+    return out;
+}
+
 function exportSettings() {
     const settings = {
+        __meta__: {
+            protocol: "Fuey EULA"
+        },
         theme: localStorage.getItem("fuey-theme") || "light",
         lang: localStorage.getItem("fuey-lang") || "en",
         handed: localStorage.getItem("fuey-handed") || "right",
-        dataSource: getDataSource()
+        dataSource: getDataSource(),
+        "apply-customization": isCustomizationEnabled(),
+        "enable-custom-protocols": isCustomProtocolsEnabled(),
+        custom: getCustomization(),
+        __persistent__: collectPersistent()
     };
     const content = `window.__FUEY_SETTINGS__ = ${JSON.stringify(settings, null, 2)};\n`;
     const blob = new Blob([content], { type: "application/javascript" });
@@ -558,35 +760,147 @@ function exportSettings() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     showIOToast(typeof t === "function" ? t("exportSuccess") : "Exported", "ok");
 }
+
+function validateImportFormat(settings) {
+    if (!settings || typeof settings !== "object" || Array.isArray(settings)) return false;
+    const meta = settings.__meta__;
+    if (!meta || typeof meta !== "object" || Array.isArray(meta)) return false;
+    if (typeof meta.protocol !== "string" || !meta.protocol) return false;
+    if (settings.theme !== "light" && settings.theme !== "dark") return false;
+    if (VALID_LANGS.indexOf(settings.lang) === -1) return false;
+    if (settings.handed !== "left" && settings.handed !== "right") return false;
+    if (settings.dataSource !== "github" && settings.dataSource !== "local") return false;
+    if (typeof settings["apply-customization"] !== "boolean") return false;
+    if (typeof settings["enable-custom-protocols"] !== "boolean") return false;
+    if (settings.custom !== undefined && settings.custom !== null) {
+        if (typeof settings.custom !== "object" || Array.isArray(settings.custom)) return false;
+    }
+    if (settings.__persistent__ !== undefined && settings.__persistent__ !== null) {
+        if (typeof settings.__persistent__ !== "object" || Array.isArray(settings.__persistent__)) return false;
+    }
+    return true;
+}
+
+function applySettings(settings) {
+    localStorage.setItem("fuey-theme", settings.theme);
+    localStorage.setItem("fuey-lang", settings.lang);
+    localStorage.setItem("fuey-handed", settings.handed);
+    localStorage.setItem("fuey-data-source", settings.dataSource);
+
+    if (settings.__persistent__ && typeof settings.__persistent__ === "object") {
+        Object.keys(settings.__persistent__).forEach(k => {
+            const val = settings.__persistent__[k];
+            const fullKey = "fuey-" + k;
+            if (UI_SETTING_KEYS.indexOf(fullKey) !== -1) return;
+            if (val === null || val === undefined) {
+                localStorage.removeItem(fullKey);
+            } else {
+                try { localStorage.setItem(fullKey, String(val)); } catch (e) {}
+            }
+        });
+    }
+
+    const wantsCustom = settings["apply-customization"] === true;
+    const customCode = settings.custom;
+    const hasCode = hasCustomContent(customCode);
+    const wantsProtocols = settings["enable-custom-protocols"] === true;
+
+    if (customCode && typeof customCode === "object") {
+        saveCustomization(customCode);
+    } else {
+        localStorage.removeItem("fuey-custom");
+    }
+
+    if (wantsCustom && hasCode) {
+        localStorage.setItem("fuey-apply-customization", "false");
+        localStorage.setItem("fuey-enable-custom-protocols", "false");
+        showImportConfirm(() => {
+            localStorage.setItem("fuey-apply-customization", "true");
+            localStorage.setItem("fuey-enable-custom-protocols", wantsProtocols ? "true" : "false");
+            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
+            setTimeout(() => {
+                window.location.replace(window.location.href.split("#")[0]);
+            }, 600);
+        }, () => {
+            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
+            setTimeout(() => {
+                window.location.replace(window.location.href.split("#")[0]);
+            }, 600);
+        });
+        return;
+    }
+
+    localStorage.setItem("fuey-apply-customization", wantsCustom ? "true" : "false");
+    localStorage.setItem("fuey-enable-custom-protocols", wantsProtocols ? "true" : "false");
+    showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
+    setTimeout(() => {
+        window.location.replace(window.location.href.split("#")[0]);
+    }, 600);
+}
+
+function showImportConfirm(onConfirm, onCancel) {
+    const existing = document.querySelector(".confirm-overlay");
+    if (existing) existing.remove();
+    const overlay = document.createElement("div");
+    overlay.className = "confirm-overlay";
+    overlay.innerHTML = `
+        <div class="confirm-dialog">
+            <p class="confirm-text">${t("importWarnDesc")}</p>
+            <div class="confirm-actions">
+                <button class="confirm-btn no">${t("importWarnCancel")}</button>
+                <button class="confirm-btn yes">${t("importWarnContinue")}</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector(".confirm-btn.no").addEventListener("click", () => {
+        overlay.classList.remove("show");
+        setTimeout(() => {
+            overlay.remove();
+            if (typeof onCancel === "function") onCancel();
+        }, 300);
+    });
+    overlay.querySelector(".confirm-btn.yes").addEventListener("click", () => {
+        overlay.classList.remove("show");
+        setTimeout(() => {
+            overlay.remove();
+            onConfirm();
+        }, 300);
+    });
+    requestAnimationFrame(() => overlay.classList.add("show"));
+}
+
 function importSettingsFile(e) {
     const file = e.target.files && e.target.files[0];
-    if (!file) return;
+    if (!file) {
+        e.target.value = "";
+        return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
         try {
             const code = String(reader.result || "");
             const fn = new Function("window", code + "\nreturn window.__FUEY_SETTINGS__ || null;");
             const settings = fn(window);
-            if (!settings || typeof settings !== "object") {
-                showIOToast(typeof t === "function" ? t("importFailed") : "Import failed", "err");
+            if (!settings || !validateImportFormat(settings)) {
+                showIOToast(typeof t === "function" ? t("importFailedFormat") : "Invalid settings file format", "err");
                 e.target.value = "";
                 return;
             }
-            if (settings.theme === "light" || settings.theme === "dark") localStorage.setItem("fuey-theme", settings.theme);
-            if (settings.lang) localStorage.setItem("fuey-lang", settings.lang);
-            if (settings.handed === "left" || settings.handed === "right") localStorage.setItem("fuey-handed", settings.handed);
-            if (settings.dataSource === "github" || settings.dataSource === "local") localStorage.setItem("fuey-data-source", settings.dataSource);
-            showIOToast(typeof t === "function" ? t("importSuccess") : "Imported", "ok");
-            setTimeout(() => {
-                window.location.replace(window.location.href.split("#")[0]);
-            }, 600);
+            applySettings(settings);
+            e.target.value = "";
         } catch (err) {
-            showIOToast(typeof t === "function" ? t("importFailed") : "Import failed", "err");
+            showIOToast(typeof t === "function" ? t("importFailedFormat") : "Invalid settings file format", "err");
             e.target.value = "";
         }
     };
+    reader.onerror = () => {
+        showIOToast(typeof t === "function" ? t("importFailedFormat") : "Invalid settings file format", "err");
+        e.target.value = "";
+    };
     reader.readAsText(file);
 }
+
 function showIOToast(text, typeOrBool) {
     let type = "ok";
     if (typeOrBool === false) type = "err";
@@ -722,8 +1036,15 @@ function initSettingsPanel() {
         notifyNavToSettings();
         lockBodyScroll();
         syncAllSegmented();
-        requestAnimationFrame(syncAllSegmented);
-        setTimeout(syncAllSegmented, 250);
+        requestAnimationFrame(() => {
+            syncAllSegmented();
+            updateSettingsBodyScroll();
+        });
+        setTimeout(() => {
+            syncAllSegmented();
+            updateSettingsBodyScroll();
+        }, 250);
+        setTimeout(updateSettingsBodyScroll, 600);
         initPanelDrag();
     }
     function closePanel() {
@@ -755,6 +1076,9 @@ function initSettingsPanel() {
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanel(); });
     const resetBtn = document.getElementById("resetSettings");
     if (resetBtn) resetBtn.addEventListener("click", () => showResetConfirm());
+    window.addEventListener("resize", () => {
+        if (settingsPanel.classList.contains("open")) updateSettingsBodyScroll();
+    });
     let panelDragInited = false;
     let dragging = false;
     let dragStartX = 0;
@@ -806,7 +1130,7 @@ function initSettingsPanel() {
         }
         settingsPanel.addEventListener("mousedown", (e) => {
             if (e.button !== 0) return;
-            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row")) return;
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row, .settings-body.scrollable")) return;
             if (!settingsPanel.classList.contains("open")) return;
             if (!taskLock.acquire("settings")) return;
             isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
@@ -822,7 +1146,7 @@ function initSettingsPanel() {
         });
         settingsPanel.addEventListener("touchstart", (e) => {
             if (e.touches.length !== 1) return;
-            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row")) return;
+            if (e.target.closest("button, a, input, .toggle-switch, .theme-options, .lang-options, .data-source-options, .lang-dropdown, .settings-io-row, .settings-body.scrollable")) return;
             if (!settingsPanel.classList.contains("open")) return;
             if (!taskLock.acquire("settings")) return;
             isLeftHanded = document.documentElement.getAttribute("data-handed") === "left";
@@ -1056,8 +1380,15 @@ function initNavSlider() {
                     if (backdrop) backdrop.classList.add("open");
                     lockBodyScroll();
                     syncAllSegmented();
-                    requestAnimationFrame(syncAllSegmented);
-                    setTimeout(syncAllSegmented, 250);
+                    requestAnimationFrame(() => {
+                        syncAllSegmented();
+                        updateSettingsBodyScroll();
+                    });
+                    setTimeout(() => {
+                        syncAllSegmented();
+                        updateSettingsBodyScroll();
+                    }, 250);
+                    setTimeout(updateSettingsBodyScroll, 600);
                 }
             } else if (target) {
                 pageItem = target;
@@ -1176,6 +1507,7 @@ document.addEventListener("DOMContentLoaded", () => {
         history.scrollRestoration = "manual";
     }
     initTheme();
+    initCustomization();
     initHanded();
     initNavSlider();
     initSettingsPanel();
@@ -1185,6 +1517,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSegmented();
     initDevelopers();
     initLangDropdown();
+    initSecurityIndicator();
     initSettingsIO();
     initVersionCheck();
     initDataSource();

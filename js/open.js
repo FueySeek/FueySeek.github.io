@@ -101,7 +101,6 @@ async function loadAboutData(src) {
 
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof applyLang === "function") applyLang();
-    loadAboutData(getDataSourceSafe());
     document.addEventListener("fuey-settings-changed", () => {
         if (aboutData) renderAboutList(aboutData);
     });
@@ -109,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const src = getDataSourceSafe();
         if (src !== currentDataSrc) loadAboutData(src);
     });
+    loadAboutData(getDataSourceSafe());
 });
 
 function renderAboutList(data) {
@@ -122,7 +122,7 @@ function renderAboutList(data) {
     listEl.innerHTML = data.items.map((item, index) => {
         let name = "";
         if (item.name && typeof item.name === "object") {
-            name = item.name[lang] || item.name.en || item.name.zh || "";
+            name = item.name[lang] || item.name.zh || item.name.en || "";
         } else if (typeof item.name === "string") {
             name = item.name;
         }

@@ -243,6 +243,7 @@ html[data-handed="left"] .settings-footer { text-align: right; }
     align-items: center;
     margin-bottom: 24px;
     min-height: 36px;
+    flex-shrink: 0;
 }
 .settings-header h3 { font-size: 20px; font-weight: 600; line-height: 1.3; color: var(--text); }
 .close-btn {
@@ -262,10 +263,16 @@ html[data-handed="left"] .settings-footer { text-align: right; }
 .close-btn:hover { background: var(--accent-soft); color: var(--accent); transform: rotate(90deg); }
 .settings-body {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding-bottom: 16px;
+    padding-bottom: 0;
+    min-height: 0;
+    overscroll-behavior: contain;
+}
+.settings-body.scrollable {
+    overflow-y: auto;
 }
 .settings-body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .setting-group {
@@ -421,32 +428,50 @@ html[data-handed="left"] .data-source-warning { text-align: right; }
 }
 .lang-dropdown.open .lang-dropdown-arrow { transform: rotate(180deg); }
 .lang-dropdown-panel {
-    position: absolute;
-    top: calc(100% + 6px);
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 100%;
+    width: 320px;
     background: var(--nav-bg);
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-sm);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), inset 0 0.5px 0 rgba(255, 255, 255, 0.7);
-    z-index: 210;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 0.5px 0 rgba(255, 255, 255, 0.7);
+    z-index: 3000;
     display: flex;
     flex-direction: column;
-    padding: 4px;
+    padding: 0;
     opacity: 0;
     pointer-events: none;
     transform: translateY(-6px);
     transition: opacity 0.22s var(--smooth), transform 0.28s var(--spring);
+    overflow: hidden;
 }
 [data-theme="dark"] .lang-dropdown-panel {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 0.5px 0 rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.12);
 }
-.lang-dropdown.open .lang-dropdown-panel {
+.lang-dropdown-panel.open {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+}
+.lang-dropdown-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: flex;
+    flex-direction: column;
+    overscroll-behavior: contain;
+    padding: 4px 0;
+}
+.lang-dropdown-scroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 .lang-dropdown-item {
     padding: 10px 14px;
@@ -460,6 +485,8 @@ html[data-handed="left"] .data-source-warning { text-align: right; }
     transition: background 0.2s var(--smooth), color 0.2s var(--smooth);
     -webkit-appearance: none;
     appearance: none;
+    flex-shrink: 0;
+    margin: 0 4px;
 }
 .lang-dropdown-item:hover { background: var(--accent-soft); color: var(--accent); }
 .lang-dropdown-item.active { color: var(--accent); font-weight: 600; }
@@ -522,6 +549,7 @@ html[data-handed="left"] .handed-desc { text-align: right; }
     margin-top: auto;
     padding-top: 16px;
     border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 .settings-io-row { display: flex; gap: 8px; margin-bottom: 10px; }
 .io-btn {
@@ -792,6 +820,38 @@ html[data-handed="left"] .handed-desc { text-align: right; }
     80% { transform: rotate(4deg) scale(1); }
     100% { transform: rotate(0deg) scale(1); }
 }
+.security-indicator-group { margin-bottom: 24px; }
+.security-indicator-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 0;
+    min-height: 22px;
+}
+html[data-handed="left"] .security-indicator-row { flex-direction: row-reverse; }
+.security-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--switch-on);
+    box-shadow: 0 0 8px var(--switch-on), 0 0 16px rgba(52, 199, 89, 0.55);
+    transition: background 0.3s var(--smooth), box-shadow 0.3s var(--smooth);
+    flex-shrink: 0;
+}
+.security-dot.unsafe {
+    background: rgba(120, 120, 128, 0.5);
+    box-shadow: none;
+}
+.security-label {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 0;
+}
+html[data-handed="left"] .security-label { text-align: right; }
 .home-embed {
     width: 100%;
     max-width: 1200px;

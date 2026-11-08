@@ -7,6 +7,32 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.11.8.0",
+                date: "2026-11-08",
+                title: "设置面板稳定性与导入导出修复",
+                sections: [
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了非中文页面的列表未同步为当前语言的问题，现在下载、关于、其它项目三个列表页会优先使用当前语言，缺失时回退中文。",
+                            "修复了语言下拉框四角圆角不完整的问题，下拉框改为独立浮层并挂载到页面根部，不再被设置栏底部的导入导出按钮遮挡。",
+                            "修复了未打开语言下拉框时设置面板仍可被滑动的问题，现在只有当内容真正溢出时才允许滚动。",
+                            "修复了语言下拉框无法滚动的问题，现在滚动的是框内内容，不会影响设置面板。",
+                            "修复了导入高风险设置文件时立即执行的 bug，现在导入前会先弹出确认提示，除非文件既未开启自定义开关也未包含注入代码。",
+                            "修复了导出设置包含导出时间且格式不符合要求的问题。"
+                        ]
+                    },
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "导出的设置文件不再包含导出时间和多余字段，并新增隐藏的持久化设置项（如小恐龙最高分等）。",
+                            "安全环境指示器位置调整为文字在前、圆点在后，与左撇子模式布局保持一致。",
+                            "语言下拉框的滚动条已隐藏，通过拖拽或滚轮滑动时只有内容移动，上下圆角保持固定。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.11.2.1",
                 date: "2026-11-02",
                 title: "其它项目页面与交互优化",
@@ -370,6 +396,32 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionChanged: "Changed",
         sectionFixed: "Fixed",
         logs: [
+            {
+                version: "v26.11.8.0",
+                date: "2026-11-08",
+                title: "Settings Panel Stability & Import/Export Fixes",
+                sections: [
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed list pages not syncing to the current language on non-Chinese locales; the download, about, and other-projects lists now prefer the current language and fall back to Chinese when missing.",
+                            "Fixed incomplete rounded corners on the language dropdown; the dropdown is now an independent floating layer mounted to the page root, no longer obscured by the import/export buttons at the bottom of the settings panel.",
+                            "Fixed the settings panel being scrollable while the language dropdown is closed; scrolling is now only allowed when the content actually overflows.",
+                            "Fixed the language dropdown being unscrollable; scrolling now affects only the inner content of the dropdown and does not move the settings panel.",
+                            "Fixed high-risk settings files being applied immediately on import; a confirmation prompt is now shown before importing, unless the file neither enables customization switches nor contains injected code.",
+                            "Fixed exported settings including an export timestamp and a format that did not meet requirements."
+                        ]
+                    },
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "Exported settings no longer include an export timestamp or redundant fields, and now include hidden persisted settings (such as the dinosaur high score).",
+                            "Adjusted the security environment indicator so that the text is on the left and the dot is on the right, matching the left-handed layout.",
+                            "The scrollbar of the language dropdown is now hidden; dragging or scrolling only moves the content while the top and bottom rounded corners stay fixed."
+                        ]
+                    }
+                ]
+            },
             {
                 version: "v26.11.2.1",
                 date: "2026-11-02",

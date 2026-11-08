@@ -3,7 +3,6 @@
     let toastTimer = null;
     let toastEl = null;
     let isEmbed = window.parent && window.parent !== window;
-    const CURSOR_VALUE = 'url("images/mouse.png") 4 4, auto';
 
     function showSecurityToast() {
         if (isEmbed) {
@@ -30,22 +29,6 @@
     function isEditable(target) {
         const tag = target && target.tagName;
         return tag === "INPUT" || tag === "TEXTAREA" || (target && target.isContentEditable);
-    }
-
-    function applyRootCursor(value) {
-        document.documentElement.style.setProperty("cursor", value, "important");
-        if (document.body) document.body.style.setProperty("cursor", value, "important");
-    }
-
-    function initCursorForce() {
-        applyRootCursor(CURSOR_VALUE);
-        function onPointerMove(e) {
-            const target = e.target;
-            if (!target) return;
-            applyRootCursor(isEditable(target) ? "text" : CURSOR_VALUE);
-        }
-        document.addEventListener("mousemove", onPointerMove, { passive: true });
-        document.addEventListener("pointermove", onPointerMove, { passive: true });
     }
 
     function initSecurity() {
@@ -78,24 +61,9 @@
         });
     }
 
-    function initThemeSync() {
-        window.addEventListener("message", (e) => {
-            if (!e.data) return;
-            if (e.data.type === "fuey-embed-sync") {
-                if (e.data.theme) {
-                    document.documentElement.setAttribute("data-theme", e.data.theme);
-                    document.documentElement.style.colorScheme = e.data.theme;
-                }
-                if (e.data.lang && typeof window.__applyFueyLang === "function") {
-                    window.__applyFueyLang(e.data.lang);
-                }
-            }
-        });
-    }
-
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => { initSecurity(); initThemeSync(); initCursorForce(); });
+        document.addEventListener("DOMContentLoaded", () => { initSecurity(); });
     } else {
-        initSecurity(); initThemeSync(); initCursorForce();
+        initSecurity();
     }
 })();

@@ -117,15 +117,16 @@ function applyCurrentSearch() {
 
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof applyLang === "function") applyLang();
-    loadOtherData(getDataSourceSafe());
     bindSearch();
     document.addEventListener("fuey-settings-changed", () => {
         if (otherFiltered) renderOtherList(otherFiltered);
+        else if (otherData) renderOtherList(otherData);
     });
     document.addEventListener("fuey-datasource-changed", () => {
         const src = getDataSourceSafe();
         if (src !== currentDataSrc) loadOtherData(src);
     });
+    loadOtherData(getDataSourceSafe());
 });
 
 function bindSearch() {
@@ -179,7 +180,7 @@ function renderOtherList(data) {
     listEl.innerHTML = data.items.map((item, index) => {
         let name = "";
         if (item.name && typeof item.name === "object") {
-            name = item.name[lang] || item.name.en || item.name.zh || "";
+            name = item.name[lang] || item.name.zh || item.name.en || "";
         } else if (typeof item.name === "string") {
             name = item.name;
         }

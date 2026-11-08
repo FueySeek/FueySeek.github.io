@@ -106,7 +106,7 @@ async function loadDownloadData(src) {
         const data = await loadScript(withCacheBust(localPath), "__DOWNLOAD_DATA__");
         if (myToken !== loadToken) return;
         downloadData = data;
-        downloadFiltered = downloadData;
+        downloadFiltered = data;
         applyCurrentSearch();
     } catch (e) {
         if (myToken !== loadToken) return;
@@ -116,15 +116,16 @@ async function loadDownloadData(src) {
 
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof applyLang === "function") applyLang();
-    loadDownloadData(getDataSourceSafe());
     bindSearch();
     document.addEventListener("fuey-settings-changed", () => {
         if (downloadFiltered) renderDownloadList(downloadFiltered);
+        else if (downloadData) renderDownloadList(downloadData);
     });
     document.addEventListener("fuey-datasource-changed", () => {
         const src = getDataSourceSafe();
         if (src !== currentDataSrc) loadDownloadData(src);
     });
+    loadDownloadData(getDataSourceSafe());
 });
 
 function bindSearch() {
@@ -185,10 +186,10 @@ function renderDownloadList(data) {
     const lang = getCurrentLang();
     listEl.innerHTML = data.items.map((item, index) => {
         const name = typeof item.name === "object"
-            ? (item.name[lang] || item.name.en || item.name.zh || "")
+            ? (item.name[lang] || item.name.zh || item.name.en || "")
             : (item.name || "");
         const date = typeof item.date === "object"
-            ? (item.date[lang] || item.date.en || item.date.zh || "")
+            ? (item.date[lang] || item.date.zh || item.date.en || "")
             : (item.date || "");
         const systemsHtml = Array.isArray(item.systems)
             ? item.systems.map(sys => `<span class="system-tag">${sys}</span>`).join("")

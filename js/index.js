@@ -1,19 +1,29 @@
 const OTHERS_TEXT = {
-    zh: "其它", en: "Others", ja: "その他", ko: "기타", fr: "Autres", de: "Andere", es: "Otros"
-};
-
-const MAINTAINER_TEXT = {
-    zh: "维护者", en: "Maintainer", ja: "メンテナー", ko: "유지관리자", fr: "Mainteneur", de: "Betreuer", es: "Mantenedor"
+    zh: "其它",
+    "zh-Hant": "其它",
+    lzh: "他",
+    en: "Others",
+    ja: "その他",
+    ko: "기타",
+    fr: "Autres",
+    de: "Andere",
+    es: "Otros",
+    ru: "Другое",
+    ar: "أخرى"
 };
 
 const LOADING_TEXT = {
     zh: "正在加载更新日志...",
+    "zh-Hant": "正在載入更新日誌...",
+    lzh: "載日誌中...",
     en: "Loading update log...",
     ja: "更新ログを読み込み中...",
     ko: "업데이트 로그 로드 중...",
     fr: "Chargement du journal...",
     de: "Update-Protokoll wird geladen...",
-    es: "Cargando registro..."
+    es: "Cargando registro...",
+    ru: "Загрузка журнала обновлений...",
+    ar: "جارٍ تحميل سجل التحديثات..."
 };
 
 const GITHUB_OWNER_REPO = "FueySeek/FueySeek.github.io";
@@ -26,7 +36,14 @@ function formatDate(isoDate, lang) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate || "");
     if (!m) return isoDate || "";
     const [, y, mo, d] = m;
-    return lang === "zh" ? `${y}/${mo}/${d}` : `${d}/${mo}/${y}`;
+    const isChinese = lang === "zh" || lang === "zh-Hant" || lang === "lzh";
+    return isChinese ? `${y}/${mo}/${d}` : `${d}/${mo}/${y}`;
+}
+
+function pickLogPack(data, lang) {
+    if (!data) return null;
+    if (lang === "en") return data.en || data.zh || null;
+    return data[lang] || data.zh || data.en || null;
 }
 
 function renderEmbed() {
@@ -43,7 +60,7 @@ function renderEmbed() {
         if (listEl) listEl.innerHTML = "";
         return;
     }
-    const pack = data[lang] || data.en;
+    const pack = pickLogPack(data, lang);
     if (!pack) return;
     if (titleEl) titleEl.textContent = pack.embedTitle;
     if (descEl) descEl.textContent = pack.embedDesc;
@@ -187,54 +204,6 @@ function initFrames() {
     });
 }
 
-function renderDevelopers() {
-    const list = document.getElementById("developerList");
-    if (!list) return;
-    const lang = localStorage.getItem("fuey-lang") || "en";
-    const cacheKey = "fuey-contributors";
-    let data = null;
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) {
-        try { data = JSON.parse(cached); } catch (e) {}
-    }
-    function render(useData) {
-        if (!Array.isArray(useData) || useData.length === 0) {
-            useData = [{ login: "FueySeek", html_url: "https://github.com/FueySeek", avatar_url: "https://github.com/FueySeek.png" }];
-        }
-        const maintainerText = MAINTAINER_TEXT[lang] || MAINTAINER_TEXT.en;
-        list.innerHTML = useData.map((user, index) => {
-            const isMaintainer = index === 0 || user.login.toLowerCase() === "fueyseek";
-            return `
-            <a href="${user.html_url}" target="_blank" rel="noopener" class="developer-item">
-                ${isMaintainer ? `<span class="maintainer-badge">${maintainerText}</span>` : ""}
-                <img src="${user.avatar_url}" alt="${user.login}" class="developer-avatar">
-                <span class="developer-name">${user.login}</span>
-            </a>`;
-        }).join("");
-    }
-    if (data) {
-        render(data);
-    } else {
-        render(null);
-        fetch("https://api.github.com/repos/" + GITHUB_OWNER_REPO + "/contributors")
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => {
-                sessionStorage.setItem(cacheKey, JSON.stringify(data));
-                render(data);
-            })
-            .catch(() => {});
-    }
-}
-
-function initDevelopers() {
-    const list = document.getElementById("developerList");
-    if (!list) return;
-    if (list.dataset.loaded === "1") return;
-    list.dataset.loaded = "1";
-    renderDevelopers();
-    document.addEventListener("fuey-settings-changed", () => renderDevelopers());
-}
-
 function initScrollDownBtn() {
     const scrollBtn = document.getElementById("scrollDownBtn");
     if (!scrollBtn) return;
@@ -261,7 +230,6 @@ function initScrollDownBtn() {
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof applyLang === "function") applyLang();
     initFrames();
-    initDevelopers();
     initScrollDownBtn();
     const src = localStorage.getItem("fuey-data-source") || "github";
     loadLogs(src);
