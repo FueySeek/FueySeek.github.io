@@ -7,6 +7,40 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionFixed: "修复",
         logs: [
             {
+                version: "v26.11.9.0",
+                date: "2026-11-09",
+                title: "交互体验优化与 DLC 编辑器发布",
+                sections: [
+                    {
+                        key: "sectionAdded",
+                        items: [
+                            "新增独立单文件 DLC 编辑器，支持实时预览、多语言、亮暗主题切换，方便创作者快速制作和调试自定义设置。",
+                            "主页更新日志新增滚动渐显动画，向下滑动时卡片会按照弹簧曲线逐个浮现，不再是一次性全部加载。",
+                            "开发者名单头像加载失败时新增默认占位图，避免因网络问题导致区域空白。"
+                        ]
+                    },
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "优化了开关和分段控件的过渡动画，恢复了更明显的弹簧回弹（Q 弹）效果。",
+                            "导出设置文件时不再包含多余的导出时间戳，同时加入了隐藏的持久化设置（如小恐龙最高分）。",
+                            "重构了导入设置的校验逻辑，格式不合规直接拦截；只有在包含自定义注入代码时才弹出高危警告。"
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "修复了设置面板中分段控件（滑块）在直接点击切换时，指示器动画超出边缘被截断的问题。",
+                            "修复了切换左撇子模式时，设置面板位置错乱、上方导航条定轨失效（无法持续定轨在设置按钮上）的问题。",
+                            "修复了左手模式开关在拖拽过程中颜色混合不同步、直接点击时没有过渡动画的问题。",
+                            "修复了下载、关于、其它项目页面的列表在非中文环境（如日语、法语）下错误回退为中文的问题，现在仅简中、繁中、文言使用中文回退，其余全部回退英文。",
+                            "修复了部分分辨率下语言下拉框四角圆角显示不完整的问题。",
+                            "修复了未打开语言下拉框时设置面板仍可通过滚轮滑动的问题。"
+                        ]
+                    }
+                ]
+            },
+            {
                 version: "v26.11.8.0",
                 date: "2026-11-08",
                 title: "设置面板稳定性与导入导出修复",
@@ -396,6 +430,40 @@ window.__EMBED_UPDATE_LOGS__ = {
         sectionChanged: "Changed",
         sectionFixed: "Fixed",
         logs: [
+            {
+                version: "v26.11.9.0",
+                date: "2026-11-09",
+                title: "Interaction Optimization & DLC Editor Release",
+                sections: [
+                    {
+                        key: "sectionAdded",
+                        items: [
+                            "Added a standalone single-file DLC Editor with live preview, multi-language, and theme toggling support for creators.",
+                            "Added a scroll-triggered fade-in animation for changelog cards on the homepage; cards now appear sequentially with a spring curve rather than loading all at once.",
+                            "Added a fallback placeholder image for developer avatars when loading fails, preventing blank areas due to network issues."
+                        ]
+                    },
+                    {
+                        key: "sectionChanged",
+                        items: [
+                            "Optimized transition animations for toggles and segmented controls, restoring a more pronounced spring (Q-bouncy) effect.",
+                            "Removed redundant export timestamps from the exported settings file and included hidden persistent settings (such as the Dino high score).",
+                            "Refactored the import validation logic; invalid formats are intercepted directly, and high-risk warnings only appear when custom injected code is present."
+                        ]
+                    },
+                    {
+                        key: "sectionFixed",
+                        items: [
+                            "Fixed the issue where the segmented control indicator would clip at the edges during direct click switching in the settings panel.",
+                            "Fixed layout misalignment and navigation indicator tracking failure (not staying on the Settings button) when switching to left-handed mode.",
+                            "Fixed the left-handed toggle's color synchronization issue during dragging and the lack of transition animation when clicking directly.",
+                            "Fixed the issue where lists on Download, About, and Other Projects pages incorrectly fell back to Chinese in non-Chinese environments (e.g., Japanese, French). Now only Simplified/Traditional/Literary Chinese use Chinese fallback; all others use English.",
+                            "Fixed incomplete rounded corners on the language dropdown in certain resolutions.",
+                            "Fixed the issue where the settings panel was still scrollable via the mouse wheel when the language dropdown was closed."
+                        ]
+                    }
+                ]
+            },
             {
                 version: "v26.11.8.0",
                 date: "2026-11-08",

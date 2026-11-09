@@ -70,10 +70,15 @@ function clearAllFueyStorage() {
     const keys = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.indexOf("fuey-") === 0) keys.push(key);
+        if (key && key.toLowerCase().indexOf("fuey") === 0) {
+            keys.push(key);
+        }
     }
     keys.forEach(k => localStorage.removeItem(k));
     try { sessionStorage.clear(); } catch (e) {}
+    if (typeof window.__FUEY_DLC_RESET__ === "function") {
+        try { window.__FUEY_DLC_RESET__(); } catch (e) {}
+    }
 }
 
 function getDataSource() {
@@ -178,7 +183,7 @@ window.__fueySetCustomProtocolsEnabled = function (enabled) {
     updateSecurityIndicator();
 };
 window.__fueyGetPermanent = function (key) {
-    return localStorage.getItem("fuey-perm-" + key);
+    return localStorage.getItem(key);
 };
 
 function initTheme() {
@@ -217,41 +222,53 @@ function initHanded() {
     let moved = false;
     let suppressClick = false;
     toggle.setAttribute("aria-checked", savedHanded === "left" ? "true" : "false");
+
     function onMove(clientX) {
         if (!dragging) return;
         const dx = clientX - startX;
         if (!moved && Math.abs(dx) < 3) return;
-        if (!moved) { lockBodyScroll(); moved = true; }
+        if (!moved) { 
+            lockBodyScroll(); 
+            moved = true; 
+            toggle.classList.add("dragging"); 
+        }
         let next = startOffset + dx;
         next = Math.max(0, Math.min(maxOffset, next));
         currentOffset = next;
         knob.style.transform = `translateX(${next}px)`;
-        const progress = next / maxOffset;
-        const r = Math.round(120 - (120 - 52) * progress);
-        const g = Math.round(120 + (199 - 120) * progress);
-        const b = Math.round(128 - (128 - 89) * progress);
-        toggle.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        
+        const isPastHalf = next >= maxOffset / 2;
+        if (toggle.getAttribute("aria-checked") !== (isPastHalf ? "true" : "false")) {
+            toggle.setAttribute("aria-checked", isPastHalf ? "true" : "false");
+        }
     }
+
     function onUp() {
         if (!dragging) return;
         dragging = false;
-        toggle.classList.remove("dragging");
         if (moved) unlockBodyScroll();
         taskLock.release("handed");
-        const checked = currentOffset >= maxOffset / 2;
-        const wasChecked = toggle.getAttribute("aria-checked") === "true";
+        
+        toggle.classList.remove("dragging");
         knob.style.transform = "";
-        toggle.style.backgroundColor = "";
-        if (moved && checked !== wasChecked) {
-            toggle.setAttribute("aria-checked", checked ? "true" : "false");
-            applyHanded(checked ? "left" : "right");
-        } else {
-            toggle.setAttribute("aria-checked", wasChecked ? "true" : "false");
-        }
+        
+        const checked = currentOffset >= maxOffset / 2;
+        const finalHanded = checked ? "left" : "right";
+        const initialHanded = document.documentElement.getAttribute("data-handed") || "right";
+
+        toggle.setAttribute("aria-checked", checked ? "true" : "false");
+
         if (moved) {
             suppressClick = true;
             setTimeout(() => { suppressClick = false; }, 50);
+            
+            if (finalHanded !== initialHanded) {
+                applyHanded(finalHanded);
+            } else {
+                toggle.setAttribute("aria-checked", initialHanded === "left" ? "true" : "false");
+            }
         }
+        currentOffset = 0;
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", onUp);
         document.removeEventListener("touchmove", handleTouchMove);
@@ -267,9 +284,16 @@ function initHanded() {
     }
     toggle.addEventListener("click", (e) => {
         if (suppressClick) { e.preventDefault(); return; }
+        
+        toggle.style.backgroundColor = "";
+        toggle.classList.remove("dragging");
+        
         const current = toggle.getAttribute("aria-checked") === "true";
         toggle.setAttribute("aria-checked", current ? "false" : "true");
-        applyHanded(current ? "right" : "left");
+        
+        setTimeout(() => {
+            applyHanded(current ? "right" : "left");
+        }, 350);
     });
     toggle.addEventListener("mousedown", (e) => {
         if (e.button !== 0) return;
@@ -279,7 +303,6 @@ function initHanded() {
         startX = e.clientX;
         startOffset = toggle.getAttribute("aria-checked") === "true" ? maxOffset : 0;
         currentOffset = startOffset;
-        toggle.classList.add("dragging");
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", onUp);
     });
@@ -291,7 +314,6 @@ function initHanded() {
         startX = e.touches[0].clientX;
         startOffset = toggle.getAttribute("aria-checked") === "true" ? maxOffset : 0;
         currentOffset = startOffset;
-        toggle.classList.add("dragging");
         document.addEventListener("touchmove", handleTouchMove, { passive: false });
         document.addEventListener("touchend", onUp);
     }, { passive: true });
@@ -301,16 +323,23 @@ function applyHanded(handed) {
     const settingsPanel = document.getElementById("settingsPanel");
     const backdrop = document.querySelector(".settings-backdrop");
     const isPanelOpen = settingsPanel && settingsPanel.classList.contains("open");
+    
     function commitHanded() {
         document.documentElement.setAttribute("data-handed", handed);
         localStorage.setItem("fuey-handed", handed);
         syncAllSegmented();
         notifyFrames({ handed: handed });
-        if (typeof window.__refreshNavIndicator === "function") window.__refreshNavIndicator(true);
     }
-    if (!isPanelOpen) { commitHanded(); return; }
+    
+    if (!isPanelOpen) { 
+        commitHanded(); 
+        if (typeof window.__refreshNavIndicator === "function") window.__refreshNavIndicator(true);
+        return; 
+    }
+    
     if (settingsPanel) settingsPanel.classList.remove("open");
     if (backdrop) backdrop.classList.remove("open");
+    
     setTimeout(() => {
         commitHanded();
         setTimeout(() => {
@@ -321,6 +350,7 @@ function applyHanded(handed) {
                 requestAnimationFrame(syncAllSegmented);
                 setTimeout(syncAllSegmented, 250);
                 updateSettingsBodyScroll();
+                if (window.__setNavUiItem) window.__setNavUiItem("settings");
             }
         }, 500);
     }, 520);
@@ -830,10 +860,10 @@ function applySettings(settings) {
         Object.keys(settings.__permanent__).forEach(k => {
             const val = settings.__permanent__[k];
             if (val === null || val === undefined) {
-                localStorage.removeItem("fuey-perm-" + k);
+                localStorage.removeItem(k);
             } else {
                 try {
-                    localStorage.setItem("fuey-perm-" + k, typeof val === "string" ? val : JSON.stringify(val));
+                    localStorage.setItem(k, typeof val === "string" ? val : JSON.stringify(val));
                 } catch (e) {}
             }
         });

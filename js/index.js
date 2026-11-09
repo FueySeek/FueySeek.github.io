@@ -67,6 +67,7 @@ function renderEmbed() {
     if (!pack) return;
     if (titleEl) titleEl.textContent = pack.embedTitle;
     if (descEl) descEl.textContent = pack.embedDesc;
+    
     if (listEl) {
         listEl.innerHTML = pack.logs.map((log, index) => {
             const sections = log.sections.map(sec => {
@@ -74,9 +75,19 @@ function renderEmbed() {
                 const items = sec.items.map(text => `<li>${text}</li>`).join("");
                 return `<div class="changelog-section">${sectionTitle}</div><ul class="changelog-desc">${items}</ul>`;
             }).join("");
-            const delay = 0.08 + index * 0.08;
-            return `<li class="changelog-item" style="animation-delay: ${delay}s"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatDate(log.date, lang)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
+            return `<li class="changelog-item"><div class="changelog-header"><span class="changelog-version">${log.version}</span><span class="changelog-date">${formatDate(log.date, lang)}</span></div><div class="changelog-title">${log.title}</div>${sections}</li>`;
         }).join("");
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05 });
+        
+        listEl.querySelectorAll('.changelog-item').forEach(el => observer.observe(el));
     }
 }
 
