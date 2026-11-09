@@ -1,0 +1,3184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Exam System</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1a1d'/%3E%3Crect x='7' y='5' width='18' height='22' rx='3' fill='none' stroke='%23f0f0f0' stroke-width='1.8'/%3E%3Cpath d='M11 12h10M11 16h10M11 20h6' stroke='%23f0f0f0' stroke-width='1.8' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='23' r='5' fill='%2322c55e'/%3E%3Cpath d='M19.8 23l1.6 1.6 2.8-3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+    --bg: #0e0e10;
+    --surface: #161618;
+    --surface-2: #1c1c1f;
+    --surface-3: #232328;
+    --border: #26262a;
+    --border-2: #3a3a42;
+    --text: #f0f0f0;
+    --text-2: #a8a8b0;
+    --text-3: #6b6b73;
+    --accent: #f0f0f0;
+    --accent-text: #0e0e10;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --r-sm: 10px;
+    --r: 14px;
+    --r-lg: 18px;
+    --r-xl: 24px;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --t: 0.22s var(--ease);
+}
+body.light {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-2: #f4f4f6;
+    --surface-3: #ececef;
+    --border: #e2e2e8;
+    --border-2: #d0d0d8;
+    --text: #1a1a1e;
+    --text-2: #5a5a62;
+    --text-3: #8a8a92;
+    --accent: #1a1a1e;
+    --accent-text: #ffffff;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    height: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+input, textarea, .selectable { user-select: text; -webkit-user-select: text; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-2); }
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background var(--t), color var(--t);
+}
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    position: relative;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+}
+.header-title { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+.settings-btn {
+    width: 38px; height: 38px;
+    border-radius: var(--r);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text);
+    transition: all var(--t);
+}
+.settings-btn:hover { border-color: var(--border-2); background: var(--surface-3); }
+.settings-btn:active { transform: scale(0.95); }
+.settings-btn svg { width: 18px; height: 18px; }
+.dropdown {
+    position: absolute; top: 64px; right: 20px;
+    width: 320px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 16px;
+    z-index: 200;
+    box-shadow: var(--shadow);
+    display: none; flex-direction: column; gap: 16px;
+    animation: ddIn 0.22s var(--ease);
+}
+@keyframes ddIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dropdown.open { display: flex; }
+.dd-section { display: flex; flex-direction: column; gap: 10px; }
+.dd-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-3); font-weight: 600; padding: 0 2px;
+}
+.user-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--r);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: all var(--t);
+}
+.user-card:hover { border-color: var(--border-2); }
+.user-card.active { border-color: var(--accent); background: var(--surface-3); }
+.avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--surface-3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+    flex-shrink: 0; transition: all var(--t);
+}
+.avatar svg { width: 22px; height: 22px; }
+.user-card.active .avatar { background: var(--accent); color: var(--accent-text); }
+.user-name { font-size: 14px; font-weight: 600; }
+.user-role { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+.settings-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 2px; gap: 10px;
+}
+.settings-item label { font-size: 13px; color: var(--text-2); }
+.custom-select { position: relative; min-width: 120px; }
+.custom-select-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    font-family: inherit; font-size: 13px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: all var(--t);
+    width: 100%;
+    text-align: left;
+}
+.custom-select-btn:hover { border-color: var(--border-2); }
+.custom-select-btn::after {
+    content: "";
+    width: 8px; height: 8px;
+    border-right: 1.8px solid var(--text-3);
+    border-bottom: 1.8px solid var(--text-3);
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform var(--t);
+    flex-shrink: 0;
+}
+.custom-select.open .custom-select-btn::after { transform: rotate(-135deg) translateY(-2px); }
+.custom-select-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    box-shadow: var(--shadow);
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 300;
+    max-height: 240px;
+    overflow-y: auto;
+    animation: ddIn 0.18s var(--ease);
+}
+.custom-select.open .custom-select-menu { display: flex; }
+.custom-select-option {
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--t);
+    color: var(--text-2);
+}
+.custom-select-option:hover { background: var(--surface-2); color: var(--text); }
+.custom-select-option.selected { background: var(--surface-3); color: var(--text); font-weight: 500; }
+.custom-select.disabled { opacity: 0.5; pointer-events: none; }
+input.input-field, .form-group input, .form-group textarea {
+    font-family: inherit; font-size: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    outline: none; transition: all var(--t);
+    width: 100%;
+}
+input.input-field:hover, .form-group input:hover, .form-group textarea:hover { border-color: var(--border-2); }
+input.input-field:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea {
+    resize: vertical; min-height: 80px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px;
+    line-height: 1.6;
+}
+.btn {
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    padding: 10px 18px;
+    border-radius: var(--r-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all var(--t);
+    white-space: nowrap; letter-spacing: 0.01em;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+.btn-secondary { background: transparent; border-color: var(--border); color: var(--text-2); }
+.btn-secondary:hover:not(:disabled) { border-color: var(--border-2); color: var(--text); background: var(--surface-2); }
+.btn-danger { background: transparent; border-color: var(--border); color: var(--danger); }
+.btn-danger:hover:not(:disabled) { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 16px 32px; font-size: 15px; border-radius: var(--r); }
+.main {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 40px 20px;
+}
+.import-card {
+    max-width: 520px; width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 48px 40px;
+    text-align: center;
+    display: flex; flex-direction: column; gap: 20px;
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.35s var(--ease);
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.import-card h2 { font-size: 22px; font-weight: 600; }
+.import-card p { font-size: 14px; color: var(--text-3); line-height: 1.6; }
+.import-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.file-input { display: none; }
+.import-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    border-radius: var(--r);
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    border: none; font-family: inherit; transition: all var(--t);
+}
+.import-btn:hover { filter: brightness(1.08); }
+.new-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    border-radius: var(--r);
+    background: transparent;
+    color: var(--text-2);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border);
+    font-family: inherit; transition: all var(--t);
+}
+.new-btn:hover { border-color: var(--border-2); color: var(--text); background: var(--surface-2); }
+.workspace {
+    display: none; width: 100%; max-width: 920px;
+    flex-direction: column; gap: 24px; margin: 0 auto;
+}
+.workspace.active { display: flex; animation: fadeUp 0.35s var(--ease); }
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+}
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 22px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: all var(--t);
+}
+.stat-card:hover { border-color: var(--border-2); }
+.stat-label {
+    font-size: 11px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}
+.stat-value { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+.action-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
+    cursor: pointer; transition: all var(--t); text-align: left;
+}
+.action-card:hover { border-color: var(--border-2); background: var(--surface-2); transform: translateY(-1px); }
+.action-card:active { transform: scale(0.99) translateY(0); }
+.action-icon {
+    width: 40px; height: 40px; border-radius: var(--r-sm);
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text); margin-bottom: 4px;
+    transition: all var(--t);
+}
+.action-card:hover .action-icon { background: var(--surface-3); }
+.action-icon svg { width: 20px; height: 20px; }
+.action-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.action-desc { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.user-welcome {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 48px 32px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    animation: fadeUp 0.35s var(--ease);
+}
+.user-welcome-title { font-size: 24px; font-weight: 600; color: var(--text); }
+.user-welcome-desc { font-size: 14px; color: var(--text-3); line-height: 1.6; max-width: 440px; }
+.user-welcome-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.quiz-area { display: none; flex-direction: column; gap: 20px; }
+.quiz-area.active { display: flex; animation: fadeUp 0.3s var(--ease); }
+.user-banner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+}
+.user-banner-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.user-banner-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.user-banner-uid {
+    font-size: 12px; color: var(--text-3);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    word-break: break-all;
+}
+.progress-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    font-size: 13px; color: var(--text-2);
+    gap: 12px;
+}
+.progress-text { font-weight: 500; }
+.progress-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.timer { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); font-size: 15px; }
+.timer.warning { color: var(--danger); }
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 36px;
+    display: none; flex-direction: column; gap: 24px;
+}
+.card.active { display: flex; animation: cardSlide 0.4s var(--ease); }
+@keyframes cardSlide {
+    from { opacity: 0; transform: translateX(24px) scale(0.99); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+.card-image {
+    max-width: 100%; border-radius: var(--r);
+    margin: 0 auto; display: block;
+    max-height: 320px; object-fit: contain;
+}
+.card-image svg { max-width: 100%; height: auto; display: block; }
+.card-audio { width: 100%; }
+.card-audio audio { width: 100%; border-radius: var(--r-sm); }
+.q-header {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 12px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+}
+.q-num {
+    width: 30px; height: 30px; border-radius: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--text); letter-spacing: 0;
+}
+.q-text { font-size: 20px; font-weight: 600; line-height: 1.5; color: var(--text); }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 16px 18px;
+    border-radius: var(--r);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    cursor: pointer; transition: all var(--t);
+}
+.option:hover { border-color: var(--border-2); background: var(--surface-3); }
+.option.selected { border-color: var(--accent); background: var(--surface-3); }
+.option.correct { border-color: var(--success); background: rgba(34, 197, 94, 0.08); }
+.option.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); }
+.option-letter {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--surface-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; flex-shrink: 0;
+    transition: all var(--t);
+}
+.option.selected .option-letter { background: var(--accent); color: var(--accent-text); }
+.option.correct .option-letter { background: var(--success); color: #fff; }
+.option.wrong .option-letter { background: var(--danger); color: #fff; }
+.option-text { font-size: 15px; line-height: 1.55; padding-top: 3px; color: var(--text); flex: 1; }
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.nav-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text); transition: all var(--t);
+}
+.nav-btn:hover:not(:disabled) { border-color: var(--border-2); background: var(--surface-2); }
+.nav-btn:active:not(:disabled) { transform: scale(0.94); }
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.nav-btn svg { width: 20px; height: 20px; }
+.submit-wrap { display: flex; justify-content: center; margin-top: 8px; }
+.result-area { display: none; flex-direction: column; gap: 20px; animation: fadeUp 0.35s var(--ease); }
+.result-area.active { display: flex; }
+.result-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 36px;
+    text-align: center;
+    display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.result-user { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.result-label {
+    font-size: 13px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}
+.result-score {
+    font-size: 56px; font-weight: 700; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-2) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.result-list { display: flex; flex-direction: column; gap: 12px; }
+.result-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 18px 22px;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.result-item-title { font-size: 15px; font-weight: 600; }
+.result-line { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.result-line.correct { color: var(--success); }
+.result-line.wrong { color: var(--danger); }
+.result-actions { display: flex; gap: 12px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.18s var(--ease);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-overlay.open { display: flex; }
+.modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 32px;
+    max-width: 680px; width: 100%; max-height: 90vh;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 18px;
+    animation: modalIn 0.28s var(--ease);
+    box-shadow: var(--shadow);
+}
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.94) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal h2 { font-size: 20px; font-weight: 600; }
+.modal h3 { font-size: 16px; font-weight: 600; margin-top: 6px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; flex-wrap: wrap; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group label {
+    font-size: 12px; color: var(--text-3); font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.04em;
+}
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.form-row > * { flex: 1; min-width: 120px; }
+.option-input-row {
+    display: flex; gap: 12px; align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+}
+.option-input-row .letter {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--surface-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; flex-shrink: 0;
+}
+.option-input-row input[type="text"] {
+    flex: 1; background: transparent; border: none;
+    color: var(--text); font-family: inherit; font-size: 14px;
+    outline: none; padding: 0;
+}
+.checkbox-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer; transition: all var(--t);
+}
+.checkbox-row:hover { border-color: var(--border-2); }
+.checkbox-row input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0;
+}
+.checkbox-row span { font-size: 13px; color: var(--text-2); flex: 1; }
+.radio-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.radio-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer; transition: all var(--t);
+    flex: 1; min-width: 120px;
+}
+.radio-option:hover { border-color: var(--border-2); }
+.radio-option input[type="radio"] {
+    width: 18px; height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0;
+}
+.radio-option span { font-size: 13px; color: var(--text); font-weight: 500; }
+.radio-option:has(input:checked) { border-color: var(--accent); background: var(--surface-3); }
+.list-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.list-toolbar .spacer { flex: 1; }
+.list-toolbar .selected-count { font-size: 12px; color: var(--text-3); }
+.list-container {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 340px; overflow-y: auto; padding-right: 4px;
+}
+.list-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--r-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 13px; transition: all var(--t);
+}
+.list-item:hover { border-color: var(--border-2); }
+.list-item input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0; margin-top: 2px;
+}
+.list-item-body { flex: 1; min-width: 0; }
+.list-item-title { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list-item-meta {
+    font-size: 11px; color: var(--text-3);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    word-break: break-all; margin-top: 4px;
+}
+.list-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.empty-state { text-align: center; padding: 24px; color: var(--text-3); font-size: 13px; }
+.step-indicator { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-2); transition: all var(--t); }
+.step-dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
+.toast {
+    position: fixed; left: 50%; bottom: 32px;
+    transform: translate(-50%, 20px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 24px;
+    border-radius: var(--r);
+    font-size: 13px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+    z-index: 9999;
+    box-shadow: var(--shadow);
+    max-width: calc(100vw - 40px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.warn { border-color: var(--danger); color: var(--danger); }
+.toast.success { border-color: var(--success); color: var(--success); }
+.waiting-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1500; padding: 20px;
+    backdrop-filter: blur(8px);
+}
+.waiting-overlay.open { display: flex; }
+.waiting-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 48px 40px;
+    max-width: 520px; width: 100%;
+    text-align: center;
+    display: flex; flex-direction: column; gap: 22px; align-items: center;
+    box-shadow: var(--shadow);
+    animation: modalIn 0.35s var(--ease);
+}
+.waiting-title { font-size: 24px; font-weight: 600; }
+.waiting-desc { font-size: 14px; color: var(--text-3); line-height: 1.6; }
+.waiting-countdown {
+    font-size: 46px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-2) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.waiting-spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.fullscreen-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: none; align-items: center; justify-content: center;
+    z-index: 2000; padding: 20px;
+    backdrop-filter: blur(8px);
+}
+.fullscreen-overlay.open { display: flex; }
+.fullscreen-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 48px 40px;
+    max-width: 520px; width: 100%;
+    text-align: center;
+    display: flex; flex-direction: column; gap: 22px; align-items: center;
+    box-shadow: var(--shadow);
+    animation: modalIn 0.35s var(--ease);
+}
+.fullscreen-title { font-size: 24px; font-weight: 600; }
+.fullscreen-desc { font-size: 14px; color: var(--text-3); line-height: 1.6; }
+.fullscreen-countdown {
+    font-size: 40px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--danger);
+}
+.fullscreen-icon {
+    width: 72px; height: 72px;
+    border-radius: var(--r-lg);
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+}
+.fullscreen-icon svg { width: 36px; height: 36px; }
+.duration-preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.duration-preset {
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all var(--t);
+    font-family: inherit;
+}
+.duration-preset:hover { border-color: var(--border-2); color: var(--text); }
+.duration-preset.active { border-color: var(--accent); color: var(--text); background: var(--surface-3); }
+.info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 20px;
+}
+.info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 13px; color: var(--text-3); }
+.info-value { font-size: 14px; font-weight: 500; color: var(--text); }
+.info-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-text);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700;
+    margin: 0 auto 8px;
+}
+.notice-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 22px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-2);
+    white-space: pre-wrap;
+    max-height: 280px;
+    overflow-y: auto;
+}
+.audio-test-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 22px;
+    display: flex; flex-direction: column; gap: 16px;
+    align-items: center;
+}
+.audio-test-status {
+    font-size: 13px;
+    color: var(--text-3);
+    text-align: center;
+    min-height: 20px;
+}
+.footer { padding: 24px; text-align: center; font-size: 12px; color: var(--text-3); }
+@media (max-width: 600px) {
+    .header { padding: 12px 16px; }
+    .main { padding: 20px 12px; }
+    .import-card { padding: 32px 20px; }
+    .card { padding: 24px; }
+    .modal { padding: 22px; }
+    .dropdown { right: 8px; width: calc(100vw - 16px); top: 60px; }
+    .q-text { font-size: 17px; }
+    .result-score { font-size: 44px; }
+    .user-welcome { padding: 36px 20px; }
+    .user-welcome-title { font-size: 20px; }
+    .waiting-card, .fullscreen-card { padding: 32px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <div class="header-title" id="headerTitle">Exam System</div>
+    <div class="settings-btn" id="settingsBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+    </div>
+</div>
+<div class="dropdown" id="dropdown">
+    <div class="dd-section">
+        <div class="dd-label" id="userSectionLabel">User</div>
+        <div class="user-card active" id="userCard">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20a8 8 0 0 1 16 0"/>
+                </svg>
+            </div>
+            <div>
+                <div class="user-name">User</div>
+                <div class="user-role" id="userRoleDisplay">Candidate</div>
+            </div>
+        </div>
+        <div class="user-card" id="adminCard">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20a8 8 0 0 1 16 0"/>
+                    <circle cx="19" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role" id="adminRoleDisplay">Admin</div>
+            </div>
+        </div>
+    </div>
+    <div class="dd-section" id="adminActions" style="display:none">
+        <div class="dd-label" id="adminSectionLabel">Admin</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button class="btn btn-secondary btn-sm" id="btnAdminImport">Import</button>
+            <button class="btn btn-danger btn-sm" id="btnClearData">Clear</button>
+        </div>
+    </div>
+    <div class="dd-section">
+        <div class="dd-label" id="settingsLabel">Settings</div>
+        <div class="settings-item">
+            <label id="themeLabel">Theme</label>
+            <div class="custom-select" id="themeSelect" data-value="dark">
+                <button class="custom-select-btn" type="button"><span class="custom-select-label">Dark</span></button>
+                <div class="custom-select-menu">
+                    <div class="custom-select-option" data-value="dark">Dark</div>
+                    <div class="custom-select-option" data-value="light">Light</div>
+                </div>
+            </div>
+        </div>
+        <div class="settings-item">
+            <label id="languageLabel">Language</label>
+            <div class="custom-select" id="languageSelect" data-value="en">
+                <button class="custom-select-btn" type="button"><span class="custom-select-label">English</span></button>
+                <div class="custom-select-menu">
+                    <div class="custom-select-option" data-value="en">English</div>
+                    <div class="custom-select-option" data-value="zh">中文</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main" id="mainArea">
+    <div class="import-card" id="importCard">
+        <h2 id="importTitle">Exam System</h2>
+        <p id="importDesc">Import a data file or create a new one to get started.</p>
+        <div class="import-actions">
+            <label class="import-btn" for="fileInput" id="importBtnLabel">Import Data</label>
+            <button class="new-btn" id="btnNewData" style="display:none">Create New</button>
+        </div>
+        <input type="file" id="fileInput" class="file-input" accept=".js">
+    </div>
+    <div class="workspace" id="workspace">
+        <div id="adminView" style="display:none;flex-direction:column;gap:24px">
+            <div class="overview-grid">
+                <div class="stat-card">
+                    <div class="stat-label" id="statQuestionsLabel">Questions</div>
+                    <div class="stat-value" id="statQuestions">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" id="statUsersLabel">Candidates</div>
+                    <div class="stat-value" id="statUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" id="statScoreLabel">Total Score</div>
+                    <div class="stat-value" id="statScore">100</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" id="statDurationLabel">Duration</div>
+                    <div class="stat-value" id="statDuration">60</div>
+                </div>
+            </div>
+            <div class="action-grid">
+                <div class="action-card" id="actQuestions">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div class="action-title" id="actQuestionsTitle">Questions</div>
+                    <div class="action-desc" id="actQuestionsDesc">Manage question bank</div>
+                </div>
+                <div class="action-card" id="actUsers">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="action-title" id="actUsersTitle">Candidates</div>
+                    <div class="action-desc" id="actUsersDesc">Manage candidate accounts</div>
+                </div>
+                <div class="action-card" id="actSettings">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </div>
+                    <div class="action-title" id="actSettingsTitle">Settings</div>
+                    <div class="action-desc" id="actSettingsDesc">Exam configuration</div>
+                </div>
+                <div class="action-card" id="actExport">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <div class="action-title" id="actExportTitle">Export</div>
+                    <div class="action-desc" id="actExportDesc">Save configuration file</div>
+                </div>
+            </div>
+        </div>
+        <div id="userView" style="display:none;flex-direction:column;gap:24px">
+            <div class="user-welcome">
+                <div class="user-welcome-title" id="userWelcomeTitle">Ready for the exam?</div>
+                <div class="user-welcome-desc" id="userWelcomeDesc">Enter your name and UID / verify code to begin.</div>
+                <div class="user-welcome-actions">
+                    <button class="btn btn-primary btn-lg" id="btnStartQuiz">Start Exam</button>
+                    <button class="btn btn-secondary btn-lg" id="btnGuestQuiz" style="display:none">Try Without Login</button>
+                    <button class="btn btn-secondary btn-lg" id="btnReImport">Import New File</button>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-area" id="quizArea">
+            <div class="user-banner" id="userBanner" style="display:none">
+                <div class="user-banner-info">
+                    <div class="user-banner-name" id="userBannerName"></div>
+                    <div class="user-banner-uid" id="userBannerUid"></div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <span class="progress-text" id="progressText">0 / 0</span>
+                <div class="progress-actions">
+                    <span class="timer" id="timerDisplay" style="display:none"></span>
+                    <button class="btn btn-secondary btn-sm" id="btnExitQuiz">Exit</button>
+                </div>
+            </div>
+            <div id="cardsContainer"></div>
+            <div class="nav-buttons">
+                <div class="nav-btn" id="prevBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </div>
+                <div class="nav-btn" id="nextBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </div>
+            <div class="submit-wrap">
+                <button class="btn btn-primary" id="btnSubmit">Submit</button>
+            </div>
+        </div>
+        <div class="result-area" id="resultArea">
+            <div id="resultSummary"></div>
+            <div class="result-list" id="resultList"></div>
+            <div class="result-actions">
+                <button class="btn btn-secondary" id="btnExportImage">Export Image</button>
+                <button class="btn btn-secondary" id="btnExportStudent" style="display:none">Export My Result</button>
+                <button class="btn btn-primary" id="btnRestart">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">© 2020-2026 fuey All Rights Reserved</div>
+<div class="toast" id="toast"></div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent"></div>
+</div>
+<div class="waiting-overlay" id="waitingOverlay">
+    <div class="waiting-card">
+        <div class="waiting-spinner"></div>
+        <div class="waiting-title" id="waitingTitle">Exam Ready</div>
+        <div class="waiting-desc" id="waitingDesc">Waiting for the exam start time</div>
+        <div class="waiting-countdown" id="waitingCountdown">--:--:--</div>
+        <button class="btn btn-secondary" id="btnCancelWaiting">Cancel</button>
+    </div>
+</div>
+<div class="fullscreen-overlay" id="fullscreenOverlay">
+    <div class="fullscreen-card">
+        <div class="fullscreen-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+        </div>
+        <div class="fullscreen-title" id="fullscreenTitle">Fullscreen Required</div>
+        <div class="fullscreen-desc" id="fullscreenDesc">Press F11 to enter fullscreen, or click the button below.</div>
+        <div class="fullscreen-countdown" id="fullscreenCountdown">30</div>
+        <button class="btn btn-primary" id="btnEnterFullscreen">Enter Fullscreen</button>
+        <button class="btn btn-secondary" id="btnCancelFullscreen">Cancel</button>
+    </div>
+</div>
+<script>
+const I18N = {
+    en: {
+        headerTitle: "Exam System",
+        userSectionLabel: "User",
+        userRoleStudent: "Candidate",
+        userRoleAdmin: "Admin",
+        adminSectionLabel: "Admin",
+        settingsLabel: "Settings",
+        themeLabel: "Theme",
+        themeDark: "Dark",
+        themeLight: "Light",
+        languageLabel: "Language",
+        importTitle: "Exam System",
+        importDesc: "Import a data file or create a new one to get started.",
+        importBtn: "Import",
+        newDataBtn: "Create New",
+        reImportBtn: "Import New File",
+        importSuccess: "Import successful",
+        importFail: "Import failed",
+        exportSuccess: "Export successful",
+        exportFail: "Export failed",
+        imageExported: "Result image exported",
+        imageExportFail: "Failed to export image",
+        studentExported: "Your result has been exported",
+        studentExportFail: "Failed to export result",
+        clearDataBtn: "Clear",
+        clearDataConfirmTitle: "Clear all data?",
+        clearDataConfirm: "This will delete all imported questions, candidates and settings, and cannot be undone. Continue?",
+        clearDataDone: "Data cleared",
+        cannotClearInExam: "Cannot clear data during the exam",
+        cannotSwitchDuringExam: "Cannot switch user during the exam",
+        statQuestionsLabel: "Questions",
+        statUsersLabel: "Candidates",
+        statScoreLabel: "Total Score",
+        statDurationLabel: "Duration",
+        actQuestionsTitle: "Questions",
+        actQuestionsDesc: "Manage question bank",
+        actUsersTitle: "Candidates",
+        actUsersDesc: "Manage candidate accounts",
+        actSettingsTitle: "Settings",
+        actSettingsDesc: "Exam configuration",
+        actExportTitle: "Export",
+        actExportDesc: "Save configuration file",
+        userWelcomeTitle: "Ready for the exam?",
+        userWelcomeDesc: "Enter your name and UID / verify code to begin.",
+        startQuiz: "Start Exam",
+        guestQuiz: "Try Without Login",
+        submit: "Submit",
+        back: "Back",
+        exportImage: "Export Image",
+        exportStudent: "Export My Result",
+        progress: "{0} / {1}",
+        adminPasswordPrompt: "Enter admin password",
+        adminPasswordWrong: "Wrong password",
+        setQuestions: "Question Management",
+        setUsers: "Candidate Management",
+        adminSettings: "Admin Settings",
+        changePassword: "Change Password",
+        addQuestion: "Add Question",
+        addUser: "Add Candidate",
+        noQuestions: "No questions",
+        noUsers: "No candidates",
+        delete: "Delete",
+        selectAll: "Select All",
+        deselectAll: "Deselect All",
+        deleteSelected: "Delete Selected",
+        selectedCount: "{0} selected",
+        complete: "Complete",
+        cancel: "Cancel",
+        back_btn: "Back",
+        next: "Next",
+        confirm: "Confirm",
+        step1: "Step 1 · Question",
+        step2: "Step 2 · Options",
+        step3: "Step 3 · Correct Answer",
+        questionText: "Question Text",
+        addImage: "Add Image",
+        addAudio: "Add Audio",
+        toggleImage: "Include Image",
+        toggleAudio: "Include Audio",
+        audioHint: "Paste audio URL (mp3 / wav / ogg)",
+        questionImageHint: "Paste image URL or SVG code",
+        optionCount: "Number of options",
+        correctOption: "Correct Option",
+        optionPlaceholder: "Option {0}",
+        titleRequired: "Question text is required",
+        optionRequired: "Option {0} is required",
+        questionAdded: "Question added",
+        deleteConfirm: "Are you sure you want to delete this?",
+        deleteSelectedConfirm: "Delete {0} selected item(s)?",
+        userName: "Name",
+        gender: "Gender",
+        male: "Male",
+        female: "Female",
+        other: "Other",
+        userAdded: "Candidate added",
+        nameRequired: "Name is required",
+        enterName: "Enter your name",
+        enterCred: "Enter UID or verify code",
+        loginCredLabel: "UID / Verify Code",
+        invalidCred: "Invalid UID or verify code",
+        userNotRegistered: "This name is not registered",
+        uid: "UID",
+        verifyCode: "Verify Code",
+        noVerifyCode: "No verify code",
+        adminName: "Admin Name",
+        oldPassword: "Old Password",
+        newPassword: "New Password",
+        confirmPassword: "Confirm Password",
+        oldPasswordWrong: "Old password is incorrect",
+        passwordMismatch: "Passwords do not match",
+        passwordTooShort: "Password must be at least 4 characters",
+        examStartMode: "Exam Start Time",
+        startModeUnlimited: "Unlimited",
+        startModeNow: "Immediately",
+        startModeCustom: "Custom time",
+        examDuration: "Exam Duration",
+        examDurationUnlimited: "Unlimited",
+        minutes: "min",
+        totalScore: "Total Score",
+        uidLength: "UID Length",
+        uidLength18: "18 digits (no verify code)",
+        uidLength32: "32 digits (with verify code)",
+        allowGuest: "Allow guest access",
+        disableCustom: "Disable custom settings",
+        requireAll: "Require all answers",
+        showAnswer: "Show answers after submit",
+        randomQuestions: "Randomize question order",
+        randomOptions: "Randomize option order",
+        enableAudio: "Enable Audio Exam",
+        allowStudentExport: "Allow candidate to export result",
+        subject: "Subject",
+        subjectPlaceholder: "e.g., Chinese, Mathematics, English",
+        noticeTitle: "Candidate Notice",
+        noticePlaceholder: "Enter notice text for candidates",
+        noticePreset: "Load Preset",
+        noticePresetDefault: "1. Please enter the exam room on time; late arrivals will not be admitted after the exam has started.\n2. No cheating of any kind, including but not limited to: looking at others' answers, using unauthorized materials, or communicating with others.\n3. Mobile phones and other electronic devices must be turned off and placed in designated areas.\n4. Keep quiet during the exam; do not disturb other candidates.\n5. Do not take screenshots, photos, or recordings during the exam.\n6. Submit your answers before the time is up; late submissions will not be accepted.\n7. For online exams: ensure a stable internet connection before starting.\n8. For online exams: do not switch windows, tabs, or applications during the exam; doing so may be treated as cheating.\n9. For online exams: keep your camera on if required; face the screen directly.\n10. For online exams: the exam duration is strictly enforced; the system will auto-submit when time runs out.\n11. If you encounter technical issues, please contact the invigilator immediately; do not attempt to solve the problem yourself.\n12. All exam materials are confidential and may not be reproduced, distributed, or shared in any form.",
+        audioTestText: "Custom Audio Test Text",
+        audioTestTextHint: "Leave empty to use the default per-language content",
+        audioTestContent: "This is an apple. I like apples. Apples are good for our health.",
+        adminSettingsSaved: "Admin settings saved",
+        passwordChanged: "Password changed",
+        timeUp: "Time is up",
+        scoreLabel: "Score",
+        yourAnswer: "Your answer: {0}",
+        correctAnswer: "Correct: {0}",
+        notAnswered: "Not answered",
+        mustAnswerAll: "Please answer all questions",
+        warningRightClick: "Right click is disabled",
+        warningDevtools: "Developer tools are disabled",
+        warningSource: "Viewing source is disabled",
+        switchUserConfirm: "Switch to User?",
+        switchUserConfirmMsg: "You will lose admin privileges until you log in again.",
+        switchUserOk: "Switch",
+        switchUserCancel: "Stay",
+        cancelConfirm: "This action will not save any changes. Only clicking Complete will save. Continue?",
+        cancelConfirmTitle: "Discard changes?",
+        exitQuiz: "Exit Exam",
+        exitQuizConfirm: "Exit the exam? Progress will not be saved.",
+        examNotStarted: "Exam has not started yet",
+        examEnded: "Exam has ended",
+        examReady: "Exam is ready",
+        waitingExamDesc: "Waiting for exam start time",
+        cancelWaiting: "Cancel",
+        startExam: "Start Exam",
+        loginName: "Name",
+        fullscreenTitle: "Fullscreen Required",
+        fullscreenDesc: "Press F11 to enter fullscreen, or click the button below. You will be logged out in {0} seconds if not in fullscreen.",
+        enterFullscreen: "Enter Fullscreen",
+        cancelFullscreen: "Cancel",
+        fullscreenTimeout: "You did not enter fullscreen in time",
+        fullscreenExitWarning: "Please stay in fullscreen during the exam",
+        noData: "Please import data first",
+        disabledByAdmin: "This setting is managed by admin",
+        uidDuplicate: "UID conflict, please try again",
+        basicSettings: "Basic",
+        examSettings: "Exam Configuration",
+        uidSettings: "UID Configuration",
+        noticeSettings: "Candidate Notice",
+        audioSettings: "Audio Test",
+        featureSettings: "Features",
+        adminNameHint: "Displayed in the admin panel",
+        passwordHint: "At least 4 characters",
+        totalScoreInvalid: "Total score must be greater than 0",
+        uidVerifyWarn: "Verify code regenerated for some candidates",
+        uidChangedWarn: "UID format changed, all candidate UIDs have been regenerated",
+        uidChangedConfirm: "Changing UID length will regenerate all candidate UIDs and verify codes. Continue?",
+        candidateInfoTitle: "Candidate Information",
+        candidateInfoDesc: "Please verify your information before starting the exam.",
+        audioTestTitle: "Audio Test",
+        audioTestDesc: "Please play the audio and confirm you can hear it clearly.",
+        audioTestPlay: "Play Audio",
+        audioTestConfirm: "I can hear clearly",
+        startAfterConfirm: "Start Exam",
+        noticeTitleDisplay: "Candidate Notice",
+        noticeConfirm: "I have read the notice",
+        examSubject: "Subject",
+        examTime: "Exam Time",
+        examDurationLabel: "Duration",
+        newDataCreated: "New data table created",
+        noQuestionsWarning: "Please add questions before starting the exam",
+        unknown: "Unknown",
+        continueBtn: "Continue",
+        playbackNotSupported: "Your browser does not support audio playback",
+        noPermission: "You do not have permission to perform this action"
+    },
+    zh: {
+        headerTitle: "考试系统",
+        userSectionLabel: "用户",
+        userRoleStudent: "考生",
+        userRoleAdmin: "管理员",
+        adminSectionLabel: "管理",
+        settingsLabel: "设置",
+        themeLabel: "主题",
+        themeDark: "深色",
+        themeLight: "浅色",
+        languageLabel: "语言",
+        importTitle: "考试系统",
+        importDesc: "导入数据文件或新建数据表开始使用。",
+        importBtn: "导入",
+        newDataBtn: "新建数据表",
+        reImportBtn: "重新导入",
+        importSuccess: "导入成功",
+        importFail: "导入失败",
+        exportSuccess: "导出成功",
+        exportFail: "导出失败",
+        imageExported: "成绩图片已导出",
+        imageExportFail: "成绩图片导出失败",
+        studentExported: "成绩已导出",
+        studentExportFail: "成绩导出失败",
+        clearDataBtn: "清空",
+        clearDataConfirmTitle: "清空所有数据？",
+        clearDataConfirm: "此操作将删除所有已导入的题目、考生和设置，且无法撤销。是否继续？",
+        clearDataDone: "数据已清空",
+        cannotClearInExam: "考试进行中无法清空数据",
+        cannotSwitchDuringExam: "考试进行中无法切换用户",
+        statQuestionsLabel: "题目",
+        statUsersLabel: "考生",
+        statScoreLabel: "总分",
+        statDurationLabel: "时长",
+        actQuestionsTitle: "题目",
+        actQuestionsDesc: "管理题库",
+        actUsersTitle: "考生",
+        actUsersDesc: "管理考生账号",
+        actSettingsTitle: "设置",
+        actSettingsDesc: "考试配置",
+        actExportTitle: "导出",
+        actExportDesc: "保存配置文件",
+        userWelcomeTitle: "准备好考试了吗？",
+        userWelcomeDesc: "输入姓名和 UID / 验证码即可开始。",
+        startQuiz: "开始考试",
+        guestQuiz: "免登录体验",
+        submit: "提交",
+        back: "返回",
+        exportImage: "导出图片",
+        exportStudent: "导出我的成绩",
+        progress: "{0} / {1}",
+        adminPasswordPrompt: "请输入管理员密码",
+        adminPasswordWrong: "密码错误",
+        setQuestions: "试卷管理",
+        setUsers: "考生管理",
+        adminSettings: "管理员设置",
+        changePassword: "修改密码",
+        addQuestion: "添加题目",
+        addUser: "添加考生",
+        noQuestions: "暂无题目",
+        noUsers: "暂无考生",
+        delete: "删除",
+        selectAll: "全选",
+        deselectAll: "全不选",
+        deleteSelected: "删除选中",
+        selectedCount: "已选 {0} 项",
+        complete: "完成",
+        cancel: "取消",
+        back_btn: "上一步",
+        next: "下一步",
+        confirm: "确定",
+        step1: "第 1 步 · 题目信息",
+        step2: "第 2 步 · 选项内容",
+        step3: "第 3 步 · 正确答案",
+        questionText: "题目内容",
+        addImage: "添加图片",
+        addAudio: "添加音频",
+        toggleImage: "包含图片",
+        toggleAudio: "包含音频",
+        audioHint: "粘贴音频 URL（mp3 / wav / ogg）",
+        questionImageHint: "粘贴图片 URL 或 SVG 代码",
+        optionCount: "选项数量",
+        correctOption: "正确选项",
+        optionPlaceholder: "选项 {0}",
+        titleRequired: "题目内容不能为空",
+        optionRequired: "选项 {0} 不能为空",
+        questionAdded: "题目已添加",
+        deleteConfirm: "确定要删除此项吗？",
+        deleteSelectedConfirm: "确定要删除选中的 {0} 项吗？",
+        userName: "姓名",
+        gender: "性别",
+        male: "男",
+        female: "女",
+        other: "其他",
+        userAdded: "考生已添加",
+        nameRequired: "姓名不能为空",
+        enterName: "请输入你的姓名",
+        enterCred: "请输入 UID 或验证码",
+        loginCredLabel: "UID / 验证码",
+        invalidCred: "UID 或验证码错误",
+        userNotRegistered: "该姓名未注册",
+        uid: "UID",
+        verifyCode: "验证码",
+        noVerifyCode: "无需验证码",
+        adminName: "管理员名称",
+        oldPassword: "旧密码",
+        newPassword: "新密码",
+        confirmPassword: "确认密码",
+        oldPasswordWrong: "旧密码不正确",
+        passwordMismatch: "两次密码不一致",
+        passwordTooShort: "密码至少 4 位",
+        examStartMode: "考试开始时间",
+        startModeUnlimited: "不限制",
+        startModeNow: "立即开始",
+        startModeCustom: "自定义时间",
+        examDuration: "考试时长",
+        examDurationUnlimited: "不限时",
+        minutes: "分钟",
+        totalScore: "总分",
+        uidLength: "UID 长度",
+        uidLength18: "18 位（无需验证码）",
+        uidLength32: "32 位（需验证码）",
+        allowGuest: "允许体验操作",
+        disableCustom: "禁用自定义设置",
+        requireAll: "要求完成答题",
+        showAnswer: "结束后显示错题与正确选项",
+        randomQuestions: "题目随机",
+        randomOptions: "选项随机",
+        enableAudio: "启用音频考试",
+        allowStudentExport: "允许考生导出成绩",
+        subject: "科目",
+        subjectPlaceholder: "例如：语文、数学、英语",
+        noticeTitle: "考生须知",
+        noticePlaceholder: "输入考生须知内容",
+        noticePreset: "加载预设",
+        noticePresetDefault: "1. 请准时进入考场，考试开始后迟到者不得入场。\n2. 禁止任何形式的作弊，包括但不限于：抄袭他人答案、使用未经允许的材料、与他人交流。\n3. 手机等电子设备必须关闭并放置在指定区域。\n4. 考试期间保持安静，不得影响其他考生。\n5. 考试期间禁止截屏、拍照、录屏等行为。\n6. 请在规定时间内提交答案，超时提交将不予受理。\n7. 线上考试：请在开始前确保网络连接稳定。\n8. 线上考试：考试期间不得切换窗口、标签页或应用程序，否则将视为作弊。\n9. 线上考试：如要求开启摄像头，请保持摄像头开启并正对屏幕。\n10. 线上考试：考试时长严格执行，时间到时系统将自动提交。\n11. 如遇技术问题，请立即联系监考人员，请勿自行处理。\n12. 所有考试材料均属保密信息，不得以任何形式复制、传播或分享。",
+        audioTestText: "自定义音频测试内容",
+        audioTestTextHint: "留空则使用对应语言的默认内容",
+        audioTestContent: "生活就像海洋，只有意志坚强的人，才能到达彼岸。",
+        adminSettingsSaved: "管理员设置已保存",
+        passwordChanged: "密码已修改",
+        timeUp: "时间到",
+        scoreLabel: "得分",
+        yourAnswer: "你的答案：{0}",
+        correctAnswer: "正确答案：{0}",
+        notAnswered: "未作答",
+        mustAnswerAll: "请完成所有题目",
+        warningRightClick: "右键已被禁用",
+        warningDevtools: "开发者工具已被禁用",
+        warningSource: "查看源代码已被禁用",
+        switchUserConfirm: "切换到用户？",
+        switchUserConfirmMsg: "切换后将失去管理员权限，需要重新输入密码才能切回。",
+        switchUserOk: "切换",
+        switchUserCancel: "留在当前",
+        cancelConfirm: "该操作不会保存任何更改，只有点击「完成」才会保存。是否继续？",
+        cancelConfirmTitle: "放弃修改？",
+        exitQuiz: "退出考试",
+        exitQuizConfirm: "确定要退出考试吗？答题进度将不会保存。",
+        examNotStarted: "考试尚未开始",
+        examEnded: "考试已结束",
+        examReady: "试卷已准备完成",
+        waitingExamDesc: "正在等待考试时间开始",
+        cancelWaiting: "取消",
+        startExam: "开始考试",
+        loginName: "姓名",
+        fullscreenTitle: "需要全屏模式",
+        fullscreenDesc: "请按 F11 进入全屏，或点击下方按钮。若 {0} 秒内未进入全屏将自动退出登录。",
+        enterFullscreen: "进入全屏",
+        cancelFullscreen: "取消",
+        fullscreenTimeout: "未在规定时间内进入全屏",
+        fullscreenExitWarning: "考试期间请保持全屏",
+        noData: "请先导入数据",
+        disabledByAdmin: "此项设置由管理员控制",
+        uidDuplicate: "UID 冲突，请重试",
+        basicSettings: "基本信息",
+        examSettings: "考试配置",
+        uidSettings: "UID 配置",
+        noticeSettings: "考生须知",
+        audioSettings: "音频测试",
+        featureSettings: "功能",
+        adminNameHint: "显示在管理面板中",
+        passwordHint: "至少 4 位",
+        totalScoreInvalid: "总分必须大于 0",
+        uidVerifyWarn: "部分考生的验证码已重新生成",
+        uidChangedWarn: "UID 格式已更改，所有考生的 UID 已重新生成",
+        uidChangedConfirm: "更改 UID 长度将重新生成所有考生的 UID 和验证码。是否继续？",
+        candidateInfoTitle: "考生信息",
+        candidateInfoDesc: "请在开始考试前核对您的信息。",
+        audioTestTitle: "音频测试",
+        audioTestDesc: "请播放音频并确认能清晰听到。",
+        audioTestPlay: "播放音频",
+        audioTestConfirm: "我能听清",
+        startAfterConfirm: "开始考试",
+        noticeTitleDisplay: "考生须知",
+        noticeConfirm: "我已阅读考生须知",
+        examSubject: "科目",
+        examTime: "考试时间",
+        examDurationLabel: "时长",
+        newDataCreated: "新数据表已创建",
+        noQuestionsWarning: "请先添加题目再开始考试",
+        unknown: "未知",
+        continueBtn: "继续",
+        playbackNotSupported: "您的浏览器不支持音频播放",
+        noPermission: "您没有权限执行此操作"
+    }
+};
+
+const UID_LENGTH_OPTIONS = [18, 32];
+const VERIFY_LENGTH = 9;
+const FULLSCREEN_TIMEOUT = 30;
+const SUPPORTED_LANGS = ["en", "zh"];
+
+const DEFAULT_SETTINGS = {
+    allowGuest: true,
+    disableCustom: false,
+    theme: "dark",
+    language: "en",
+    examStartTime: "",
+    examDuration: 60,
+    totalScore: 100,
+    uidLength: 18,
+    requireAll: false,
+    showAnswer: true,
+    randomQuestions: false,
+    randomOptions: false,
+    enableAudio: false,
+    allowStudentExport: false,
+    subject: "",
+    noticeText: "",
+    audioTestText: ""
+};
+
+const state = {
+    currentLang: "en",
+    currentTheme: "dark",
+    currentUser: "user",
+    modalClosable: true,
+    appData: {
+        admin: { name: "Administrator", password: "password" },
+        settings: Object.assign({}, DEFAULT_SETTINGS),
+        questions: [],
+        users: []
+    },
+    quiz: {
+        active: false,
+        currentIndex: 0,
+        answers: [],
+        questions: [],
+        timerInterval: null,
+        waitInterval: null,
+        currentUserInfo: null,
+        pendingAdvance: null,
+        audioConfirmed: false,
+        noticeConfirmed: false
+    },
+    wizard: { step: 1, image: "", audio: "", title: "", optionCount: 4, options: [], correct: 0, includeImage: false, includeAudio: false },
+    editBuffer: null,
+    selection: { questions: new Set(), users: new Set() },
+    fullscreen: { interval: null, countdown: 0, active: false, onSuccess: null },
+    lastWarn: 0
+};
+
+const $ = (id) => document.getElementById(id);
+
+function normalizeLang(code) {
+    return SUPPORTED_LANGS.indexOf(code) >= 0 ? code : "en";
+}
+
+function t(key, ...args) {
+    const dict = I18N[state.currentLang] || I18N.en;
+    let str = dict[key] || I18N.en[key] || key;
+    args.forEach((arg, i) => { str = str.split("{" + i + "}").join(String(arg)); });
+    return str;
+}
+
+function showToast(msg, type) {
+    const el = $("toast");
+    el.textContent = msg;
+    el.classList.remove("warn", "success");
+    if (type === "warn") el.classList.add("warn");
+    else if (type === "success") el.classList.add("success");
+    el.classList.add("show");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("show"), 2000);
+}
+
+function warnThrottled(msg) {
+    const now = Date.now();
+    if (now - state.lastWarn < 1500) return;
+    state.lastWarn = now;
+    showToast(msg, "warn");
+}
+
+function applyTheme() { document.body.classList.toggle("light", state.currentTheme === "light"); }
+
+function setCustomSelect(id, value) {
+    const el = $(id);
+    if (!el) return;
+    el.dataset.value = value;
+    const label = el.querySelector(".custom-select-label");
+    const opt = el.querySelector('.custom-select-option[data-value="' + value + '"]');
+    if (label && opt) label.textContent = opt.textContent;
+    el.querySelectorAll(".custom-select-option").forEach((o) => {
+        o.classList.toggle("selected", o.dataset.value === value);
+    });
+}
+
+function refreshThemeLabels() {
+    const el = $("themeSelect");
+    if (!el) return;
+    const opts = el.querySelectorAll(".custom-select-option");
+    if (opts[0]) opts[0].textContent = t("themeDark");
+    if (opts[1]) opts[1].textContent = t("themeLight");
+    setCustomSelect("themeSelect", state.currentTheme);
+}
+
+function initCustomSelects() {
+    document.querySelectorAll(".custom-select").forEach((sel) => {
+        const btn = sel.querySelector(".custom-select-btn");
+        if (btn) {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".custom-select").forEach((s) => {
+                    if (s !== sel) s.classList.remove("open");
+                });
+                sel.classList.toggle("open");
+            };
+        }
+        sel.querySelectorAll(".custom-select-option").forEach((opt) => {
+            opt.onclick = () => {
+                sel.classList.remove("open");
+                const val = opt.dataset.value;
+                setCustomSelect(sel.id, val);
+                if (sel.id === "themeSelect") {
+                    if (state.currentUser !== "admin" && state.appData.settings.disableCustom) {
+                        setCustomSelect("themeSelect", state.currentTheme);
+                        showToast(t("disabledByAdmin"), "warn");
+                        return;
+                    }
+                    state.currentTheme = val;
+                    state.appData.settings.theme = val;
+                    applyTheme();
+                } else if (sel.id === "languageSelect") {
+                    if (state.currentUser !== "admin" && state.appData.settings.disableCustom) {
+                        setCustomSelect("languageSelect", state.currentLang);
+                        showToast(t("disabledByAdmin"), "warn");
+                        return;
+                    }
+                    state.currentLang = normalizeLang(val);
+                    state.appData.settings.language = state.currentLang;
+                    applyLang();
+                }
+            };
+        });
+    });
+    document.addEventListener("click", () => {
+        document.querySelectorAll(".custom-select").forEach((s) => s.classList.remove("open"));
+    });
+}
+
+function applyLang() {
+    state.currentLang = normalizeLang(state.currentLang);
+    document.documentElement.lang = state.currentLang === "zh" ? "zh-CN" : "en";
+    document.title = t("headerTitle");
+    const map = {
+        headerTitle: "headerTitle",
+        userSectionLabel: "userSectionLabel",
+        userRoleDisplay: "userRoleStudent",
+        adminRoleDisplay: "userRoleAdmin",
+        adminSectionLabel: "adminSectionLabel",
+        settingsLabel: "settingsLabel",
+        themeLabel: "themeLabel",
+        languageLabel: "languageLabel",
+        importTitle: "importTitle",
+        importDesc: "importDesc",
+        importBtnLabel: "importBtn",
+        btnNewData: "newDataBtn",
+        btnReImport: "reImportBtn",
+        btnAdminImport: "importBtn",
+        btnClearData: "clearDataBtn",
+        statQuestionsLabel: "statQuestionsLabel",
+        statUsersLabel: "statUsersLabel",
+        statScoreLabel: "statScoreLabel",
+        statDurationLabel: "statDurationLabel",
+        actQuestionsTitle: "actQuestionsTitle",
+        actQuestionsDesc: "actQuestionsDesc",
+        actUsersTitle: "actUsersTitle",
+        actUsersDesc: "actUsersDesc",
+        actSettingsTitle: "actSettingsTitle",
+        actSettingsDesc: "actSettingsDesc",
+        actExportTitle: "actExportTitle",
+        actExportDesc: "actExportDesc",
+        userWelcomeTitle: "userWelcomeTitle",
+        userWelcomeDesc: "userWelcomeDesc",
+        btnStartQuiz: "startQuiz",
+        btnGuestQuiz: "guestQuiz",
+        btnSubmit: "submit",
+        btnRestart: "back",
+        btnExportImage: "exportImage",
+        btnExportStudent: "exportStudent",
+        btnExitQuiz: "exitQuiz",
+        waitingTitle: "examReady",
+        waitingDesc: "waitingExamDesc",
+        btnCancelWaiting: "cancelWaiting",
+        fullscreenTitle: "fullscreenTitle",
+        btnEnterFullscreen: "enterFullscreen",
+        btnCancelFullscreen: "cancelFullscreen"
+    };
+    Object.entries(map).forEach(([id, key]) => {
+        const el = $(id);
+        if (el) el.textContent = t(key);
+    });
+    refreshThemeLabels();
+    setCustomSelect("languageSelect", state.currentLang);
+    updateRoleUI();
+    updateStats();
+    if (state.quiz.active) updateQuizUI();
+}
+
+function updateStats() {
+    $("statQuestions").textContent = state.appData.questions.length;
+    $("statUsers").textContent = state.appData.users.length;
+    $("statScore").textContent = state.appData.settings.totalScore;
+    const dur = state.appData.settings.examDuration;
+    $("statDuration").textContent = dur > 0 ? dur + " " + t("minutes") : t("examDurationUnlimited");
+}
+
+function updateRoleUI() {
+    const isAdmin = state.currentUser === "admin";
+    $("userCard").classList.toggle("active", !isAdmin);
+    $("adminCard").classList.toggle("active", isAdmin);
+    const canCustom = isAdmin || !state.appData.settings.disableCustom;
+    $("themeSelect").classList.toggle("disabled", !canCustom);
+    $("languageSelect").classList.toggle("disabled", !canCustom);
+    $("adminActions").style.display = isAdmin ? "flex" : "none";
+    const newBtn = $("btnNewData");
+    if (newBtn) newBtn.style.display = isAdmin ? "inline-flex" : "none";
+    const reImportBtn = $("btnReImport");
+    if (reImportBtn) reImportBtn.style.display = isAdmin ? "none" : "inline-flex";
+    if (!state.quiz.active && !$("resultArea").classList.contains("active")) {
+        if (isAdmin) {
+            $("adminView").style.display = "flex";
+            $("userView").style.display = "none";
+            $("quizArea").classList.remove("active");
+        } else {
+            $("adminView").style.display = "none";
+            $("userView").style.display = "flex";
+            $("quizArea").classList.remove("active");
+        }
+    }
+    const guestBtn = $("btnGuestQuiz");
+    if (guestBtn) guestBtn.style.display = (state.appData.settings.allowGuest && !isAdmin) ? "inline-flex" : "none";
+}
+
+function openModal(html, closable) {
+    state.modalClosable = closable !== false;
+    $("modalContent").innerHTML = html;
+    $("modalOverlay").classList.add("open");
+}
+
+function closeModal() {
+    state.modalClosable = true;
+    $("modalOverlay").classList.remove("open");
+    $("modalContent").innerHTML = "";
+}
+
+function confirmDialog(title, message, okText, cancelText, onOk) {
+    openModal(
+        '<h2>' + title + '</h2>' +
+        '<p style="font-size:14px;color:var(--text-2);line-height:1.6">' + message + '</p>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="cfCancel">' + cancelText + '</button>' +
+        '<button class="btn btn-primary" id="cfOk">' + okText + '</button>' +
+        '</div>',
+        false
+    );
+    $("cfCancel").onclick = () => closeModal();
+    $("cfOk").onclick = () => { closeModal(); onOk(); };
+}
+
+function confirmCancel(onConfirm) {
+    confirmDialog(t("cancelConfirmTitle"), t("cancelConfirm"), t("complete"), t("cancel"), onConfirm);
+}
+
+function passwordPrompt(onSuccess) {
+    openModal(
+        '<h2>' + t("adminPasswordPrompt") + '</h2>' +
+        '<div class="form-group"><input id="pwdInput" type="password" autocomplete="current-password"></div>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="pwdCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="pwdOk">' + t("confirm") + '</button>' +
+        '</div>',
+        false
+    );
+    const input = $("pwdInput");
+    setTimeout(() => input.focus(), 50);
+    const check = () => {
+        if (input.value === state.appData.admin.password) {
+            closeModal(); onSuccess();
+        } else {
+            showToast(t("adminPasswordWrong"), "warn");
+            input.value = ""; input.focus();
+        }
+    };
+    $("pwdOk").onclick = check;
+    $("pwdCancel").onclick = closeModal;
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
+}
+
+function generateUID(seq, gender, length) {
+    const g = gender === "male" ? "1" : gender === "female" ? "2" : "0";
+    const seqStr = String(seq).padStart(4, "0");
+    const ts = String(Date.now()).padStart(13, "0");
+    if (length === 18) return seqStr + g + ts;
+    let random = "";
+    for (let i = 0; i < 5; i++) random += Math.floor(Math.random() * 10);
+    const base = seqStr + g + ts + random;
+    let h = 0;
+    for (let i = 0; i < base.length; i++) h = (h * 31 + base.charCodeAt(i)) >>> 0;
+    const check = String(h).padStart(VERIFY_LENGTH, "0").slice(-VERIFY_LENGTH);
+    return base + check;
+}
+
+function needsVerifyCode(uid) { return uid && uid.length === 32; }
+
+function generateVerifyCode(uid) {
+    let h = 0;
+    for (let i = 0; i < uid.length; i++) h = (h * 33 + uid.charCodeAt(i)) >>> 0;
+    return String(h).padStart(VERIFY_LENGTH, "0").slice(-VERIFY_LENGTH);
+}
+
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = arr[i];
+        arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+}
+
+function getQuestions() {
+    return state.editBuffer && state.editBuffer.type === "questions"
+        ? state.editBuffer.data : state.appData.questions;
+}
+
+function getUsers() {
+    return state.editBuffer && state.editBuffer.type === "users"
+        ? state.editBuffer.data : state.appData.users;
+}
+
+function getExamStartTime() {
+    const s = state.appData.settings.examStartTime;
+    if (!s) return null;
+    const time = new Date(s).getTime();
+    return isNaN(time) ? null : time;
+}
+
+function checkExamTimeWindow() {
+    const startTime = getExamStartTime();
+    if (startTime === null) return { ok: true };
+    if (Date.now() < startTime) return { ok: false, startTime };
+    return { ok: true };
+}
+
+function verifyImportedUsers(users) {
+    let regenCount = 0;
+    users.forEach((u) => {
+        if (needsVerifyCode(u.uid)) {
+            const expected = generateVerifyCode(u.uid);
+            if (!u.verifyCode || u.verifyCode !== expected) {
+                u.verifyCode = expected;
+                regenCount++;
+            }
+        }
+    });
+    return regenCount;
+}
+
+function exportData() {
+    try {
+        const data = {
+            admin: { name: state.appData.admin.name, password: state.appData.admin.password },
+            settings: state.appData.settings,
+            questions: state.appData.questions,
+            users: state.appData.users
+        };
+        const content = "window.APP_DATA=" + JSON.stringify(data, null, 2) + ";";
+        const blob = new Blob([content], { type: "text/javascript" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "exam_data.js";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast(t("exportSuccess"), "success");
+    } catch (err) { showToast(t("exportFail"), "warn"); }
+}
+
+function exportStudentResult() {
+    try {
+        const user = state.quiz.currentUserInfo;
+        if (!user) { showToast(t("studentExportFail"), "warn"); return; }
+        const qs = state.quiz.questions;
+        const answers = state.quiz.answers;
+        const details = qs.map((q, i) => ({
+            title: q.title,
+            correct: q.correct,
+            userAnswer: answers[i],
+            isCorrect: answers[i] === q.correct
+        }));
+        const data = {
+            name: user.name,
+            uid: user.uid,
+            verifyCode: user.verifyCode || "",
+            gender: user.gender,
+            subject: state.appData.settings.subject,
+            details: details
+        };
+        const content = "window.STUDENT_RESULT=" + JSON.stringify(data, null, 2) + ";";
+        const blob = new Blob([content], { type: "text/javascript" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "student_result_" + user.name + ".js";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast(t("studentExported"), "success");
+    } catch (err) { showToast(t("studentExportFail"), "warn"); }
+}
+
+function loadData(data) {
+    state.appData.admin = (data.admin && typeof data.admin === "object")
+        ? { name: data.admin.name || "Administrator", password: data.admin.password || "password" }
+        : { name: "Administrator", password: "password" };
+    state.appData.settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
+    state.appData.settings.uidLength = UID_LENGTH_OPTIONS.indexOf(state.appData.settings.uidLength) >= 0
+        ? state.appData.settings.uidLength : 18;
+    state.appData.settings.language = normalizeLang(state.appData.settings.language);
+    state.appData.questions = Array.isArray(data.questions)
+        ? data.questions.filter((q) => q && Array.isArray(q.options) && typeof q.correct === "number")
+        : [];
+    state.appData.users = Array.isArray(data.users)
+        ? data.users.filter((u) => u && u.uid) : [];
+    const regenCount = verifyImportedUsers(state.appData.users);
+    state.currentTheme = state.appData.settings.theme || "dark";
+    state.currentLang = normalizeLang(state.appData.settings.language || "en");
+    state.quiz.active = false;
+    state.quiz.answers = [];
+    state.quiz.questions = [];
+    state.quiz.currentUserInfo = null;
+    state.quiz.pendingAdvance = null;
+    state.selection.questions.clear();
+    state.selection.users.clear();
+    $("importCard").style.display = "none";
+    $("workspace").classList.add("active");
+    $("quizArea").classList.remove("active");
+    $("resultArea").classList.remove("active");
+    applyTheme();
+    applyLang();
+    if (regenCount > 0) showToast(t("uidVerifyWarn"), "warn");
+}
+
+function importDataFromFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onerror = () => showToast(t("importFail"), "warn");
+    reader.onload = (e) => {
+        try {
+            const fn = new Function(e.target.result + "\nreturn (typeof window!=='undefined'&&window.APP_DATA)?window.APP_DATA:null;");
+            const data = fn();
+            if (!data || !Array.isArray(data.questions)) throw new Error("invalid");
+            loadData(data);
+            showToast(t("importSuccess"), "success");
+        } catch (err) { showToast(t("importFail"), "warn"); }
+    };
+    reader.readAsText(file);
+}
+
+function createNewData() {
+    if (state.currentUser !== "admin") {
+        showToast(t("noPermission"), "warn");
+        return;
+    }
+    loadData({
+        admin: state.appData.admin,
+        settings: state.appData.settings,
+        questions: [],
+        users: []
+    });
+    showToast(t("newDataCreated"), "success");
+}
+
+function clearAllData() {
+    if (state.currentUser !== "admin") {
+        showToast(t("noPermission"), "warn");
+        return;
+    }
+    if (state.quiz.active) {
+        showToast(t("cannotClearInExam"), "warn");
+        return;
+    }
+    confirmDialog(t("clearDataConfirmTitle"), t("clearDataConfirm"), t("confirm"), t("cancel"), () => {
+        state.appData = {
+            admin: { name: "Administrator", password: "password" },
+            settings: Object.assign({}, DEFAULT_SETTINGS),
+            questions: [],
+            users: []
+        };
+        state.currentTheme = "dark";
+        state.currentLang = "en";
+        state.currentUser = "user";
+        state.quiz.active = false;
+        state.quiz.answers = [];
+        state.quiz.questions = [];
+        state.quiz.currentUserInfo = null;
+        state.quiz.pendingAdvance = null;
+        state.selection.questions.clear();
+        state.selection.users.clear();
+        $("importCard").style.display = "block";
+        $("workspace").classList.remove("active");
+        $("quizArea").classList.remove("active");
+        $("resultArea").classList.remove("active");
+        applyTheme();
+        applyLang();
+        showToast(t("clearDataDone"), "success");
+    });
+}
+
+function buildSessionQuestions() {
+    let qs = state.appData.questions.map((q) => ({
+        title: q.title,
+        image: q.image || "",
+        audio: q.audio || "",
+        options: q.options.slice(),
+        correct: q.correct
+    }));
+    if (state.appData.settings.randomQuestions) qs = shuffle(qs);
+    if (state.appData.settings.randomOptions) {
+        qs = qs.map((q) => {
+            const opts = q.options.map((text, i) => ({ text: text, isCorrect: i === q.correct }));
+            shuffle(opts);
+            return {
+                title: q.title,
+                image: q.image,
+                audio: q.audio,
+                options: opts.map((o) => o.text),
+                correct: opts.findIndex((o) => o.isCorrect)
+            };
+        });
+    }
+    return qs;
+}
+
+function renderQuizCards() {
+    const container = $("cardsContainer");
+    container.innerHTML = "";
+    if (state.quiz.questions.length === 0) {
+        container.innerHTML = '<div class="card active"><div class="empty-state">' + t("noQuestions") + '</div></div>';
+        return;
+    }
+    state.quiz.questions.forEach((q, i) => {
+        const card = document.createElement("div");
+        card.className = "card" + (i === state.quiz.currentIndex ? " active" : "");
+        let html = "";
+        if (q.image) {
+            if (q.image.trim().startsWith("<svg")) {
+                html += '<div class="card-image">' + q.image + '</div>';
+            } else {
+                html += '<img class="card-image" src="' + q.image.replace(/"/g, "&quot;") + '" alt="">';
+            }
+        }
+        if (q.audio) {
+            html += '<div class="card-audio"><audio controls preload="metadata" src="' + q.audio.replace(/"/g, "&quot;") + '"></audio></div>';
+        }
+        html += '<div class="q-header"><div class="q-num">' + (i + 1) + '</div><span>' + t("progress", i + 1, state.quiz.questions.length) + '</span></div>';
+        html += '<div class="q-text">' + q.title + '</div>';
+        html += '<div class="options">';
+        q.options.forEach((opt, j) => {
+            const letter = String.fromCharCode(65 + j);
+            const selected = state.quiz.answers[i] === j;
+            const cls = "option" + (selected ? " selected" : "");
+            html += '<div class="' + cls + '" data-q="' + i + '" data-opt="' + j + '">' +
+                '<div class="option-letter">' + letter + '</div>' +
+                '<div class="option-text">' + opt + '</div>' +
+                '</div>';
+        });
+        html += '</div>';
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+    container.querySelectorAll(".option").forEach((el) => {
+        el.onclick = () => {
+            if (!state.quiz.active) return;
+            const qi = Number(el.dataset.q);
+            const oi = Number(el.dataset.opt);
+            const isFirstPick = state.quiz.answers[qi] === null || state.quiz.answers[qi] === undefined;
+            state.quiz.answers[qi] = oi;
+            const card = el.closest(".card");
+            card.querySelectorAll(".option").forEach((optEl) => {
+                optEl.classList.toggle("selected", Number(optEl.dataset.opt) === oi);
+            });
+            updateProgress();
+            if (isFirstPick && qi === state.quiz.currentIndex && state.quiz.currentIndex < state.quiz.questions.length - 1) {
+                clearTimeout(state.quiz.pendingAdvance);
+                state.quiz.pendingAdvance = setTimeout(() => {
+                    if (state.quiz.active && state.quiz.currentIndex === qi) {
+                        state.quiz.currentIndex++;
+                        updateQuizUI();
+                    }
+                }, 300);
+            }
+        };
+    });
+}
+
+function updateProgress() {
+    const total = state.quiz.questions.length;
+    const answered = state.quiz.answers.filter((a) => a !== null && a !== undefined).length;
+    $("progressText").textContent = t("progress", answered, total);
+}
+
+function updateQuizUI() {
+    const cards = $("cardsContainer").querySelectorAll(".card");
+    cards.forEach((card, i) => card.classList.toggle("active", i === state.quiz.currentIndex));
+    $("prevBtn").disabled = state.quiz.currentIndex === 0;
+    $("nextBtn").disabled = state.quiz.currentIndex >= state.quiz.questions.length - 1;
+    updateProgress();
+}
+
+function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ":" + String(s).padStart(2, "0");
+}
+
+function formatHMS(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function showWaitingOverlay(startTime) {
+    $("waitingOverlay").classList.add("open");
+    const update = () => {
+        const remain = Math.max(0, Math.floor((startTime - Date.now()) / 1000));
+        $("waitingCountdown").textContent = formatHMS(remain);
+        if (remain <= 0) {
+            clearInterval(state.quiz.waitInterval);
+            state.quiz.waitInterval = null;
+            $("waitingOverlay").classList.remove("open");
+            showPreExamFlow(state.quiz.currentUserInfo);
+        }
+    };
+    update();
+    state.quiz.waitInterval = setInterval(update, 1000);
+}
+
+function hideWaitingOverlay() {
+    $("waitingOverlay").classList.remove("open");
+    if (state.quiz.waitInterval) {
+        clearInterval(state.quiz.waitInterval);
+        state.quiz.waitInterval = null;
+    }
+}
+
+function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement ||
+              document.mozFullScreenElement || document.msFullscreenElement);
+}
+
+function requestFullscreenFlow(onSuccess) {
+    state.fullscreen.onSuccess = onSuccess;
+    state.fullscreen.countdown = FULLSCREEN_TIMEOUT;
+    state.fullscreen.active = true;
+    $("fullscreenCountdown").textContent = state.fullscreen.countdown;
+    $("fullscreenDesc").textContent = t("fullscreenDesc", state.fullscreen.countdown);
+    $("fullscreenOverlay").classList.add("open");
+    clearInterval(state.fullscreen.interval);
+    state.fullscreen.interval = setInterval(() => {
+        if (isFullscreen()) {
+            clearInterval(state.fullscreen.interval);
+            state.fullscreen.interval = null;
+            state.fullscreen.active = false;
+            $("fullscreenOverlay").classList.remove("open");
+            if (state.fullscreen.onSuccess) {
+                const cb = state.fullscreen.onSuccess;
+                state.fullscreen.onSuccess = null;
+                cb();
+            }
+            return;
+        }
+        state.fullscreen.countdown--;
+        $("fullscreenCountdown").textContent = state.fullscreen.countdown;
+        $("fullscreenDesc").textContent = t("fullscreenDesc", state.fullscreen.countdown);
+        if (state.fullscreen.countdown <= 0) {
+            clearInterval(state.fullscreen.interval);
+            state.fullscreen.interval = null;
+            state.fullscreen.active = false;
+            state.fullscreen.onSuccess = null;
+            $("fullscreenOverlay").classList.remove("open");
+            showToast(t("fullscreenTimeout"), "warn");
+            exitExam();
+        }
+    }, 1000);
+}
+
+function cancelFullscreenFlow() {
+    if (state.fullscreen.interval) clearInterval(state.fullscreen.interval);
+    state.fullscreen.interval = null;
+    state.fullscreen.active = false;
+    state.fullscreen.onSuccess = null;
+    $("fullscreenOverlay").classList.remove("open");
+}
+
+function exitExam() {
+    if (state.quiz.pendingAdvance) {
+        clearTimeout(state.quiz.pendingAdvance);
+        state.quiz.pendingAdvance = null;
+    }
+    if (state.quiz.timerInterval) {
+        clearInterval(state.quiz.timerInterval);
+        state.quiz.timerInterval = null;
+    }
+    if (state.quiz.waitInterval) {
+        clearInterval(state.quiz.waitInterval);
+        state.quiz.waitInterval = null;
+    }
+    if (isFullscreen() && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+    }
+    state.quiz.active = false;
+    state.quiz.answers = [];
+    state.quiz.currentIndex = 0;
+    state.quiz.questions = [];
+    state.quiz.currentUserInfo = null;
+    state.quiz.audioConfirmed = false;
+    state.quiz.noticeConfirmed = false;
+    $("waitingOverlay").classList.remove("open");
+    $("fullscreenOverlay").classList.remove("open");
+    $("resultArea").classList.remove("active");
+    $("quizArea").classList.remove("active");
+    $("userBanner").style.display = "none";
+    updateRoleUI();
+}
+
+function getAudioTestText() {
+    const custom = state.appData.settings.audioTestText;
+    if (custom && custom.trim()) return custom;
+    return t("audioTestContent");
+}
+
+function playSpeech(text, onEnd) {
+    if (!window.speechSynthesis) {
+        showToast(t("playbackNotSupported"), "warn");
+        if (onEnd) onEnd();
+        return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = state.currentLang === "zh" ? "zh-CN" : "en-US";
+    u.rate = 0.95;
+    u.pitch = 1;
+    u.onend = () => { if (onEnd) onEnd(); };
+    u.onerror = () => { if (onEnd) onEnd(); };
+    window.speechSynthesis.speak(u);
+}
+
+function showPreExamFlow(userInfo) {
+    if (state.appData.questions.length === 0) {
+        showToast(t("noQuestionsWarning"), "warn");
+        return;
+    }
+    const hasNotice = !!(state.appData.settings.noticeText && state.appData.settings.noticeText.trim());
+    const hasAudio = !!state.appData.settings.enableAudio;
+    const steps = [];
+    if (hasNotice) steps.push("notice");
+    if (hasAudio) steps.push("audio");
+    steps.push("info");
+    let stepIndex = 0;
+    state.quiz.noticeConfirmed = !hasNotice;
+    state.quiz.audioConfirmed = !hasAudio;
+
+    function renderStep() {
+        const step = steps[stepIndex];
+        if (step === "notice") renderNoticeStep();
+        else if (step === "audio") renderAudioStep();
+        else if (step === "info") renderInfoStep();
+    }
+
+    function goNext() {
+        stepIndex++;
+        if (stepIndex >= steps.length) {
+            beginExamAfterLogin(userInfo);
+            return;
+        }
+        renderStep();
+    }
+
+    function renderNoticeStep() {
+        openModal(
+            '<h2>' + t("noticeTitleDisplay") + '</h2>' +
+            '<div class="notice-box selectable">' + state.appData.settings.noticeText.replace(/</g, "&lt;") + '</div>' +
+            '<div class="checkbox-row"><input type="checkbox" id="noticeCheck"><span>' + t("noticeConfirm") + '</span></div>' +
+            '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="preCancel">' + t("cancel") + '</button>' +
+            '<button class="btn btn-primary" id="preNext" disabled>' + t("continueBtn") + '</button>' +
+            '</div>',
+            false
+        );
+        const check = $("noticeCheck");
+        const nextBtn = $("preNext");
+        check.onchange = () => { nextBtn.disabled = !check.checked; };
+        nextBtn.onclick = () => {
+            state.quiz.noticeConfirmed = true;
+            goNext();
+        };
+        $("preCancel").onclick = () => { closeModal(); exitExam(); };
+    }
+
+    function renderAudioStep() {
+        openModal(
+            '<h2>' + t("audioTestTitle") + '</h2>' +
+            '<p style="font-size:13px;color:var(--text-3);line-height:1.6">' + t("audioTestDesc") + '</p>' +
+            '<div class="audio-test-box">' +
+            '<button class="btn btn-secondary" id="playAudioBtn">' + t("audioTestPlay") + '</button>' +
+            '<div class="audio-test-status" id="audioStatus"></div>' +
+            '<button class="btn btn-primary" id="confirmAudioBtn" style="display:none">' + t("audioTestConfirm") + '</button>' +
+            '</div>' +
+            '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="preCancel">' + t("cancel") + '</button>' +
+            '</div>',
+            false
+        );
+        const playBtn = $("playAudioBtn");
+        const statusEl = $("audioStatus");
+        const confirmBtn = $("confirmAudioBtn");
+        playBtn.onclick = () => {
+            playBtn.disabled = true;
+            statusEl.textContent = "...";
+            playSpeech(getAudioTestText(), () => {
+                playBtn.disabled = false;
+                statusEl.textContent = "";
+                confirmBtn.style.display = "inline-flex";
+            });
+        };
+        confirmBtn.onclick = () => {
+            state.quiz.audioConfirmed = true;
+            goNext();
+        };
+        $("preCancel").onclick = () => { closeModal(); exitExam(); };
+    }
+
+    function renderInfoStep() {
+        const avatarText = userInfo.name.charAt(0).toUpperCase();
+        const genderKey = userInfo.gender === "male" ? "male" : userInfo.gender === "female" ? "female" : "other";
+        const examTime = state.appData.settings.examStartTime
+            ? new Date(state.appData.settings.examStartTime).toLocaleString()
+            : t("startModeUnlimited");
+        const dur = state.appData.settings.examDuration > 0
+            ? state.appData.settings.examDuration + " " + t("minutes")
+            : t("examDurationUnlimited");
+        const subject = state.appData.settings.subject || t("unknown");
+        openModal(
+            '<h2>' + t("candidateInfoTitle") + '</h2>' +
+            '<p style="font-size:13px;color:var(--text-3);line-height:1.6">' + t("candidateInfoDesc") + '</p>' +
+            '<div class="info-card">' +
+            '<div class="info-avatar">' + avatarText + '</div>' +
+            '<div class="info-row"><span class="info-label">' + t("userName") + '</span><span class="info-value">' + userInfo.name + '</span></div>' +
+            '<div class="info-row"><span class="info-label">' + t("uid") + '</span><span class="info-value selectable" style="font-family:ui-monospace,monospace;font-size:12px">' + userInfo.uid + '</span></div>' +
+            '<div class="info-row"><span class="info-label">' + t("gender") + '</span><span class="info-value">' + t(genderKey) + '</span></div>' +
+            '<div class="info-row"><span class="info-label">' + t("examSubject") + '</span><span class="info-value">' + subject + '</span></div>' +
+            '<div class="info-row"><span class="info-label">' + t("examTime") + '</span><span class="info-value">' + examTime + '</span></div>' +
+            '<div class="info-row"><span class="info-label">' + t("examDurationLabel") + '</span><span class="info-value">' + dur + '</span></div>' +
+            '</div>' +
+            '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="preCancel">' + t("cancel") + '</button>' +
+            '<button class="btn btn-primary" id="confirmInfoBtn">' + t("startAfterConfirm") + '</button>' +
+            '</div>',
+            false
+        );
+        $("confirmInfoBtn").onclick = () => { goNext(); };
+        $("preCancel").onclick = () => { closeModal(); exitExam(); };
+    }
+
+    renderStep();
+}
+
+function beginExamAfterLogin(userInfo) {
+    if (state.appData.questions.length === 0) {
+        showToast(t("noQuestionsWarning"), "warn");
+        return;
+    }
+    closeModal();
+    state.quiz.questions = buildSessionQuestions();
+    state.quiz.active = true;
+    state.quiz.currentIndex = 0;
+    state.quiz.answers = new Array(state.quiz.questions.length).fill(null);
+    state.quiz.currentUserInfo = userInfo || null;
+    state.quiz.pendingAdvance = null;
+    $("adminView").style.display = "none";
+    $("userView").style.display = "none";
+    $("quizArea").classList.add("active");
+    $("resultArea").classList.remove("active");
+    const banner = $("userBanner");
+    if (userInfo) {
+        banner.style.display = "flex";
+        $("userBannerName").textContent = userInfo.name;
+        $("userBannerUid").textContent = t("uid") + " · " + userInfo.uid;
+    } else {
+        banner.style.display = "none";
+    }
+    renderQuizCards();
+    updateProgress();
+    if (state.quiz.timerInterval) clearInterval(state.quiz.timerInterval);
+    const timerEl = $("timerDisplay");
+    const dur = state.appData.settings.examDuration;
+    if (dur && dur > 0) {
+        let remaining = dur * 60;
+        timerEl.style.display = "inline";
+        timerEl.textContent = formatTime(remaining);
+        timerEl.classList.toggle("warning", remaining < 60);
+        state.quiz.timerInterval = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) {
+                clearInterval(state.quiz.timerInterval);
+                state.quiz.timerInterval = null;
+                submitQuiz(true);
+            } else {
+                timerEl.textContent = formatTime(remaining);
+                timerEl.classList.toggle("warning", remaining < 60);
+            }
+        }, 1000);
+    } else {
+        timerEl.style.display = "none";
+    }
+}
+
+function startQuiz(userInfo) {
+    const win = checkExamTimeWindow();
+    state.quiz.currentUserInfo = userInfo || null;
+    if (!win.ok) {
+        showWaitingOverlay(win.startTime);
+        return;
+    }
+    requestFullscreenFlow(() => {
+        showPreExamFlow(userInfo);
+    });
+}
+
+function submitQuiz(timeUp) {
+    if (!timeUp && state.appData.settings.requireAll) {
+        const answered = state.quiz.answers.filter((a) => a !== null && a !== undefined).length;
+        if (answered < state.quiz.questions.length) {
+            showToast(t("mustAnswerAll"), "warn");
+            return;
+        }
+    }
+    state.quiz.active = false;
+    if (state.quiz.timerInterval) {
+        clearInterval(state.quiz.timerInterval);
+        state.quiz.timerInterval = null;
+    }
+    if (state.quiz.pendingAdvance) {
+        clearTimeout(state.quiz.pendingAdvance);
+        state.quiz.pendingAdvance = null;
+    }
+    $("timerDisplay").style.display = "none";
+    let correctCount = 0;
+    state.quiz.questions.forEach((q, i) => {
+        if (state.quiz.answers[i] === q.correct) correctCount++;
+    });
+    const total = state.quiz.questions.length;
+    const totalScore = state.appData.settings.totalScore;
+    const perScore = total > 0 ? totalScore / total : 0;
+    const finalScore = Math.round(correctCount * perScore * 100) / 100;
+    const user = state.quiz.currentUserInfo;
+    let summaryHtml = '<div class="result-summary">';
+    if (user) summaryHtml += '<div class="result-user">' + user.name + '</div>';
+    summaryHtml += '<div class="result-label">' + (timeUp ? t("timeUp") + " · " : "") + t("scoreLabel") + '</div>';
+    summaryHtml += '<div class="result-score">' + finalScore + ' / ' + totalScore + '</div>';
+    summaryHtml += '<div class="result-label">' + t("progress", correctCount, total) + '</div>';
+    summaryHtml += '</div>';
+    $("resultSummary").innerHTML = summaryHtml;
+    let listHtml = "";
+    if (state.appData.settings.showAnswer) {
+        state.quiz.questions.forEach((q, i) => {
+            const userAns = state.quiz.answers[i];
+            const isCorrect = userAns === q.correct;
+            let lines = "";
+            if (userAns === null || userAns === undefined) {
+                lines += '<div class="result-line wrong">' + t("notAnswered") + '</div>';
+            } else {
+                lines += '<div class="result-line ' + (isCorrect ? "correct" : "wrong") + '">' + t("yourAnswer", String.fromCharCode(65 + userAns)) + '</div>';
+            }
+            if (!isCorrect) {
+                lines += '<div class="result-line correct">' + t("correctAnswer", String.fromCharCode(65 + q.correct)) + '</div>';
+            }
+            listHtml += '<div class="result-item"><div class="result-item-title">' + (i + 1) + '. ' + q.title + '</div>' + lines + '</div>';
+        });
+    }
+    $("resultList").innerHTML = listHtml;
+    $("resultArea").classList.add("active");
+    $("quizArea").classList.remove("active");
+    const exportBtn = $("btnExportStudent");
+    if (exportBtn) exportBtn.style.display = (state.appData.settings.allowStudentExport && user) ? "inline-flex" : "none";
+    if (isFullscreen() && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+function exportResultImage() {
+    try {
+        const qs = state.quiz.questions;
+        const answers = state.quiz.answers;
+        const total = qs.length;
+        const totalScore = state.appData.settings.totalScore;
+        let correctCount = 0;
+        qs.forEach((q, i) => { if (answers[i] === q.correct) correctCount++; });
+        const perScore = total > 0 ? totalScore / total : 0;
+        const finalScore = Math.round(correctCount * perScore * 100) / 100;
+        const user = state.quiz.currentUserInfo;
+        const isLight = state.currentTheme === "light";
+        const bg = isLight ? "#ffffff" : "#161618";
+        const fg = isLight ? "#1a1a1e" : "#f0f0f0";
+        const muted = isLight ? "#5a5a62" : "#a8a8b0";
+        const border = isLight ? "#e0e0e6" : "#26262a";
+        const success = "#22c55e";
+        const danger = "#ef4444";
+        const fontCN = "'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif";
+        const width = 900;
+        const padding = 60;
+        const headerHeight = user ? 260 : 220;
+        let itemHeights = 0;
+        qs.forEach((q, i) => {
+            itemHeights += 70;
+            if (answers[i] !== q.correct) itemHeights += 22;
+        });
+        const height = Math.max(600, headerHeight + itemHeights + padding + 80);
+        const canvas = document.createElement("canvas");
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = border;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, width - 2, height - 2);
+        ctx.textAlign = "center";
+        if (user) {
+            ctx.fillStyle = fg;
+            ctx.font = "600 22px " + fontCN;
+            ctx.fillText(user.name, width / 2, 50);
+        }
+        ctx.fillStyle = muted;
+        ctx.font = "600 14px " + fontCN;
+        ctx.fillText(t("scoreLabel").toUpperCase(), width / 2, user ? 90 : 60);
+        ctx.fillStyle = fg;
+        ctx.font = "700 64px " + fontCN;
+        ctx.fillText(finalScore + " / " + totalScore, width / 2, user ? 160 : 130);
+        ctx.fillStyle = muted;
+        ctx.font = "500 16px " + fontCN;
+        ctx.fillText(t("progress", correctCount, total), width / 2, user ? 195 : 165);
+        if (user) {
+            ctx.textAlign = "left";
+            ctx.fillStyle = muted;
+            ctx.font = "500 12px ui-monospace, monospace";
+            ctx.fillText(t("uid") + ": " + user.uid, padding, 230);
+        }
+        ctx.strokeStyle = border;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding, headerHeight + 10);
+        ctx.lineTo(width - padding, headerHeight + 10);
+        ctx.stroke();
+        let y = headerHeight + 50;
+        ctx.textAlign = "left";
+        qs.forEach((q, i) => {
+            const userAns = answers[i];
+            const isCorrect = userAns === q.correct;
+            ctx.fillStyle = fg;
+            ctx.font = "600 16px " + fontCN;
+            let title = (i + 1) + ". " + q.title;
+            if (title.length > 60) title = title.slice(0, 60) + "...";
+            ctx.fillText(title, padding, y);
+            y += 24;
+            ctx.font = "500 13px " + fontCN;
+            if (userAns === null || userAns === undefined) {
+                ctx.fillStyle = danger;
+                ctx.fillText(t("notAnswered"), padding + 20, y);
+            } else {
+                ctx.fillStyle = isCorrect ? success : danger;
+                ctx.fillText(t("yourAnswer", String.fromCharCode(65 + userAns)), padding + 20, y);
+            }
+            y += 20;
+            if (!isCorrect) {
+                ctx.fillStyle = success;
+                ctx.fillText(t("correctAnswer", String.fromCharCode(65 + q.correct)), padding + 20, y);
+                y += 22;
+            }
+            y += 8;
+        });
+        ctx.fillStyle = muted;
+        ctx.font = "500 11px " + fontCN;
+        ctx.textAlign = "right";
+        ctx.fillText("© 2020-2026 fuey All Rights Reserved", width - padding, height - 24);
+        const url = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "exam_result_" + Date.now() + ".png";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        showToast(t("imageExported"), "success");
+    } catch (err) { showToast(t("imageExportFail"), "warn"); }
+}
+
+function openLoginModal(onSuccess) {
+    if (state.appData.users.length === 0) {
+        showToast(t("noUsers"), "warn");
+        return;
+    }
+    openModal(
+        '<h2>' + t("startExam") + '</h2>' +
+        '<div class="form-group"><label>' + t("loginName") + '</label><input id="loginName" type="text" autocomplete="off" placeholder="' + t("enterName") + '"></div>' +
+        '<div class="form-group"><label>' + t("loginCredLabel") + '</label><input id="loginCred" type="text" autocomplete="off" placeholder="' + t("enterCred") + '"></div>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="loginCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="loginOk">' + t("confirm") + '</button>' +
+        '</div>',
+        false
+    );
+    const nameInput = $("loginName");
+    const credInput = $("loginCred");
+    setTimeout(() => nameInput.focus(), 50);
+    const submit = () => {
+        const name = nameInput.value.trim();
+        const cred = credInput.value.trim();
+        if (!name) { showToast(t("nameRequired"), "warn"); nameInput.focus(); return; }
+        if (!cred) { showToast(t("enterCred"), "warn"); credInput.focus(); return; }
+        const user = state.appData.users.find((u) => u.name === name);
+        if (!user) { showToast(t("userNotRegistered"), "warn"); nameInput.value = ""; nameInput.focus(); return; }
+        let valid = false;
+        if (needsVerifyCode(user.uid)) {
+            valid = cred === user.verifyCode;
+        } else {
+            valid = cred === user.uid;
+        }
+        if (!valid) { showToast(t("invalidCred"), "warn"); credInput.value = ""; credInput.focus(); return; }
+        closeModal();
+        onSuccess(user);
+    };
+    $("loginCancel").onclick = closeModal;
+    $("loginOk").onclick = submit;
+    nameInput.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); credInput.focus(); } };
+    credInput.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } };
+}
+
+function renderStepIndicator() {
+    const steps = [1, 2, 3];
+    return '<div class="step-indicator">' + steps.map((s) =>
+        '<div class="step-dot' + (state.wizard.step >= s ? " active" : "") + '"></div>'
+    ).join("") + '</div>';
+}
+
+function buildListToolbar(prefix) {
+    return '<div class="list-toolbar">' +
+        '<button class="btn btn-secondary btn-sm" id="' + prefix + 'SelectAll">' + t("selectAll") + '</button>' +
+        '<button class="btn btn-secondary btn-sm" id="' + prefix + 'DeselectAll">' + t("deselectAll") + '</button>' +
+        '<button class="btn btn-danger btn-sm" id="' + prefix + 'DeleteBtn">' + t("deleteSelected") + '</button>' +
+        '<div class="spacer"></div>' +
+        '<span class="selected-count" id="' + prefix + 'SelectedCount">' + t("selectedCount", 0) + '</span>' +
+        '</div>';
+}
+
+function updateListToolbar(prefix) {
+    const sel = prefix === "q" ? state.selection.questions : state.selection.users;
+    const countEl = $(prefix + "SelectedCount");
+    const delBtn = $(prefix + "DeleteBtn");
+    if (countEl) countEl.textContent = t("selectedCount", sel.size);
+    if (delBtn) delBtn.disabled = sel.size === 0;
+}
+
+function bindListToolbar(prefix, onDelete) {
+    const getSel = () => prefix === "q" ? state.selection.questions : state.selection.users;
+    $(prefix + "SelectAll").onclick = () => {
+        const data = prefix === "q" ? getQuestions() : getUsers();
+        for (let i = 0; i < data.length; i++) getSel().add(i);
+        onDelete(); updateListToolbar(prefix);
+    };
+    $(prefix + "DeselectAll").onclick = () => {
+        getSel().clear(); onDelete(); updateListToolbar(prefix);
+    };
+    $(prefix + "DeleteBtn").onclick = () => {
+        const sel = getSel();
+        if (sel.size === 0) return;
+        confirmDialog(t("delete"), t("deleteSelectedConfirm", sel.size), t("delete"), t("cancel"), () => {
+            const data = prefix === "q" ? getQuestions() : getUsers();
+            const sorted = Array.from(sel).sort((a, b) => b - a);
+            sorted.forEach((idx) => data.splice(idx, 1));
+            sel.clear(); onDelete(); updateListToolbar(prefix);
+        });
+    };
+}
+
+function renderQuestionListItems() {
+    const list = $("qList");
+    if (!list) return;
+    const questions = getQuestions();
+    if (questions.length === 0) { list.innerHTML = '<div class="empty-state">' + t("noQuestions") + '</div>'; return; }
+    list.innerHTML = "";
+    questions.forEach((q, i) => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+        const checked = state.selection.questions.has(i) ? " checked" : "";
+        item.innerHTML = '<input type="checkbox" data-sel="' + i + '"' + checked + '>' +
+            '<div class="list-item-body"><div class="list-item-title">' + (i + 1) + '. ' + q.title + '</div></div>' +
+            '<div class="list-item-actions"><button class="btn btn-danger btn-sm" data-del="' + i + '">' + t("delete") + '</button></div>';
+        list.appendChild(item);
+    });
+    list.querySelectorAll("[data-del]").forEach((btn) => {
+        btn.onclick = () => {
+            const idx = Number(btn.dataset.del);
+            confirmDialog(t("delete"), t("deleteConfirm"), t("delete"), t("cancel"), () => {
+                getQuestions().splice(idx, 1);
+                state.selection.questions.clear();
+                renderQuestionListItems(); updateListToolbar("q");
+            });
+        };
+    });
+    list.querySelectorAll("[data-sel]").forEach((cb) => {
+        cb.onchange = () => {
+            const idx = Number(cb.dataset.sel);
+            if (cb.checked) state.selection.questions.add(idx);
+            else state.selection.questions.delete(idx);
+            updateListToolbar("q");
+        };
+    });
+}
+
+function renderUserListItems() {
+    const list = $("uList");
+    if (!list) return;
+    const users = getUsers();
+    if (users.length === 0) { list.innerHTML = '<div class="empty-state">' + t("noUsers") + '</div>'; return; }
+    list.innerHTML = "";
+    users.forEach((u, i) => {
+        const item = document.createElement("div");
+        item.className = "list-item";
+        const checked = state.selection.users.has(i) ? " checked" : "";
+        const genderKey = u.gender === "male" ? "male" : u.gender === "female" ? "female" : "other";
+        let verifyLine;
+        if (needsVerifyCode(u.uid)) {
+            verifyLine = '<div class="list-item-meta">' + t("verifyCode") + ': ' + (u.verifyCode || generateVerifyCode(u.uid)) + '</div>';
+        } else {
+            verifyLine = '<div class="list-item-meta">' + t("noVerifyCode") + '</div>';
+        }
+        item.innerHTML = '<input type="checkbox" data-sel="' + i + '"' + checked + '>' +
+            '<div class="list-item-body">' +
+            '<div class="list-item-title">' + u.name + ' · ' + t(genderKey) + '</div>' +
+            '<div class="list-item-meta selectable">' + t("uid") + ': ' + u.uid + '</div>' +
+            verifyLine +
+            '</div>' +
+            '<div class="list-item-actions"><button class="btn btn-danger btn-sm" data-del="' + i + '">' + t("delete") + '</button></div>';
+        list.appendChild(item);
+    });
+    list.querySelectorAll("[data-del]").forEach((btn) => {
+        btn.onclick = () => {
+            const idx = Number(btn.dataset.del);
+            confirmDialog(t("delete"), t("deleteConfirm"), t("delete"), t("cancel"), () => {
+                getUsers().splice(idx, 1);
+                state.selection.users.clear();
+                renderUserListItems(); updateListToolbar("u");
+            });
+        };
+    });
+    list.querySelectorAll("[data-sel]").forEach((cb) => {
+        cb.onchange = () => {
+            const idx = Number(cb.dataset.sel);
+            if (cb.checked) state.selection.users.add(idx);
+            else state.selection.users.delete(idx);
+            updateListToolbar("u");
+        };
+    });
+}
+
+function renderQuestionEditorModal() {
+    let html = '<h2>' + t("setQuestions") + '</h2>';
+    html += '<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" id="qAddBtn">+ ' + t("addQuestion") + '</button></div>';
+    html += buildListToolbar("q");
+    html += '<div class="list-container" id="qList" style="max-height:360px"></div>';
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="qCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="qComplete">' + t("complete") + '</button>' +
+        '</div>';
+    openModal(html, false);
+    renderQuestionListItems();
+    updateListToolbar("q");
+    bindListToolbar("q", renderQuestionListItems);
+    $("qAddBtn").onclick = () => openQuestionWizard();
+    $("qCancel").onclick = () => {
+        confirmCancel(() => { state.editBuffer = null; state.selection.questions.clear(); closeModal(); });
+    };
+    $("qComplete").onclick = () => {
+        if (state.editBuffer) { state.appData.questions = state.editBuffer.data; state.editBuffer = null; }
+        state.selection.questions.clear(); closeModal(); updateStats();
+    };
+}
+
+function renderUserEditorModal() {
+    let html = '<h2>' + t("setUsers") + '</h2>';
+    html += '<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" id="uAddBtn">+ ' + t("addUser") + '</button></div>';
+    html += buildListToolbar("u");
+    html += '<div class="list-container" id="uList" style="max-height:400px"></div>';
+    html += '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="uCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="uComplete">' + t("complete") + '</button>' +
+        '</div>';
+    openModal(html, false);
+    renderUserListItems();
+    updateListToolbar("u");
+    bindListToolbar("u", renderUserListItems);
+    $("uAddBtn").onclick = () => openUserForm();
+    $("uCancel").onclick = () => {
+        confirmCancel(() => { state.editBuffer = null; state.selection.users.clear(); closeModal(); });
+    };
+    $("uComplete").onclick = () => {
+        if (state.editBuffer) { state.appData.users = state.editBuffer.data; state.editBuffer = null; }
+        state.selection.users.clear(); closeModal(); updateStats();
+    };
+}
+
+function openQuestionEditor() {
+    state.editBuffer = { type: "questions", data: JSON.parse(JSON.stringify(state.appData.questions)) };
+    state.selection.questions.clear();
+    renderQuestionEditorModal();
+}
+
+function openUserEditor() {
+    state.editBuffer = { type: "users", data: JSON.parse(JSON.stringify(state.appData.users)) };
+    state.selection.users.clear();
+    renderUserEditorModal();
+}
+
+function openQuestionWizard() {
+    state.wizard = { step: 1, image: "", audio: "", title: "", optionCount: 4, options: [], correct: 0, includeImage: false, includeAudio: false };
+    renderWizard();
+}
+
+function renderWizard() {
+    const w = state.wizard;
+    let html = '<h2>' + t("addQuestion") + '</h2>' + renderStepIndicator();
+    if (w.step === 1) {
+        html += '<h3>' + t("step1") + '</h3>';
+        html += '<div class="form-group"><label>' + t("questionText") + '</label><input id="wTitle" value="' + (w.title || "").replace(/"/g, "&quot;") + '"></div>';
+        html += '<div class="checkbox-row"><input type="checkbox" id="wIncludeImage"' + (w.includeImage ? " checked" : "") + '><span>' + t("toggleImage") + '</span></div>';
+        html += '<div class="form-group" id="wImageGroup" style="display:' + (w.includeImage ? "flex" : "none") + '"><label>' + t("addImage") + '</label><textarea id="wImage" placeholder="' + t("questionImageHint") + '">' + (w.image || "") + '</textarea></div>';
+        html += '<div class="checkbox-row"><input type="checkbox" id="wIncludeAudio"' + (w.includeAudio ? " checked" : "") + '><span>' + t("toggleAudio") + '</span></div>';
+        html += '<div class="form-group" id="wAudioGroup" style="display:' + (w.includeAudio ? "flex" : "none") + '"><label>' + t("addAudio") + '</label><input id="wAudio" type="text" placeholder="' + t("audioHint") + '" value="' + (w.audio || "").replace(/"/g, "&quot;") + '"></div>';
+        html += '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="wCancel">' + t("cancel") + '</button>' +
+            '<button class="btn btn-primary" id="wNext">' + t("next") + '</button>' +
+            '</div>';
+    } else if (w.step === 2) {
+        html += '<h3>' + t("step2") + '</h3>';
+        html += '<div class="form-row"><div class="form-group"><label>' + t("optionCount") + '</label><input id="wOptCount" type="number" min="2" max="8" value="' + w.optionCount + '"></div><button class="btn btn-secondary" id="wGen">' + t("confirm") + '</button></div>';
+        html += '<div id="wOptionsBox">';
+        for (let i = 0; i < w.optionCount; i++) {
+            const letter = String.fromCharCode(65 + i);
+            html += '<div class="option-input-row"><div class="letter">' + letter + '</div><input type="text" id="wOpt_' + i + '" value="' + ((w.options[i] || "").replace(/"/g, "&quot;")) + '" placeholder="' + t("optionPlaceholder", letter) + '"></div>';
+        }
+        html += '</div>';
+        html += '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="wCancel">' + t("cancel") + '</button>' +
+            '<button class="btn btn-secondary" id="wBack">' + t("back_btn") + '</button>' +
+            '<button class="btn btn-primary" id="wNext">' + t("next") + '</button>' +
+            '</div>';
+    } else {
+        html += '<h3>' + t("step3") + '</h3>';
+        html += '<div class="form-group"><label>' + t("correctOption") + '</label><select id="wCorrect" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none">';
+        for (let i = 0; i < w.optionCount; i++) {
+            const letter = String.fromCharCode(65 + i);
+            html += '<option value="' + i + '"' + (i === w.correct ? " selected" : "") + '>' + letter + '. ' + (w.options[i] || "") + '</option>';
+        }
+        html += '</select></div>';
+        html += '<div class="modal-actions">' +
+            '<button class="btn btn-secondary" id="wCancel">' + t("cancel") + '</button>' +
+            '<button class="btn btn-secondary" id="wBack">' + t("back_btn") + '</button>' +
+            '<button class="btn btn-primary" id="wSave">' + t("complete") + '</button>' +
+            '</div>';
+    }
+    openModal(html, false);
+    const cancelHandler = () => { confirmCancel(() => { renderQuestionEditorModal(); }); };
+    $("wCancel").onclick = cancelHandler;
+    if (w.step === 1) {
+        $("wIncludeImage").onchange = (e) => {
+            $("wImageGroup").style.display = e.target.checked ? "flex" : "none";
+            w.includeImage = e.target.checked;
+        };
+        $("wIncludeAudio").onchange = (e) => {
+            $("wAudioGroup").style.display = e.target.checked ? "flex" : "none";
+            w.includeAudio = e.target.checked;
+        };
+        const titleEl = $("wTitle");
+        setTimeout(() => titleEl.focus(), 50);
+        $("wNext").onclick = () => {
+            const title = $("wTitle").value.trim();
+            if (!title) { showToast(t("titleRequired"), "warn"); return; }
+            w.title = title;
+            w.image = w.includeImage ? $("wImage").value.trim() : "";
+            w.audio = w.includeAudio ? $("wAudio").value.trim() : "";
+            w.step = 2; renderWizard();
+        };
+    } else if (w.step === 2) {
+        $("wGen").onclick = () => {
+            const count = Math.max(2, Math.min(8, parseInt($("wOptCount").value) || 4));
+            w.optionCount = count;
+            const newOptions = [];
+            for (let i = 0; i < count; i++) {
+                const prev = $("wOpt_" + i);
+                newOptions.push(prev ? prev.value : (w.options[i] || ""));
+            }
+            w.options = newOptions; renderWizard();
+        };
+        $("wBack").onclick = () => { collectOptions(); w.step = 1; renderWizard(); };
+        $("wNext").onclick = () => {
+            collectOptions();
+            for (let i = 0; i < w.optionCount; i++) {
+                if (!w.options[i] || !w.options[i].trim()) {
+                    showToast(t("optionRequired", String.fromCharCode(65 + i)), "warn"); return;
+                }
+            }
+            w.step = 3; renderWizard();
+        };
+    } else {
+        $("wBack").onclick = () => { w.correct = parseInt($("wCorrect").value) || 0; w.step = 2; renderWizard(); };
+        $("wSave").onclick = () => {
+            w.correct = parseInt($("wCorrect").value) || 0;
+            getQuestions().push({
+                image: w.image || "",
+                audio: w.audio || "",
+                title: w.title,
+                options: w.options.slice(),
+                correct: w.correct
+            });
+            showToast(t("questionAdded"), "success");
+            renderQuestionEditorModal();
+        };
+    }
+}
+
+function collectOptions() {
+    const newOptions = [];
+    for (let i = 0; i < state.wizard.optionCount; i++) {
+        const el = $("wOpt_" + i);
+        if (el) newOptions.push(el.value);
+        else newOptions.push(state.wizard.options[i] || "");
+    }
+    state.wizard.options = newOptions;
+}
+
+function openUserForm() {
+    openModal(
+        '<h2>' + t("addUser") + '</h2>' +
+        '<div class="form-group"><label>' + t("userName") + '</label><input id="uName"></div>' +
+        '<div class="form-group"><label>' + t("gender") + '</label><select id="uGender" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none">' +
+        '<option value="male">' + t("male") + '</option>' +
+        '<option value="female">' + t("female") + '</option>' +
+        '<option value="other">' + t("other") + '</option>' +
+        '</select></div>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="uCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="uSave">' + t("complete") + '</button>' +
+        '</div>',
+        false
+    );
+    setTimeout(() => $("uName").focus(), 50);
+    $("uCancel").onclick = () => { confirmCancel(() => { renderUserEditorModal(); }); };
+    $("uSave").onclick = () => {
+        const name = $("uName").value.trim();
+        const gender = $("uGender").value;
+        if (!name) { showToast(t("nameRequired"), "warn"); return; }
+        const list = getUsers();
+        const uidLen = state.appData.settings.uidLength;
+        let uid = generateUID(list.length + 1, gender, uidLen);
+        let attempts = 0;
+        while (list.some((u) => u.uid === uid) && attempts < 10) {
+            uid = generateUID(list.length + 1 + attempts, gender, uidLen); attempts++;
+        }
+        if (list.some((u) => u.uid === uid)) { showToast(t("uidDuplicate"), "warn"); return; }
+        const verifyCode = needsVerifyCode(uid) ? generateVerifyCode(uid) : "";
+        list.push({ name, gender, uid, verifyCode });
+        showToast(t("userAdded"), "success");
+        renderUserEditorModal();
+    };
+}
+
+function openAdminSettings() {
+    const s = state.appData.settings;
+    let startMode = "";
+    let startCustom = "";
+    if (s.examStartTime) { startMode = "custom"; startCustom = s.examStartTime; }
+    let uidRadios = "";
+    UID_LENGTH_OPTIONS.forEach((n) => {
+        const label = n === 18 ? t("uidLength18") : t("uidLength32");
+        const checked = (s.uidLength === n) ? " checked" : "";
+        uidRadios += '<label class="radio-option"><input type="radio" name="uidLen" value="' + n + '"' + checked + '><span>' + label + '</span></label>';
+    });
+    const presetValues = [15, 30, 45, 60, 90, 120, 180, 0];
+    let presets = "";
+    presetValues.forEach((v) => {
+        const label = v === 0 ? t("examDurationUnlimited") : v + " " + t("minutes");
+        const active = (s.examDuration === v) ? " active" : "";
+        presets += '<button type="button" class="duration-preset' + active + '" data-val="' + v + '">' + label + '</button>';
+    });
+    const durVal = s.examDuration > 0 ? s.examDuration : "";
+    const noticeText = s.noticeText || "";
+    const audioTestText = s.audioTestText || "";
+    openModal(
+        '<h2>' + t("adminSettings") + '</h2>' +
+        '<h3>' + t("basicSettings") + '</h3>' +
+        '<div class="form-group"><label>' + t("adminName") + '</label><input id="asName" value="' + state.appData.admin.name.replace(/"/g, "&quot;") + '" placeholder="' + t("adminNameHint") + '"></div>' +
+        '<div class="form-group"><label>' + t("subject") + '</label><input id="asSubject" value="' + (s.subject || "").replace(/"/g, "&quot;") + '" placeholder="' + t("subjectPlaceholder") + '"></div>' +
+        '<button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">' + t("changePassword") + '</button>' +
+        '<h3>' + t("examSettings") + '</h3>' +
+        '<div class="form-group"><label>' + t("examStartMode") + '</label><select id="asStartMode" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none">' +
+        '<option value=""' + (startMode === "" ? " selected" : "") + '>' + t("startModeUnlimited") + '</option>' +
+        '<option value="now"' + (startMode === "now" ? " selected" : "") + '>' + t("startModeNow") + '</option>' +
+        '<option value="custom"' + (startMode === "custom" ? " selected" : "") + '>' + t("startModeCustom") + '</option>' +
+        '</select></div>' +
+        '<div class="form-group" id="asStartCustomGroup" style="display:' + (startMode === "custom" || startMode === "now" ? "flex" : "none") + '"><label>&nbsp;</label><input id="asStartCustom" type="datetime-local" value="' + (startCustom || "") + '"></div>' +
+        '<div class="form-group"><label>' + t("examDuration") + '</label><input id="asDuration" type="number" min="0" value="' + durVal + '" placeholder="' + t("examDurationUnlimited") + '"><div class="duration-preset-row">' + presets + '</div></div>' +
+        '<div class="form-group"><label>' + t("totalScore") + '</label><input id="asTotalScore" type="number" min="1" value="' + s.totalScore + '"></div>' +
+        '<h3>' + t("uidSettings") + '</h3>' +
+        '<div class="radio-row">' + uidRadios + '</div>' +
+        '<h3>' + t("noticeSettings") + '</h3>' +
+        '<div class="form-group"><textarea id="asNotice" rows="5" placeholder="' + t("noticePlaceholder") + '">' + noticeText.replace(/</g, "&lt;") + '</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">' + t("noticePreset") + '</button></div>' +
+        '<h3>' + t("audioSettings") + '</h3>' +
+        '<div class="form-group"><label>' + t("audioTestText") + '</label><textarea id="asAudioTest" rows="3" placeholder="' + t("audioTestTextHint") + '">' + audioTestText.replace(/</g, "&lt;") + '</textarea></div>' +
+        '<h3>' + t("featureSettings") + '</h3>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asAllowGuest"' + (s.allowGuest ? " checked" : "") + '><span>' + t("allowGuest") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asDisableCustom"' + (s.disableCustom ? " checked" : "") + '><span>' + t("disableCustom") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asRequireAll"' + (s.requireAll ? " checked" : "") + '><span>' + t("requireAll") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asShowAnswer"' + (s.showAnswer ? " checked" : "") + '><span>' + t("showAnswer") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asRandomQ"' + (s.randomQuestions ? " checked" : "") + '><span>' + t("randomQuestions") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asRandomO"' + (s.randomOptions ? " checked" : "") + '><span>' + t("randomOptions") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asEnableAudio"' + (s.enableAudio ? " checked" : "") + '><span>' + t("enableAudio") + '</span></div>' +
+        '<div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"' + (s.allowStudentExport ? " checked" : "") + '><span>' + t("allowStudentExport") + '</span></div>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="asCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="asSave">' + t("complete") + '</button>' +
+        '</div>',
+        false
+    );
+    $("asChangePwd").onclick = () => openChangePassword();
+    $("asNoticePreset").onclick = () => {
+        $("asNotice").value = t("noticePresetDefault");
+    };
+    document.querySelectorAll(".duration-preset").forEach((btn) => {
+        btn.onclick = () => {
+            document.querySelectorAll(".duration-preset").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const v = parseInt(btn.dataset.val);
+            $("asDuration").value = v > 0 ? v : "";
+        };
+    });
+    $("asStartMode").onchange = (e) => {
+        const group = $("asStartCustomGroup");
+        if (e.target.value === "custom") {
+            group.style.display = "flex";
+            setTimeout(() => $("asStartCustom").focus(), 50);
+        } else if (e.target.value === "now") {
+            group.style.display = "flex";
+            const now = new Date();
+            $("asStartCustom").value = now.toISOString().slice(0, 16);
+        } else {
+            group.style.display = "none";
+        }
+    };
+    $("asCancel").onclick = () => { confirmCancel(closeModal); };
+    $("asSave").onclick = () => {
+        const name = $("asName").value.trim() || "Administrator";
+        const subject = $("asSubject").value.trim();
+        const totalScore = parseInt($("asTotalScore").value);
+        if (!totalScore || totalScore <= 0) { showToast(t("totalScoreInvalid"), "warn"); return; }
+        const mode = $("asStartMode").value;
+        let startTime = "";
+        if (mode === "custom" || mode === "now") startTime = $("asStartCustom").value || "";
+        const uidRadio = document.querySelector('input[name="uidLen"]:checked');
+        const uidLen = uidRadio ? parseInt(uidRadio.value) : 18;
+        const oldUidLen = state.appData.settings.uidLength;
+        const durVal = $("asDuration").value;
+        const dur = durVal ? parseInt(durVal) : 0;
+        const noticeText = $("asNotice").value;
+        const audioTestText = $("asAudioTest").value;
+
+        const applySettings = () => {
+            state.appData.admin.name = name;
+            state.appData.settings.examStartTime = startTime;
+            state.appData.settings.examDuration = dur;
+            state.appData.settings.totalScore = totalScore;
+            state.appData.settings.uidLength = uidLen;
+            state.appData.settings.subject = subject;
+            state.appData.settings.noticeText = noticeText;
+            state.appData.settings.audioTestText = audioTestText;
+            state.appData.settings.allowGuest = $("asAllowGuest").checked;
+            state.appData.settings.disableCustom = $("asDisableCustom").checked;
+            state.appData.settings.requireAll = $("asRequireAll").checked;
+            state.appData.settings.showAnswer = $("asShowAnswer").checked;
+            state.appData.settings.randomQuestions = $("asRandomQ").checked;
+            state.appData.settings.randomOptions = $("asRandomO").checked;
+            state.appData.settings.enableAudio = $("asEnableAudio").checked;
+            state.appData.settings.allowStudentExport = $("asAllowStudentExport").checked;
+            showToast(t("adminSettingsSaved"), "success");
+            closeModal();
+            updateRoleUI();
+            updateStats();
+            applyLang();
+        };
+
+        if (uidLen !== oldUidLen && state.appData.users.length > 0) {
+            confirmDialog(t("uidSettings"), t("uidChangedConfirm"), t("confirm"), t("cancel"), () => {
+                state.appData.users.forEach((u, i) => {
+                    const newUid = generateUID(i + 1, u.gender, uidLen);
+                    u.uid = newUid;
+                    u.verifyCode = needsVerifyCode(newUid) ? generateVerifyCode(newUid) : "";
+                });
+                applySettings();
+                showToast(t("uidChangedWarn"), "success");
+            });
+        } else {
+            applySettings();
+        }
+    };
+}
+
+function openChangePassword() {
+    openModal(
+        '<h2>' + t("changePassword") + '</h2>' +
+        '<div class="form-group"><label>' + t("oldPassword") + '</label><input id="cpOld" type="password" autocomplete="current-password"></div>' +
+        '<div class="form-group"><label>' + t("newPassword") + '</label><input id="cpNew" type="password" autocomplete="new-password" placeholder="' + t("passwordHint") + '"></div>' +
+        '<div class="form-group"><label>' + t("confirmPassword") + '</label><input id="cpConfirm" type="password" autocomplete="new-password"></div>' +
+        '<div class="modal-actions">' +
+        '<button class="btn btn-secondary" id="cpCancel">' + t("cancel") + '</button>' +
+        '<button class="btn btn-primary" id="cpSave">' + t("complete") + '</button>' +
+        '</div>',
+        false
+    );
+    setTimeout(() => $("cpOld").focus(), 50);
+    $("cpCancel").onclick = () => openAdminSettings();
+    $("cpSave").onclick = () => {
+        const oldPwd = $("cpOld").value;
+        const newPwd = $("cpNew").value;
+        const confirmPwd = $("cpConfirm").value;
+        if (oldPwd !== state.appData.admin.password) { showToast(t("oldPasswordWrong"), "warn"); return; }
+        if (newPwd !== confirmPwd) { showToast(t("passwordMismatch"), "warn"); return; }
+        if (newPwd.length < 4) { showToast(t("passwordTooShort"), "warn"); return; }
+        state.appData.admin.password = newPwd;
+        showToast(t("passwordChanged"), "success");
+        openAdminSettings();
+    };
+}
+
+function bindEvents() {
+    $("settingsBtn").onclick = (e) => {
+        e.stopPropagation();
+        $("dropdown").classList.toggle("open");
+    };
+    document.addEventListener("click", (e) => {
+        const dd = $("dropdown");
+        const btn = $("settingsBtn");
+        if (!dd.contains(e.target) && !btn.contains(e.target)) dd.classList.remove("open");
+    });
+    $("userCard").onclick = () => {
+        $("dropdown").classList.remove("open");
+        if (state.quiz.active) {
+            showToast(t("cannotSwitchDuringExam"), "warn");
+            return;
+        }
+        if (state.currentUser === "admin") {
+            confirmDialog(t("switchUserConfirm"), t("switchUserConfirmMsg"), t("switchUserOk"), t("switchUserCancel"), () => {
+                state.currentUser = "user";
+                updateRoleUI(); applyLang();
+            });
+        } else {
+            state.currentUser = "user";
+            updateRoleUI(); applyLang();
+        }
+    };
+    $("adminCard").onclick = () => {
+        $("dropdown").classList.remove("open");
+        if (state.quiz.active) {
+            showToast(t("cannotSwitchDuringExam"), "warn");
+            return;
+        }
+        if (state.currentUser === "admin") return;
+        passwordPrompt(() => {
+            state.currentUser = "admin";
+            updateRoleUI(); applyLang();
+        });
+    };
+    $("fileInput").onchange = (e) => {
+        const f = e.target.files[0];
+        if (f) importDataFromFile(f);
+        e.target.value = "";
+    };
+    $("btnNewData").onclick = () => createNewData();
+    $("btnClearData").onclick = () => {
+        $("dropdown").classList.remove("open");
+        clearAllData();
+    };
+    $("btnAdminImport").onclick = () => {
+        $("dropdown").classList.remove("open");
+        if (state.quiz.active) {
+            showToast(t("cannotClearInExam"), "warn");
+            return;
+        }
+        $("fileInput").click();
+    };
+    $("btnReImport").onclick = () => {
+        if (state.quiz.active) {
+            showToast(t("cannotClearInExam"), "warn");
+            return;
+        }
+        $("fileInput").click();
+    };
+    $("actQuestions").onclick = () => openQuestionEditor();
+    $("actUsers").onclick = () => openUserEditor();
+    $("actSettings").onclick = () => openAdminSettings();
+    $("actExport").onclick = () => exportData();
+    $("btnStartQuiz").onclick = () => { openLoginModal((user) => startQuiz(user)); };
+    $("btnGuestQuiz").onclick = () => startQuiz(null);
+    $("prevBtn").onclick = () => {
+        if (state.quiz.pendingAdvance) {
+            clearTimeout(state.quiz.pendingAdvance); state.quiz.pendingAdvance = null;
+        }
+        if (state.quiz.currentIndex > 0) { state.quiz.currentIndex--; updateQuizUI(); }
+    };
+    $("nextBtn").onclick = () => {
+        if (state.quiz.pendingAdvance) {
+            clearTimeout(state.quiz.pendingAdvance); state.quiz.pendingAdvance = null;
+        }
+        if (state.quiz.currentIndex < state.quiz.questions.length - 1) {
+            state.quiz.currentIndex++; updateQuizUI();
+        }
+    };
+    $("btnSubmit").onclick = () => submitQuiz(false);
+    $("btnRestart").onclick = exitExam;
+    $("btnExportImage").onclick = exportResultImage;
+    $("btnExportStudent").onclick = exportStudentResult;
+    $("btnExitQuiz").onclick = () => {
+        confirmDialog(t("exitQuiz"), t("exitQuizConfirm"), t("confirm"), t("cancel"), exitExam);
+    };
+    $("btnCancelWaiting").onclick = () => { hideWaitingOverlay(); exitExam(); };
+    $("btnEnterFullscreen").onclick = () => {
+        const el = document.documentElement;
+        const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        if (req) {
+            req.call(el).catch(() => {});
+        }
+    };
+    $("btnCancelFullscreen").onclick = () => {
+        cancelFullscreenFlow();
+        exitExam();
+    };
+    $("modalOverlay").onclick = (e) => {
+        if (e.target === $("modalOverlay") && state.modalClosable) closeModal();
+    };
+    document.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        warnThrottled(t("warningRightClick"));
+    });
+    document.addEventListener("keydown", (e) => {
+        const k = e.key.toUpperCase();
+        if (e.key === "F12") {
+            e.preventDefault(); warnThrottled(t("warningDevtools")); return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (k === "I" || k === "J" || k === "C")) {
+            e.preventDefault(); warnThrottled(t("warningDevtools")); return false;
+        }
+        if (e.ctrlKey && k === "U") {
+            e.preventDefault(); warnThrottled(t("warningSource")); return false;
+        }
+    });
+    document.addEventListener("fullscreenchange", () => {
+        if (state.fullscreen.active && isFullscreen()) {
+            if (state.fullscreen.interval) clearInterval(state.fullscreen.interval);
+            state.fullscreen.interval = null;
+            state.fullscreen.active = false;
+            $("fullscreenOverlay").classList.remove("open");
+            if (state.fullscreen.onSuccess) {
+                const cb = state.fullscreen.onSuccess;
+                state.fullscreen.onSuccess = null;
+                cb();
+            }
+        } else if (!isFullscreen() && state.quiz.active) {
+            warnThrottled(t("fullscreenExitWarning"));
+        }
+    });
+}
+
+applyTheme();
+applyLang();
+bindEvents();
+initCustomSelects();
+</script>
+</body>
+</html>
