@@ -7,6 +7,10 @@ window.__OTHER_DATA__ = {
         {
             name: { zh: "随机点名器", en: "Roll Call Tool" },
             url: "https://fueyseek.github.io/Projects/tools/RollCallTool"
+        },
+        {
+            name: { zh: "考试系统", en: "Exam System" },
+            url: "https://fueyseek.github.io/Projects/tools/ExamSystem"
         }
     ]
 };
