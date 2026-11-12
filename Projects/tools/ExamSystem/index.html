@@ -8,28 +8,30 @@
 <style>
 :root{--bg:#0e0e10;--surface:#161618;--surface-2:#1c1c1f;--surface-3:#232328;--border:#26262a;--border-2:#3a3a42;--text:#f0f0f0;--text-2:#a8a8b0;--text-3:#6b6b73;--accent:#f0f0f0;--accent-text:#0e0e10;--danger:#ef4444;--success:#22c55e;--warning:#f59e0b;--r-sm:10px;--r:14px;--r-lg:18px;--r-xl:24px;--shadow:0 20px 50px rgba(0,0,0,0.5);--shadow-sm:0 4px 16px rgba(0,0,0,0.25);--ease:cubic-bezier(0.16,1,0.3,1);--ease-bounce:cubic-bezier(0.34,1.56,0.64,1);--t:0.22s var(--ease);--t-fast:0.16s var(--ease)}
 body.light{--bg:#f5f5f7;--surface:#ffffff;--surface-2:#f4f4f6;--surface-3:#ececef;--border:#e2e2e8;--border-2:#d0d0d8;--text:#1a1a1e;--text-2:#5a5a62;--text-3:#8a8a92;--accent:#1a1a1e;--accent-text:#ffffff;--shadow:0 20px 50px rgba(0,0,0,0.08);--shadow-sm:0 4px 16px rgba(0,0,0,0.06)}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
-input,textarea,.selectable{user-select:text;-webkit-user-select:text}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+*::before,*::after{user-select:none;-webkit-user-select:none}
+html,body{height:100%;-webkit-tap-highlight-color:transparent}
+input,textarea,.selectable,.selectable *{user-select:text;-webkit-user-select:text;-webkit-touch-callout:default}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-2)}
 *{scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background var(--t),color var(--t)}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background var(--t),color var(--t);color-scheme:dark}
+body.light{color-scheme:light}
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;position:relative;z-index:100;border-bottom:1px solid var(--border)}
 .header-title{font-size:17px;font-weight:600;letter-spacing:0.01em}
-.settings-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:all var(--t)}
+.settings-btn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:all var(--t)}
 .settings-btn:hover{border-color:var(--border-2);background:var(--surface-3)}
 .settings-btn:active{transform:scale(0.95)}
 .settings-btn svg{width:18px;height:18px;transition:transform var(--t)}
 .settings-btn:hover svg{transform:rotate(45deg)}
-.dropdown{position:absolute;top:64px;right:20px;width:320px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:16px;z-index:200;box-shadow:var(--shadow);display:none;flex-direction:column;gap:16px;animation:ddIn 0.24s var(--ease)}
+.dropdown{position:absolute;top:64px;right:20px;width:320px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;z-index:200;box-shadow:var(--shadow);display:none;flex-direction:column;gap:16px;animation:ddIn 0.24s var(--ease)}
 @keyframes ddIn{from{opacity:0;transform:translateY(-10px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .dropdown.open{display:flex}
 .dd-section{display:flex;flex-direction:column;gap:10px}
 .dd-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);font-weight:600;padding:0 2px}
-.user-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all var(--t)}
+.user-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all var(--t)}
 .user-card:hover{border-color:var(--border-2)}
 .user-card.active{border-color:var(--accent);background:var(--surface-3)}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;color:var(--text);flex-shrink:0;transition:all var(--t)}
@@ -50,10 +52,11 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ox
 .custom-select-option:hover{background:var(--surface-2);color:var(--text)}
 .custom-select-option.selected{background:var(--surface-3);color:var(--text);font-weight:500}
 .custom-select.disabled{opacity:0.5;pointer-events:none}
-input.input-field,.form-group input,.form-group textarea,.form-group select{font-family:inherit;font-size:14px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:var(--r-sm);outline:none;transition:all var(--t);width:100%}
-input.input-field:hover,.form-group input:hover,.form-group textarea:hover,.form-group select:hover{border-color:var(--border-2)}
-input.input-field:focus,.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
-body.light input.input-field:focus,body.light .form-group input:focus,body.light .form-group textarea:focus,body.light .form-group select:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+input.input-field,.form-group input,.form-group textarea{font-family:inherit;font-size:14px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:var(--r-sm);outline:none;transition:all var(--t);width:100%}
+input.input-field:hover,.form-group input:hover,.form-group textarea:hover{border-color:var(--border-2)}
+input.input-field:focus,.form-group input:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light input.input-field:focus,body.light .form-group input:focus,body.light .form-group textarea:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.form-group input[type="datetime-local"]{font-family:inherit;font-variant-numeric:tabular-nums;cursor:pointer}
 .form-group textarea{resize:vertical;min-height:80px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;line-height:1.6}
 .btn{font-family:inherit;font-size:13px;font-weight:500;padding:10px 18px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;transition:all var(--t);white-space:nowrap;letter-spacing:0.01em;display:inline-flex;align-items:center;justify-content:center;gap:6px;position:relative;overflow:hidden}
 .btn::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity var(--t);pointer-events:none}
@@ -66,7 +69,7 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .btn-secondary:hover:not(:disabled){border-color:var(--border-2);color:var(--text);background:var(--surface-2)}
 .btn-danger{background:transparent;border-color:var(--border);color:var(--danger)}
 .btn-danger:hover:not(:disabled){border-color:var(--danger);background:rgba(239,68,68,0.08)}
-.btn-sm{padding:6px 12px;font-size:12px}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:var(--r-sm)}
 .btn-lg{padding:16px 32px;font-size:15px;border-radius:var(--r)}
 .main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .import-card{max-width:520px;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:48px 40px;text-align:center;display:flex;flex-direction:column;gap:20px;box-shadow:var(--shadow);animation:fadeUp 0.4s var(--ease)}
@@ -121,7 +124,7 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .card-audio{width:100%}
 .card-audio audio{width:100%;border-radius:var(--r-sm)}
 .q-header{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--text-3);letter-spacing:0.06em;font-weight:600}
-.q-num{width:30px;height:30px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);letter-spacing:0}
+.q-num{width:30px;height:30px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);letter-spacing:0}
 .q-type{font-size:10px;padding:3px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-3);text-transform:none}
 .q-text{font-size:20px;font-weight:600;line-height:1.5;color:var(--text)}
 .options{display:flex;flex-direction:column;gap:10px}
@@ -135,6 +138,22 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .option.correct .option-letter{background:var(--success);color:#fff}
 .option.wrong .option-letter{background:var(--danger);color:#fff}
 .option-text{font-size:15px;line-height:1.55;padding-top:3px;color:var(--text);flex:1}
+.judge-options{flex-direction:row !important;gap:16px}
+.judge-option{flex:1;justify-content:center;align-items:center;padding:28px 16px;text-align:center;transform:none !important}
+.judge-symbol{font-size:44px;font-weight:700;line-height:1;color:var(--text);transition:color var(--t)}
+.judge-option.selected{background:var(--accent);border-color:var(--accent)}
+.judge-option.selected .judge-symbol{color:var(--accent-text)}
+.fill-inline-text{font-size:20px;font-weight:600;line-height:2.4;color:var(--text);word-break:break-word}
+.fill-inline-input{display:inline-block;min-width:120px;max-width:220px;padding:6px 12px;margin:0 4px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-size:15px;font-family:inherit;outline:none;transition:all var(--t);text-align:center;font-weight:500}
+.fill-inline-input:hover{border-color:var(--border-2)}
+.fill-inline-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light .fill-inline-input:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.fill-list-box{display:flex;flex-direction:column;gap:12px}
+.fill-list-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);transition:all var(--t)}
+.fill-list-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light .fill-list-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.fill-list-row .fill-index{font-size:12px;font-weight:600;color:var(--text-3);min-width:48px;font-family:ui-monospace,monospace}
+.fill-list-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:15px;font-family:inherit;outline:none;padding:0}
 .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
 .nav-btn{width:48px;height:48px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:all var(--t)}
 .nav-btn:hover:not(:disabled){border-color:var(--border-2);background:var(--surface-2);transform:scale(1.05)}
@@ -152,16 +171,16 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .result-sub{font-size:15px;color:var(--text-2);font-weight:500;margin-top:4px}
 .result-list{display:flex;flex-direction:column;gap:12px}
 .result-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 22px;display:flex;flex-direction:column;gap:8px;animation:fadeUp 0.3s var(--ease);animation-fill-mode:both}
-.result-item:nth-child(1){animation-delay:0.03s}
-.result-item:nth-child(2){animation-delay:0.06s}
-.result-item:nth-child(3){animation-delay:0.09s}
-.result-item:nth-child(4){animation-delay:0.12s}
 .result-item-title{font-size:15px;font-weight:600}
 .result-line{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px}
 .result-line.correct{color:var(--success)}
 .result-line.wrong{color:var(--danger)}
+.explanation-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 16px;margin-top:6px}
+.explanation-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);margin-bottom:6px}
+.explanation-text{font-size:13px;line-height:1.7;color:var(--text-2);white-space:pre-wrap}
 .result-actions{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px);animation:fadeIn 0.2s var(--ease)}
+#confirmOverlay{z-index:1100}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .modal-overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:18px;animation:modalIn 0.32s var(--ease-bounce);box-shadow:var(--shadow)}
@@ -170,39 +189,59 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .modal h3{font-size:16px;font-weight:600;margin-top:6px}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}
 .form-group{display:flex;flex-direction:column;gap:8px}
-.form-group label{font-size:12px;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:0.04em}
+.form-group label{font-size:12px;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:0.04em;user-select:none;-webkit-user-select:none}
 .form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
 .form-row>*{flex:1;min-width:120px}
 .option-input-row{display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:10px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);transition:all var(--t)}
 .option-input-row:focus-within{border-color:var(--accent)}
-.option-input-row .letter{width:28px;height:28px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.option-input-row .letter{width:28px;height:28px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;user-select:none;-webkit-user-select:none}
 .option-input-row input[type="text"]{flex:1;background:transparent;border:none;color:var(--text);font-family:inherit;font-size:14px;outline:none;padding:0}
-.checkbox-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all var(--t)}
+.checkbox-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all var(--t);user-select:none;-webkit-user-select:none}
 .checkbox-row:hover{border-color:var(--border-2);background:var(--surface-3)}
-.checkbox-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-.checkbox-row span{font-size:13px;color:var(--text-2);flex:1}
+.checkbox-row input[type="checkbox"],.checkbox-row input[type="radio"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.checkbox-row span{font-size:13px;color:var(--text-2);flex:1;user-select:none;-webkit-user-select:none}
 .radio-row{display:flex;gap:10px;flex-wrap:wrap}
-.radio-option{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all var(--t);flex:1;min-width:120px}
+.radio-option{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all var(--t);flex:1;min-width:120px;user-select:none;-webkit-user-select:none}
 .radio-option:hover{border-color:var(--border-2)}
 .radio-option input[type="radio"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-.radio-option span{font-size:13px;color:var(--text);font-weight:500}
+.radio-option span{font-size:13px;color:var(--text);font-weight:500;user-select:none;-webkit-user-select:none}
 .radio-option:has(input:checked){border-color:var(--accent);background:var(--surface-3)}
+.type-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;position:relative}
+.type-tabs::-webkit-scrollbar{display:none}
+.type-tab{padding:9px 18px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);cursor:pointer;font-size:13px;white-space:nowrap;transition:all var(--t);font-family:inherit;flex-shrink:0;font-weight:500;position:relative;user-select:none;-webkit-user-select:none}
+.type-tab:hover{border-color:var(--border-2);color:var(--text);transform:translateY(-1px)}
+.type-tab.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.type-tab[draggable="true"]{cursor:grab}
+.type-tab[draggable="true"]:active{cursor:grabbing}
+.type-tab.dragging{opacity:0.35}
+.type-tab.drag-over-left::after{content:"";position:absolute;left:2px;top:6px;bottom:6px;width:3px;background:var(--accent);border-radius:2px;pointer-events:none}
+.type-tab.drag-over-right::after{content:"";position:absolute;right:2px;top:6px;bottom:6px;width:3px;background:var(--accent);border-radius:2px;pointer-events:none}
+.type-tabs-hint{font-size:11px;color:var(--text-3);padding:0 2px 8px;display:flex;align-items:center;gap:6px;user-select:none;-webkit-user-select:none}
+.type-tabs-hint svg{width:12px;height:12px;flex-shrink:0}
 .list-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .list-toolbar .spacer{flex:1}
-.list-toolbar .selected-count{font-size:12px;color:var(--text-3)}
+.list-toolbar .selected-count{font-size:12px;color:var(--text-3);user-select:none;-webkit-user-select:none}
 .list-container{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:4px}
-.list-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);font-size:13px;transition:all var(--t);animation:fadeUp 0.25s var(--ease)}
+.list-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px 12px 10px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);font-size:13px;transition:all var(--t);position:relative;user-select:none;-webkit-user-select:none}
 .list-item:hover{border-color:var(--border-2);background:var(--surface-3)}
 .list-item input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;margin-top:2px}
-.list-item-body{flex:1;min-width:0}
-.list-item-title{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list-item-body{flex:1;min-width:0;user-select:none;-webkit-user-select:none}
+.list-item-title{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:none;-webkit-user-select:none}
 .list-item-meta{font-size:11px;color:var(--text-3);font-family:ui-monospace,"SF Mono",Menlo,monospace;word-break:break-all;margin-top:4px}
+.list-item-meta.selectable{user-select:text;-webkit-user-select:text}
 .list-item-actions{display:flex;gap:6px;flex-shrink:0}
-.empty-state{text-align:center;padding:24px;color:var(--text-3);font-size:13px}
+.list-item.dragging{opacity:0.35;border-style:dashed}
+.list-item.drag-over-top::before{content:"";position:absolute;top:-3px;left:8px;right:8px;height:3px;background:var(--accent);border-radius:2px;z-index:2;pointer-events:none}
+.list-item.drag-over-bottom::after{content:"";position:absolute;bottom:-3px;left:8px;right:8px;height:3px;background:var(--accent);border-radius:2px;z-index:2;pointer-events:none}
+.drag-handle{width:18px;height:24px;color:var(--text-3);cursor:grab;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0;transition:color var(--t);user-select:none;-webkit-user-select:none}
+.drag-handle:hover{color:var(--text)}
+.drag-handle:active{cursor:grabbing}
+.drag-handle svg{width:14px;height:14px;display:block;pointer-events:none}
+.empty-state{text-align:center;padding:24px;color:var(--text-3);font-size:13px;user-select:none;-webkit-user-select:none}
 .step-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:6px}
 .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border-2);transition:all var(--t)}
 .step-dot.active{background:var(--accent);width:24px;border-radius:4px}
-.toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px 24px;border-radius:var(--r);font-size:13px;opacity:0;pointer-events:none;transition:opacity 0.3s var(--ease),transform 0.3s var(--ease);z-index:9999;box-shadow:var(--shadow);max-width:calc(100vw - 40px);text-align:center}
+.toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px 24px;border-radius:var(--r);font-size:13px;opacity:0;pointer-events:none;transition:opacity 0.3s var(--ease),transform 0.3s var(--ease);z-index:9999;box-shadow:var(--shadow);max-width:calc(100vw - 40px);text-align:center;user-select:none;-webkit-user-select:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.warn{border-color:var(--danger);color:var(--danger)}
 .toast.success{border-color:var(--success);color:var(--success)}
@@ -223,20 +262,38 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .fullscreen-icon{width:72px;height:72px;border-radius:var(--r-lg);background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text)}
 .fullscreen-icon svg{width:36px;height:36px}
 .duration-preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.duration-preset{font-size:12px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;transition:all var(--t);font-family:inherit}
+.duration-preset{font-size:12px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;transition:all var(--t);font-family:inherit;user-select:none;-webkit-user-select:none}
 .duration-preset:hover{border-color:var(--border-2);color:var(--text);transform:translateY(-1px)}
 .duration-preset.active{border-color:var(--accent);color:var(--text);background:var(--surface-3)}
 .info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;display:flex;flex-direction:column;gap:20px}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
 .info-row:last-child{border-bottom:none}
-.info-label{font-size:13px;color:var(--text-3)}
-.info-value{font-size:14px;font-weight:500;color:var(--text)}
+.info-label{font-size:13px;color:var(--text-3);user-select:none;-webkit-user-select:none}
+.info-value{font-size:14px;font-weight:500;color:var(--text);user-select:none;-webkit-user-select:none}
+.info-value.selectable{user-select:text;-webkit-user-select:text}
 .info-avatar{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 8px}
-.notice-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;font-size:13px;line-height:1.8;color:var(--text-2);white-space:pre-wrap;max-height:280px;overflow-y:auto}
+.notice-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;font-size:13px;line-height:1.8;color:var(--text-2);white-space:pre-wrap;max-height:280px;overflow-y:auto;user-select:text;-webkit-user-select:text}
 .audio-test-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .audio-test-status{font-size:13px;color:var(--text-3);text-align:center;min-height:20px}
-.footer{padding:24px;text-align:center;font-size:12px;color:var(--text-3)}
-.dirty-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(245,158,11,0.12);color:var(--warning);font-weight:500;animation:fadeUp 0.25s var(--ease)}
+.exam-info-box{text-align:center;padding:32px 12px;display:flex;flex-direction:column;gap:14px;align-items:center;animation:fadeUp 0.4s var(--ease)}
+.exam-info-title{font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-0.01em;color:var(--text);word-break:break-word}
+.exam-info-subtitle{font-size:16px;color:var(--text-2);line-height:1.6;word-break:break-word;max-width:480px}
+.exam-info-divider{width:60px;height:3px;background:var(--border-2);border-radius:2px;margin:4px auto}
+.title-input-wrap{display:flex;gap:8px;align-items:stretch}
+.title-input-wrap input{flex:1;min-width:0}
+.add-blank-btn{width:44px;flex-shrink:0;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);font-family:inherit;padding:0}
+.add-blank-btn:hover{border-color:var(--border-2);background:var(--surface-3)}
+.add-blank-btn:active{transform:scale(0.95)}
+.add-blank-btn svg{width:18px;height:18px}
+.blank-hint{font-size:11px;color:var(--text-3);margin-top:6px;font-family:ui-monospace,monospace;user-select:none;-webkit-user-select:none}
+.blank-hint.has-blanks{color:var(--success)}
+.blank-answer-row{display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);transition:all var(--t)}
+.blank-answer-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.blank-answer-row .blank-index{font-size:12px;font-weight:600;color:var(--text-3);min-width:48px;font-family:ui-monospace,monospace;user-select:none;-webkit-user-select:none}
+.blank-answer-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px;font-family:inherit;outline:none;padding:0}
+.footer{padding:24px;text-align:center;font-size:12px;color:var(--text-3);user-select:none;-webkit-user-select:none}
+.dirty-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:4px 10px;border-radius:var(--r-sm);background:rgba(245,158,11,0.12);color:var(--warning);font-weight:500;animation:fadeUp 0.25s var(--ease);user-select:none;-webkit-user-select:none}
 @media(max-width:600px){
 .header{padding:12px 16px}
 .main{padding:20px 12px}
@@ -245,12 +302,17 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .modal{padding:22px}
 .dropdown{right:8px;width:calc(100vw - 16px);top:60px}
 .q-text{font-size:17px}
+.fill-inline-text{font-size:17px;line-height:2.2}
 .result-score{font-size:44px}
 .user-welcome{padding:36px 20px}
 .user-welcome-title{font-size:20px}
 .waiting-card,.fullscreen-card{padding:32px 20px}
 .option:hover{transform:none}
 .action-card:hover,.stat-card:hover{transform:none}
+.exam-info-title{font-size:24px}
+.exam-info-subtitle{font-size:14px}
+.judge-symbol{font-size:36px}
+.fill-inline-input{min-width:80px;max-width:160px}
 }
 </style>
 </head>
@@ -390,6 +452,7 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 <div class="footer">© 2020-2026 fuey All Rights Reserved</div>
 <div class="toast" id="toast"></div>
 <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+<div class="modal-overlay" id="confirmOverlay"><div class="modal" id="confirmContent"></div></div>
 <div class="waiting-overlay" id="waitingOverlay">
     <div class="waiting-card">
         <div class="waiting-spinner"></div>
@@ -424,22 +487,22 @@ setQuestions:"Question Management",setUsers:"Candidate Management",adminSettings
 noQuestions:"No questions",noUsers:"No candidates",delete:"Delete",selectAll:"Select All",deselectAll:"Deselect All",deleteSelected:"Delete Selected",selectedCount:"{0} selected",
 complete:"Complete",cancel:"Cancel",back_btn:"Back",next:"Next",confirm:"Confirm",close:"Close",
 questionDeleted:"Question deleted",userDeleted:"Candidate deleted",deleteSuccess:"Deleted successfully",deleteSelectedSuccess:"Deleted {0} item(s)",
-step1:"Step 1 · Question",step2:"Step 2 · Options",step3:"Step 3 · Correct Answer",questionText:"Question Text",questionType:"Question Type",singleChoice:"Single Choice",multipleChoice:"Multiple Choice",addImage:"Add Image",addAudio:"Add Audio",toggleImage:"Include Image",toggleAudio:"Include Audio",audioHint:"Paste audio URL (mp3 / wav / ogg)",questionImageHint:"Paste image URL or SVG code",optionCount:"Number of options",correctOption:"Correct Option",correctOptions:"Correct Options (multiple)",optionPlaceholder:"Option {0}",
+step1:"Step 1 · Question",step2:"Step 2 · Options",step3:"Step 3 · Correct Answer",step3Fill:"Step 3 · Blank Answers",questionText:"Question Text",questionType:"Question Type",singleChoice:"Single Choice",multipleChoice:"Multiple Choice",judgeQuestion:"True/False",fillQuestion:"Fill in the Blank",trueLabel:"✓",falseLabel:"✗",addImage:"Add Image",addAudio:"Add Audio",toggleImage:"Include Image",toggleAudio:"Include Audio",audioHint:"Paste audio URL (mp3 / wav / ogg)",questionImageHint:"Paste image URL or SVG code",optionCount:"Number of options",correctOption:"Correct Option",correctOptions:"Correct Options (multiple)",optionPlaceholder:"Option {0}",
 titleRequired:"Question text is required",optionRequired:"Option {0} is required",questionAdded:"Question added",deleteConfirm:"Are you sure you want to delete this?",deleteSelectedConfirm:"Delete {0} selected item(s)?",
 userName:"Name",gender:"Gender",male:"Male",female:"Female",other:"Other",userAdded:"Candidate added",nameRequired:"Name is required",enterName:"Enter your name",enterCred:"Enter UID or verify code",loginCredLabel:"UID / Verify Code",invalidCred:"Invalid UID or verify code",userNotRegistered:"This name is not registered",uid:"UID",verifyCode:"Verify Code",noVerifyCode:"No verify code",
 adminName:"Admin Name",oldPassword:"Old Password",newPassword:"New Password",confirmPassword:"Confirm Password",oldPasswordWrong:"Old password is incorrect",passwordMismatch:"Passwords do not match",passwordTooShort:"Password must be at least 4 characters",
-examStartMode:"Exam Start Time",startModeUnlimited:"Unlimited",startModeNow:"Immediately",startModeCustom:"Custom time",examDuration:"Exam Duration",examDurationUnlimited:"Unlimited",minutes:"min",totalScore:"Total Score",examQuestionCount:"Questions per Exam",examQuestionCountHint:"0 = all questions",uidLength:"UID Length",uidLength9:"9 digits (no verify code)",uidLength18:"18 digits (no verify code)",uidLength32:"32 digits (with verify code)",
-allowGuest:"Allow guest access",disableCustom:"Disable custom settings",requireAll:"Require all answers",showAnswer:"Show answers after submit",randomQuestions:"Randomize question order",randomOptions:"Randomize option order",enableAudio:"Enable Audio Exam",allowStudentExport:"Allow candidate to export result",
+examStartMode:"Exam Start Time",startModeUnlimited:"Unlimited",startModeNow:"Immediately",startModeCustom:"Custom time",examDuration:"Exam Duration",examDurationUnlimited:"Unlimited",minutes:"min",totalScore:"Total Score",examQuestionCount:"Total Question Cap",examQuestionCountHint:"0 = no cap",uidLength:"UID Length",uidLength9:"9 digits (no verify code)",uidLength18:"18 digits (no verify code)",uidLength32:"32 digits (with verify code)",
+allowGuest:"Allow guest access",disableCustom:"Disable custom settings",requireAll:"Require all answers",showAnswer:"Show answers after submit",randomQuestions:"Randomize within each section",randomOptions:"Randomize option order",enableAudio:"Enable Audio Exam",allowStudentExport:"Allow candidate to export result",
 subject:"Subject",subjectPlaceholder:"e.g., Chinese, Mathematics, English",
 noticeTitle:"Candidate Notice",noticePlaceholder:"Enter notice text for candidates",noticePreset:"Load Preset",
-noticePresetDefault:"1. Please enter the exam room on time; late arrivals will not be admitted after the exam has started.\n2. No cheating of any kind.\n3. Mobile phones and other electronic devices must be turned off and placed in designated areas.\n4. Keep quiet during the exam; do not disturb other candidates.\n5. Do not take screenshots, photos, or recordings during the exam.\n6. Submit your answers before the time is up.\n7. For online exams: ensure a stable internet connection before starting.\n8. For online exams: do not switch windows, tabs, or applications during the exam.\n9. For online exams: keep your camera on if required; face the screen directly.\n10. For online exams: the exam duration is strictly enforced; the system will auto-submit when time runs out.\n11. If you encounter technical issues, please contact the invigilator immediately.\n12. All exam materials are confidential and may not be reproduced, distributed, or shared in any form.",
+noticePresetDefault:"1. Please enter the exam room on time.\n2. No cheating of any kind.\n3. Mobile phones and other electronic devices must be turned off and placed in designated areas.\n4. Keep quiet during the exam.\n5. Do not take screenshots, photos, or recordings during the exam.\n6. Submit your answers before the time is up.\n7. For online exams: ensure a stable internet connection before starting.\n8. For online exams: do not switch windows or applications.\n9. For online exams: the exam duration is strictly enforced.\n10. If you encounter technical issues, contact the invigilator immediately.",
 audioTestText:"Custom Audio Test Text",audioTestTextHint:"Leave empty to use the default per-language content",audioTestContent:"This is an apple. I like apples. Apples are good for our health.",
 adminSettingsSaved:"Admin settings saved",passwordChanged:"Password changed",timeUp:"Time is up",scoreLabel:"Score",yourAnswer:"Your answer: {0}",correctAnswer:"Correct: {0}",notAnswered:"Not answered",mustAnswerAll:"Please answer all questions",
 warningRightClick:"Right click is disabled",warningDevtools:"Developer tools are disabled",warningSource:"Viewing source is disabled",
 switchUserConfirm:"Switch to User?",switchUserConfirmMsg:"You will lose admin privileges until you log in again.",switchUserOk:"Switch",switchUserCancel:"Stay",
 cancelConfirm:"This action will not save any changes. Only clicking Complete will save. Continue?",cancelConfirmTitle:"Discard changes?",
 exitQuiz:"Exit Exam",exitQuizConfirm:"Exit the exam? Progress will not be saved.",
-examNotStarted:"Exam has not started yet",examEnded:"This exam has ended. Please wait for the next session.",examEndedLong:"This exam session has ended. Please wait for the next scheduled session.",examEndedTitle:"Exam Session Ended",examEndedDesc:"The scheduled exam time for this exam data has already ended. You cannot start a new exam with this file. Please import a new exam file to continue.",importNewExam:"Import New Exam",examReady:"Exam is ready",waitingExamDesc:"Waiting for exam start time",cancelWaiting:"Cancel",
+examNotStarted:"Exam has not started yet",examEnded:"This exam has ended. Please wait for the next session.",examEndedTitle:"Exam Session Ended",examEndedDesc:"The scheduled exam time for this exam data has already ended. You cannot start a new exam with this file. Please import a new exam file to continue.",importNewExam:"Import New Exam",examReady:"Exam is ready",waitingExamDesc:"Waiting for exam start time",cancelWaiting:"Cancel",
 startExam:"Start Exam",loginName:"Name",
 fullscreenTitle:"Fullscreen Required",fullscreenDesc:"Press F11 to enter fullscreen, or click the button below. You will be logged out in {0} seconds if not in fullscreen.",enterFullscreen:"Enter Fullscreen",cancelFullscreen:"Cancel",fullscreenTimeout:"You did not enter fullscreen in time",fullscreenExitWarning:"Please stay in fullscreen during the exam",
 noData:"Please import data first",disabledByAdmin:"This setting is managed by admin",uidDuplicate:"UID conflict, please try again",
@@ -449,8 +512,18 @@ uidVerifyWarn:"Verify code regenerated for some candidates",uidChangedWarn:"UID 
 candidateInfoTitle:"Candidate Information",candidateInfoDesc:"Please verify your information before starting the exam.",audioTestTitle:"Audio Test",audioTestDesc:"Please play the audio and confirm you can hear it clearly.",audioTestPlay:"Play Audio",audioTestConfirm:"I can hear clearly",startAfterConfirm:"Start Exam",noticeTitleDisplay:"Candidate Notice",noticeConfirm:"I have read the notice",
 examSubject:"Subject",examTime:"Exam Time",examDurationLabel:"Duration",newDataCreated:"New data table created",noQuestionsWarning:"Please add questions before starting the exam",unknown:"Unknown",continueBtn:"Continue",playbackNotSupported:"Your browser does not support audio playback",noPermission:"You do not have permission to perform this action",
 guestName:"Guest",examTimeEnded:"This exam has ended. Please wait for the next session.",examNotStartedYet:"The exam has not started yet. Please wait.",timeRemaining:"Time remaining",
-dirtyBadge:"Unsaved changes",unsavedWarning:"You have unsaved changes. Export the file to save your data, otherwise it will be lost when you leave this page.",unsavedConfirmTitle:"Unsaved Changes",unsavedConfirmDesc:"You have unsaved changes. Are you sure you want to continue? Your changes will be lost.",unsavedOk:"Continue Anyway",unsavedCancel:"Cancel",
-exportPrompt:"Export Data",exportPromptDesc:"Please export your data to keep it. Unsaved data will be lost when the page is closed."
+dirtyBadge:"Unsaved changes",unsavedWarning:"You have unsaved changes.",unsavedConfirmTitle:"Unsaved Changes",unsavedConfirmDesc:"You have unsaved changes. Are you sure you want to continue? Your changes will be lost.",unsavedOk:"Continue Anyway",unsavedCancel:"Cancel",
+exportPrompt:"Export Data",exportPromptDesc:"Please export your data to keep it.",
+fillAnswer:"Your Answer",fillAnswerHint:"The correct answer (whitespace trimmed, case-insensitive)",fillPlaceholder:"Type your answer...",fillAnswerRequired:"Answer is required",allTypes:"All",
+examTitleLabel:"Exam Title",examSubtitleLabel:"Exam Subtitle",examTitlePlaceholder:"e.g., 2024 Spring Final Exam",examSubtitlePlaceholder:"e.g., Computer Science · Grade 12",
+explanationLabel:"Explanation",toggleExplanation:"Include Explanation",explanationPlaceholder:"Explain the correct answer here...",
+examInfoContinue:"Continue",showAnswerDisabled:"Answer details are hidden by the administrator",
+addBlankBtn:"Add blank",blankHint:"{0} blank(s) added. Each blank will be rendered as an input.",blankHintEmpty:"No blanks yet. Click + to add a blank.",blankAnswerLabel:"Blank {0}",blankAnswerHint:"Enter the correct answer for this blank",blankAnswerRequired:"Answer for blank {0} is required",blankRequired:"Please add at least one blank in the question text",
+dragToReorder:"Drag to reorder",
+typeTabsHint:"Drag question type tabs to change their order. Exams will present questions grouped by this order.",
+typeOrderHint:"Question order in the exam will follow the current tab order.",
+typeQuotasSection:"Type Quotas",quotaSingle:"Single Choice Count",quotaMultiple:"Multiple Choice Count",quotaJudge:"True/False Count",quotaFill:"Fill-in Count",quotaHint:"0 = use all questions of this type",
+startTimeRequired:"Please set a custom start time"
 },
 zh:{
 headerTitle:"考试系统",userSectionLabel:"用户",userRoleStudent:"考生",userRoleAdmin:"管理员",adminSectionLabel:"管理",settingsLabel:"设置",themeLabel:"主题",themeDark:"深色",themeLight:"浅色",languageLabel:"语言",
@@ -465,22 +538,22 @@ setQuestions:"试卷管理",setUsers:"考生管理",adminSettings:"管理员设�
 noQuestions:"暂无题目",noUsers:"暂无考生",delete:"删除",selectAll:"全选",deselectAll:"全不选",deleteSelected:"删除选中",selectedCount:"已选 {0} 项",
 complete:"完成",cancel:"取消",back_btn:"上一步",next:"下一步",confirm:"确定",close:"关闭",
 questionDeleted:"题目已删除",userDeleted:"考生已删除",deleteSuccess:"删除成功",deleteSelectedSuccess:"已删除 {0} 项",
-step1:"第 1 步 · 题目信息",step2:"第 2 步 · 选项内容",step3:"第 3 步 · 正确答案",questionText:"题目内容",questionType:"题目类型",singleChoice:"单选题",multipleChoice:"多选题",addImage:"添加图片",addAudio:"添加音频",toggleImage:"包含图片",toggleAudio:"包含音频",audioHint:"粘贴音频 URL（mp3 / wav / ogg）",questionImageHint:"粘贴图片 URL 或 SVG 代码",optionCount:"选项数量",correctOption:"正确选项",correctOptions:"正确选项（可多选）",optionPlaceholder:"选项 {0}",
+step1:"第 1 步 · 题目信息",step2:"第 2 步 · 选项内容",step3:"第 3 步 · 正确答案",step3Fill:"第 3 步 · 空的答案",questionText:"题目内容",questionType:"题目类型",singleChoice:"单选题",multipleChoice:"多选题",judgeQuestion:"判断题",fillQuestion:"填空题",trueLabel:"✓",falseLabel:"✗",addImage:"添加图片",addAudio:"添加音频",toggleImage:"包含图片",toggleAudio:"包含音频",audioHint:"粘贴音频 URL（mp3 / wav / ogg）",questionImageHint:"粘贴图片 URL 或 SVG 代码",optionCount:"选项数量",correctOption:"正确选项",correctOptions:"正确选项（可多选）",optionPlaceholder:"选项 {0}",
 titleRequired:"题目内容不能为空",optionRequired:"选项 {0} 不能为空",questionAdded:"题目已添加",deleteConfirm:"确定要删除此项吗？",deleteSelectedConfirm:"确定要删除选中的 {0} 项吗？",
 userName:"姓名",gender:"性别",male:"男",female:"女",other:"其他",userAdded:"考生已添加",nameRequired:"姓名不能为空",enterName:"请输入你的姓名",enterCred:"请输入 UID 或验证码",loginCredLabel:"UID / 验证码",invalidCred:"UID 或验证码错误",userNotRegistered:"该姓名未注册",uid:"UID",verifyCode:"验证码",noVerifyCode:"无需验证码",
 adminName:"管理员名称",oldPassword:"旧密码",newPassword:"新密码",confirmPassword:"确认密码",oldPasswordWrong:"旧密码不正确",passwordMismatch:"两次密码不一致",passwordTooShort:"密码至少 4 位",
-examStartMode:"考试开始时间",startModeUnlimited:"不限制",startModeNow:"立即开始",startModeCustom:"自定义时间",examDuration:"考试时长",examDurationUnlimited:"不限时",minutes:"分钟",totalScore:"总分",examQuestionCount:"每次考试题目数",examQuestionCountHint:"0 表示全部题目",uidLength:"UID 长度",uidLength9:"9 位（无需验证码）",uidLength18:"18 位（无需验证码）",uidLength32:"32 位（需验证码）",
-allowGuest:"允许体验操作",disableCustom:"禁用自定义设置",requireAll:"要求完成答题",showAnswer:"结束后显示错题与正确选项",randomQuestions:"题目随机",randomOptions:"选项随机",enableAudio:"启用音频考试",allowStudentExport:"允许考生导出成绩",
+examStartMode:"考试开始时间",startModeUnlimited:"不限制",startModeNow:"立即开始",startModeCustom:"自定义时间",examDuration:"考试时长",examDurationUnlimited:"不限时",minutes:"分钟",totalScore:"总分",examQuestionCount:"总题数上限",examQuestionCountHint:"0 = 不限制",uidLength:"UID 长度",uidLength9:"9 位（无需验证码）",uidLength18:"18 位（无需验证码）",uidLength32:"32 位（需验证码）",
+allowGuest:"允许体验操作",disableCustom:"禁用自定义设置",requireAll:"要求完成答题",showAnswer:"结束后显示错题与正确选项",randomQuestions:"每个大题内随机",randomOptions:"选项随机",enableAudio:"启用音频考试",allowStudentExport:"允许考生导出成绩",
 subject:"科目",subjectPlaceholder:"例如：语文、数学、英语",
 noticeTitle:"考生须知",noticePlaceholder:"输入考生须知内容",noticePreset:"加载预设",
-noticePresetDefault:"1. 请准时进入考场，考试开始后迟到者不得入场。\n2. 禁止任何形式的作弊，包括但不限于：抄袭他人答案、使用未经允许的材料、与他人交流。\n3. 手机等电子设备必须关闭并放置在指定区域。\n4. 考试期间保持安静，不得影响其他考生。\n5. 考试期间禁止截屏、拍照、录屏等行为。\n6. 请在规定时间内提交答案，超时提交将不予受理。\n7. 线上考试：请在开始前确保网络连接稳定。\n8. 线上考试：考试期间不得切换窗口、标签页或应用程序，否则将视为作弊。\n9. 线上考试：如要求开启摄像头，请保持摄像头开启并正对屏幕。\n10. 线上考试：考试时长严格执行，时间到时系统将自动提交。\n11. 如遇技术问题，请立即联系监考人员，请勿自行处理。\n12. 所有考试材料均属保密信息，不得以任何形式复制、传播或分享。",
+noticePresetDefault:"1. 请准时进入考场。\n2. 禁止任何形式的作弊。\n3. 手机等电子设备必须关闭并放置在指定区域。\n4. 考试期间保持安静。\n5. 考试期间禁止截屏、拍照、录屏等行为。\n6. 请在规定时间内提交答案。\n7. 线上考试：请在开始前确保网络连接稳定。\n8. 线上考试：考试期间不得切换窗口或应用程序。\n9. 线上考试：考试时长严格执行。\n10. 如遇技术问题，请立即联系监考人员。",
 audioTestText:"自定义音频测试内容",audioTestTextHint:"留空则使用对应语言的默认内容",audioTestContent:"生活就像海洋，只有意志坚强的人，才能到达彼岸。",
 adminSettingsSaved:"管理员设置已保存",passwordChanged:"密码已修改",timeUp:"时间到",scoreLabel:"得分",yourAnswer:"你的答案：{0}",correctAnswer:"正确答案：{0}",notAnswered:"未作答",mustAnswerAll:"请完成所有题目",
 warningRightClick:"右键已被禁用",warningDevtools:"开发者工具已被禁用",warningSource:"查看源代码已被禁用",
 switchUserConfirm:"切换到用户？",switchUserConfirmMsg:"切换后将失去管理员权限，需要重新输入密码才能切回。",switchUserOk:"切换",switchUserCancel:"留在当前",
 cancelConfirm:"该操作不会保存任何更改，只有点击「完成」才会保存。是否继续？",cancelConfirmTitle:"放弃修改？",
 exitQuiz:"退出考试",exitQuizConfirm:"确定要退出考试吗？答题进度将不会保存。",
-examNotStarted:"考试尚未开始",examEnded:"本场考试已结束，请等待下一场考试。",examEndedLong:"本场考试已结束，请等待下一场安排的考试。",examEndedTitle:"本场考试已结束",examEndedDesc:"该试卷的考试时间已结束，无法使用此文件开始新的考试。请导入新的试卷文件以继续使用。",importNewExam:"导入新试卷",examReady:"试卷已准备完成",waitingExamDesc:"正在等待考试时间开始",cancelWaiting:"取消",
+examNotStarted:"考试尚未开始",examEnded:"本场考试已结束，请等待下一场考试。",examEndedTitle:"本场考试已结束",examEndedDesc:"该试卷的考试时间已结束，无法使用此文件开始新的考试。请导入新的试卷文件以继续使用。",importNewExam:"导入新试卷",examReady:"试卷已准备完成",waitingExamDesc:"正在等待考试时间开始",cancelWaiting:"取消",
 startExam:"开始考试",loginName:"姓名",
 fullscreenTitle:"需要全屏模式",fullscreenDesc:"请按 F11 进入全屏，或点击下方按钮。若 {0} 秒内未进入全屏将自动退出登录。",enterFullscreen:"进入全屏",cancelFullscreen:"取消",fullscreenTimeout:"未在规定时间内进入全屏",fullscreenExitWarning:"考试期间请保持全屏",
 noData:"请先导入数据",disabledByAdmin:"此项设置由管理员控制",uidDuplicate:"UID 冲突，请重试",
@@ -490,8 +563,18 @@ uidVerifyWarn:"部分考生的验证码已重新生成",uidChangedWarn:"UID 格�
 candidateInfoTitle:"考生信息",candidateInfoDesc:"请在开始考试前核对您的信息。",audioTestTitle:"音频测试",audioTestDesc:"请播放音频并确认能清晰听到。",audioTestPlay:"播放音频",audioTestConfirm:"我能听清",startAfterConfirm:"开始考试",noticeTitleDisplay:"考生须知",noticeConfirm:"我已阅读考生须知",
 examSubject:"科目",examTime:"考试时间",examDurationLabel:"时长",newDataCreated:"新数据表已创建",noQuestionsWarning:"请先添加题目再开始考试",unknown:"未知",continueBtn:"继续",playbackNotSupported:"您的浏览器不支持音频播放",noPermission:"您没有权限执行此操作",
 guestName:"体验用户",examTimeEnded:"本场考试已结束，请等待下一场考试。",examNotStartedYet:"考试尚未开始，请稍候。",timeRemaining:"剩余时间",
-dirtyBadge:"未保存",unsavedWarning:"您有未保存的更改。请导出文件以保存数据，否则离开页面后数据将丢失。",unsavedConfirmTitle:"未保存的更改",unsavedConfirmDesc:"您有未保存的更改，确定要继续吗？更改将丢失。",unsavedOk:"仍要继续",unsavedCancel:"取消",
-exportPrompt:"导出数据",exportPromptDesc:"请导出数据以保存。关闭页面后未保存的数据将丢失。"
+dirtyBadge:"未保存",unsavedWarning:"您有未保存的更改。",unsavedConfirmTitle:"未保存的更改",unsavedConfirmDesc:"您有未保存的更改，确定要继续吗？更改将丢失。",unsavedOk:"仍要继续",unsavedCancel:"取消",
+exportPrompt:"导出数据",exportPromptDesc:"请导出数据以保存。",
+fillAnswer:"你的答案",fillAnswerHint:"正确答案（忽略首尾空白和大小写）",fillPlaceholder:"请输入答案...",fillAnswerRequired:"答案不能为空",allTypes:"全部",
+examTitleLabel:"试卷主标题",examSubtitleLabel:"试卷副标题",examTitlePlaceholder:"例如：2024 春季期末考试",examSubtitlePlaceholder:"例如：计算机科学 · 高三",
+explanationLabel:"题目解析",toggleExplanation:"包含解析",explanationPlaceholder:"在此处填写题目解析...",
+examInfoContinue:"开始",showAnswerDisabled:"答案详情已由管理员隐藏",
+addBlankBtn:"添加空",blankHint:"已添加 {0} 个空，每个空会渲染为一个输入框。",blankHintEmpty:"还没有空，点击 + 号添加空。",blankAnswerLabel:"空 {0}",blankAnswerHint:"请输入这个空的正确答案",blankAnswerRequired:"第 {0} 个空的答案不能为空",blankRequired:"请先在题目内容中添加至少一个空",
+dragToReorder:"拖动排序",
+typeTabsHint:"拖动题型标签可调整大题出场顺序，考试将按此顺序出题。",
+typeOrderHint:"考试题目将按当前标签顺序分组呈现。",
+typeQuotasSection:"题型配额",quotaSingle:"单选题数",quotaMultiple:"多选题数",quotaJudge:"判断题数",quotaFill:"填空题数",quotaHint:"0 = 该类型全部出题",
+startTimeRequired:"请设置自定义开始时间"
 }
 };
 
@@ -500,7 +583,9 @@ const VERIFY_LENGTH=9;
 const FULLSCREEN_TIMEOUT=30;
 const SUPPORTED_LANGS=["en","zh"];
 const AUDIO_CONFIRMED_KEY="audioConfirmedUsers";
-const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",language:"en",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:true,randomQuestions:false,randomOptions:false,enableAudio:false,allowStudentExport:false,subject:"",noticeText:"",audioTestText:""};
+const QUESTION_TYPES=["single","multiple","judge","fill"];
+const BLANK_PLACEHOLDER="___";
+const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",language:"en",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:true,randomQuestions:false,randomOptions:false,enableAudio:false,allowStudentExport:false,subject:"",noticeText:"",audioTestText:"",examTitle:"",examSubtitle:"",typeOrder:["single","multiple","judge","fill"],typeQuotas:{single:0,multiple:0,judge:0,fill:0}};
 
 const state={
   currentLang:"en",
@@ -508,6 +593,9 @@ const state={
   currentUser:"user",
   modalClosable:true,
   dirty:false,
+  qFilter:"all",
+  dragSrcId:null,
+  dragSrcType:null,
   appData:{
     admin:{name:"Administrator",password:"password"},
     settings:Object.assign({},DEFAULT_SETTINGS),
@@ -526,7 +614,7 @@ const state={
     lastResult:null,
     audioConfirmedUsers:new Set()
   },
-  wizard:{step:1,type:"single",image:"",audio:"",title:"",optionCount:4,options:["","","",""],correct:[0],includeImage:false,includeAudio:false},
+  wizard:{step:1,type:"single",image:"",audio:"",title:"",optionCount:4,options:["","","",""],correct:[0],includeImage:false,includeAudio:false,includeExplanation:false,explanation:"",blankAnswers:[]},
   selection:{questions:new Set(),users:new Set()},
   fullscreen:{interval:null,countdown:0,active:false,onSuccess:null},
   lastWarn:0,
@@ -546,6 +634,39 @@ function esc(s){
   return str;
 }
 
+function typeLabel(type){
+  if(type==="single")return t("singleChoice");
+  if(type==="multiple")return t("multipleChoice");
+  if(type==="judge")return t("judgeQuestion");
+  if(type==="fill")return t("fillQuestion");
+  return t("singleChoice");
+}
+
+function countBlanks(text){
+  if(!text)return 0;
+  const matches=String(text).match(new RegExp(BLANK_PLACEHOLDER,"g"));
+  return matches?matches.length:0;
+}
+
+function normalizeTypeOrder(order){
+  const valid=Array.isArray(order)?order.filter((x)=>QUESTION_TYPES.indexOf(x)>=0):[];
+  QUESTION_TYPES.forEach((tp)=>{if(valid.indexOf(tp)<0)valid.push(tp);});
+  return valid;
+}
+
+function getTypeOrder(){return normalizeTypeOrder(state.appData.settings.typeOrder);}
+
+function makeTransparentDragCanvas(){
+  try{
+    const c=document.createElement("canvas");
+    c.width=1;
+    c.height=1;
+    return c;
+  }catch(e){return null;}
+}
+
+const TRANSPARENT_DRAG_CANVAS=makeTransparentDragCanvas();
+
 function loadAudioConfirmedUsers(){try{return new Set(JSON.parse(localStorage.getItem(AUDIO_CONFIRMED_KEY)||"[]"));}catch(e){return new Set();}}
 function saveAudioConfirmedUsers(){try{localStorage.setItem(AUDIO_CONFIRMED_KEY,JSON.stringify([...state.quiz.audioConfirmedUsers]));}catch(e){}}
 function markDirty(){state.dirty=true;refreshDirtyBadge();}
@@ -560,7 +681,8 @@ function formatLocalDateTime(date){const pad=(n)=>String(n).padStart(2,"0");retu
 function normalizeDateTime(s){if(!s)return "";if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(s))return s.slice(0,16);const d=new Date(s);if(isNaN(d))return "";return formatLocalDateTime(d);}
 function setCustomSelect(id,value){const el=$(id);if(!el)return;el.dataset.value=value;const label=el.querySelector(".custom-select-label");const opt=el.querySelector('.custom-select-option[data-value="'+value+'"]');if(label&&opt)label.textContent=opt.textContent;el.querySelectorAll(".custom-select-option").forEach((o)=>{o.classList.toggle("selected",o.dataset.value===value);});}
 function refreshThemeLabels(){const el=$("themeSelect");if(!el)return;const opts=el.querySelectorAll(".custom-select-option");if(opts[0])opts[0].textContent=t("themeDark");if(opts[1])opts[1].textContent=t("themeLight");setCustomSelect("themeSelect",state.currentTheme);}
-function initCustomSelects(){document.querySelectorAll(".custom-select").forEach((sel)=>{const btn=sel.querySelector(".custom-select-btn");if(btn){btn.onclick=(e)=>{e.stopPropagation();document.querySelectorAll(".custom-select").forEach((s)=>{if(s!==sel)s.classList.remove("open");});sel.classList.toggle("open");};}sel.querySelectorAll(".custom-select-option").forEach((opt)=>{opt.onclick=()=>{sel.classList.remove("open");const val=opt.dataset.value;setCustomSelect(sel.id,val);if(sel.id==="themeSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("themeSelect",state.currentTheme);showToast(t("disabledByAdmin"),"warn");return;}state.currentTheme=val;state.appData.settings.theme=val;applyTheme();markDirty();}else if(sel.id==="languageSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("languageSelect",state.currentLang);showToast(t("disabledByAdmin"),"warn");return;}state.currentLang=normalizeLang(val);state.appData.settings.language=state.currentLang;applyLang();}};});});document.addEventListener("click",()=>{document.querySelectorAll(".custom-select").forEach((s)=>s.classList.remove("open"));});}
+function initCustomSelects(){document.querySelectorAll(".custom-select").forEach((sel)=>{const btn=sel.querySelector(".custom-select-btn");if(btn){btn.onclick=(e)=>{e.stopPropagation();document.querySelectorAll(".custom-select").forEach((s)=>{if(s!==sel)s.classList.remove("open");});sel.classList.toggle("open");};}sel.querySelectorAll(".custom-select-option").forEach((opt)=>{opt.onclick=(e)=>{e.stopPropagation();sel.classList.remove("open");const val=opt.dataset.value;setCustomSelect(sel.id,val);if(sel.id==="themeSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("themeSelect",state.currentTheme);showToast(t("disabledByAdmin"),"warn");return;}state.currentTheme=val;state.appData.settings.theme=val;applyTheme();markDirty();}else if(sel.id==="languageSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("languageSelect",state.currentLang);showToast(t("disabledByAdmin"),"warn");return;}state.currentLang=normalizeLang(val);state.appData.settings.language=state.currentLang;applyLang();}};});});document.addEventListener("click",()=>{document.querySelectorAll(".custom-select").forEach((s)=>s.classList.remove("open"));});}
+
 function applyLang(){
   state.currentLang=normalizeLang(state.currentLang);
   document.documentElement.lang=state.currentLang==="zh"?"zh-CN":"en";
@@ -579,24 +701,124 @@ function updateStats(){$("statQuestions").textContent=state.appData.questions.le
 function updateRoleUI(){const isAdmin=state.currentUser==="admin";$("userCard").classList.toggle("active",!isAdmin);$("adminCard").classList.toggle("active",isAdmin);const canCustom=isAdmin||!state.appData.settings.disableCustom;$("themeSelect").classList.toggle("disabled",!canCustom);$("languageSelect").classList.toggle("disabled",!canCustom);$("adminActions").style.display=isAdmin?"flex":"none";const newBtn=$("btnNewData");if(newBtn)newBtn.style.display=isAdmin?"inline-flex":"none";const reImportBtn=$("btnReImport");if(reImportBtn)reImportBtn.style.display=isAdmin?"none":"inline-flex";if(!state.quiz.active&&!$("resultArea").classList.contains("active")){if(isAdmin){$("adminView").style.display="flex";$("userView").style.display="none";$("quizArea").classList.remove("active");}else{$("adminView").style.display="none";$("userView").style.display="flex";$("quizArea").classList.remove("active");}}const guestBtn=$("btnGuestQuiz");if(guestBtn)guestBtn.style.display=(state.appData.settings.allowGuest&&!isAdmin)?"inline-flex":"none";}
 function openModal(html,closable){state.modalClosable=closable!==false;$("modalContent").innerHTML=html;$("modalOverlay").classList.add("open");}
 function closeModal(){state.modalClosable=true;$("modalOverlay").classList.remove("open");$("modalContent").innerHTML="";}
-function confirmDialog(title,message,okText,cancelText,onOk){openModal('<h2>'+esc(title)+'</h2><p style="font-size:14px;color:var(--text-2);line-height:1.6">'+esc(message)+'</p><div class="modal-actions"><button class="btn btn-secondary" id="cfCancel">'+esc(cancelText)+'</button><button class="btn btn-primary" id="cfOk">'+esc(okText)+'</button></div>',false);$("cfCancel").onclick=()=>closeModal();$("cfOk").onclick=()=>{closeModal();onOk();};}
+function confirmDialog(title,message,okText,cancelText,onOk){
+  const overlay=$("confirmOverlay");
+  const content=$("confirmContent");
+  content.innerHTML='<h2>'+esc(title)+'</h2><p style="font-size:14px;color:var(--text-2);line-height:1.6">'+esc(message)+'</p><div class="modal-actions"><button class="btn btn-secondary" id="cfCancel">'+esc(cancelText)+'</button><button class="btn btn-primary" id="cfOk">'+esc(okText)+'</button></div>';
+  overlay.classList.add("open");
+  $("cfCancel").onclick=()=>{overlay.classList.remove("open");};
+  $("cfOk").onclick=()=>{overlay.classList.remove("open");onOk();};
+}
 function passwordPrompt(onSuccess){openModal('<h2>'+t("adminPasswordPrompt")+'</h2><div class="form-group"><input id="pwdInput" type="password" autocomplete="current-password"></div><div class="modal-actions"><button class="btn btn-secondary" id="pwdCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="pwdOk">'+t("confirm")+'</button></div>',false);const input=$("pwdInput");setTimeout(()=>input.focus(),50);const check=()=>{if(input.value===state.appData.admin.password){closeModal();onSuccess();}else{showToast(t("adminPasswordWrong"),"warn");input.value="";input.focus();}};$("pwdOk").onclick=check;$("pwdCancel").onclick=closeModal;input.addEventListener("keydown",(e)=>{if(e.key==="Enter")check();});}
 function generateUID(seq,gender,length){const g=gender==="male"?"1":gender==="female"?"2":"0";if(length===9){const seqStr3=String(seq).padStart(3,"0");return seqStr3+g+String(Math.floor(Math.random()*100000)).padStart(5,"0");}const seqStr=String(seq).padStart(4,"0");const ts=String(Date.now()).padStart(13,"0");if(length===18)return seqStr+g+ts;let random="";for(let i=0;i<5;i++)random+=Math.floor(Math.random()*10);const base=seqStr+g+ts+random;let h=0;for(let i=0;i<base.length;i++)h=(h*31+base.charCodeAt(i))>>>0;const check=String(h).padStart(VERIFY_LENGTH,"0").slice(-VERIFY_LENGTH);return base+check;}
 function needsVerifyCode(uid){return uid&&uid.length===32;}
 function generateVerifyCode(uid){let h=0;for(let i=0;i<uid.length;i++)h=(h*33+uid.charCodeAt(i))>>>0;return String(h).padStart(VERIFY_LENGTH,"0").slice(-VERIFY_LENGTH);}
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;}return arr;}
 function newId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,4);}
-function normalizeQuestion(q){const type=q.type==="multiple"||Array.isArray(q.correct)?"multiple":"single";let correct;if(type==="multiple"){const arr=Array.isArray(q.correct)?q.correct:[q.correct];correct=arr.map(Number).filter((n)=>!isNaN(n)).sort((a,b)=>a-b);if(correct.length===0)correct=[0];}else{const n=Number(q.correct);correct=isNaN(n)?0:n;}return{_id:q._id||newId(),title:q.title||"",image:q.image||"",audio:q.audio||"",options:Array.isArray(q.options)?q.options.slice():[],type,correct};}
+
+function normalizeQuestion(q){
+  let type=q.type;
+  if(QUESTION_TYPES.indexOf(type)<0){
+    type=Array.isArray(q.correct)?"multiple":"single";
+  }
+  let correct;
+  if(type==="fill"){
+    if(Array.isArray(q.correct)){
+      correct=q.correct.map((x)=>String(x==null?"":x).trim());
+    }else{
+      correct=[String(q.correct==null?"":q.correct).trim()];
+    }
+    if(correct.length===0)correct=[""];
+  }else if(type==="multiple"){
+    const arr=Array.isArray(q.correct)?q.correct:[q.correct];
+    correct=arr.map(Number).filter((n)=>!isNaN(n)).sort((a,b)=>a-b);
+    if(correct.length===0)correct=[0];
+  }else{
+    const n=Number(q.correct);
+    correct=isNaN(n)?0:n;
+  }
+  return {_id:q._id||newId(),title:q.title||"",image:q.image||"",audio:q.audio||"",options:Array.isArray(q.options)?q.options.slice():[],type,correct,explanation:q.explanation||""};
+}
+
 function getQuestions(){return state.appData.questions;}
 function getUsers(){return state.appData.users;}
 function getExamStartTime(){const s=state.appData.settings.examStartTime;if(!s)return null;const time=new Date(s).getTime();return isNaN(time)?null:time;}
 function getExamEndTime(){const start=getExamStartTime();if(start===null)return null;const dur=state.appData.settings.examDuration;if(!dur||dur<=0)return null;return start+dur*60*1000;}
 function checkExamTimeWindow(){const startTime=getExamStartTime();if(startTime===null)return{ok:true};const endTime=getExamEndTime();const now=Date.now();if(now<startTime)return{ok:false,reason:"notStarted",startTime};if(endTime!==null&&now>endTime)return{ok:false,reason:"ended",endTime};return{ok:true};}
 function verifyImportedUsers(users){let regenCount=0;users.forEach((u)=>{if(needsVerifyCode(u.uid)){const expected=generateVerifyCode(u.uid);if(!u.verifyCode||u.verifyCode!==expected){u.verifyCode=expected;regenCount++;}}});return regenCount;}
-function isAnswerCorrect(userAns,correct,type){if(Array.isArray(correct)){if(!Array.isArray(userAns))return false;if(userAns.length!==correct.length)return false;const s=[...userAns].map(Number).sort((a,b)=>a-b);const c=[...correct].map(Number).sort((a,b)=>a-b);for(let i=0;i<s.length;i++){if(s[i]!==c[i])return false;}return true;}if(type==="multiple"){if(!Array.isArray(userAns))return false;if(userAns.length!==1)return false;return Number(userAns[0])===Number(correct);}return Number(userAns)===Number(correct);}
-function formatAnswer(correct){if(Array.isArray(correct))return correct.map((i)=>String.fromCharCode(65+Number(i))).join(", ");return String.fromCharCode(65+Number(correct));}
+
+function isAnswerCorrect(userAns,correct,type){
+  if(type==="fill"){
+    const cArr=Array.isArray(correct)?correct:[String(correct==null?"":correct)];
+    const uArr=Array.isArray(userAns)?userAns:[String(userAns==null?"":userAns)];
+    if(uArr.length!==cArr.length)return false;
+    for(let i=0;i<cArr.length;i++){
+      const c=String(cArr[i]==null?"":cArr[i]).trim().toLowerCase();
+      const u=String(uArr[i]==null?"":uArr[i]).trim().toLowerCase();
+      if(c.length===0)return false;
+      if(u!==c)return false;
+    }
+    return true;
+  }
+  if(type==="multiple"){
+    const cArr=Array.isArray(correct)?correct:[correct];
+    if(!Array.isArray(userAns))return false;
+    if(userAns.length!==cArr.length)return false;
+    const s=[...userAns].map(Number).sort((a,b)=>a-b);
+    const c=[...cArr].map(Number).sort((a,b)=>a-b);
+    for(let i=0;i<s.length;i++){if(s[i]!==c[i])return false;}
+    return true;
+  }
+  if(userAns===null||userAns===undefined)return false;
+  return Number(userAns)===Number(correct);
+}
+
+function formatAnswer(correct,type){
+  if(type==="fill"){
+    const arr=Array.isArray(correct)?correct:[correct];
+    return arr.map((a)=>'"'+String(a==null?"":a)+'"').join(", ");
+  }
+  if(type==="judge"){
+    if(correct===null||correct===undefined)return "-";
+    return Number(correct)===0?t("trueLabel"):t("falseLabel");
+  }
+  if(Array.isArray(correct))return correct.map((i)=>String.fromCharCode(65+Number(i))).join(", ");
+  return String.fromCharCode(65+Number(correct));
+}
+
 function exportData(){try{const data={admin:{name:state.appData.admin.name,password:state.appData.admin.password},settings:state.appData.settings,questions:state.appData.questions.map(({_id,...rest})=>rest),users:state.appData.users.map(({_id,...rest})=>rest)};const content="window.APP_DATA="+JSON.stringify(data,null,2)+";";const blob=new Blob([content],{type:"text/javascript"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="exam_data.js";document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1000);markClean();showToast(t("exportSuccess"),"success");}catch(err){showToast(t("exportFail"),"warn");}}
-function exportStudentResult(){try{const user=state.quiz.currentUserInfo;if(!user){showToast(t("studentExportFail"),"warn");return;}const qs=state.quiz.questions;const answers=state.quiz.answers;const details=qs.map((q,i)=>({title:q.title,correct:q.correct,type:q.type,userAnswer:answers[i],isCorrect:isAnswerCorrect(answers[i],q.correct,q.type)}));const data={name:user.name,uid:user.uid,verifyCode:user.verifyCode||"",gender:user.gender,subject:state.appData.settings.subject,details:details};const content="window.STUDENT_RESULT="+JSON.stringify(data,null,2)+";";const blob=new Blob([content],{type:"text/javascript"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="student_result_"+user.name+".js";document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1000);showToast(t("studentExported"),"success");}catch(err){showToast(t("studentExportFail"),"warn");}}
+
+function exportStudentResult(){
+  try{
+    const user=state.quiz.currentUserInfo;
+    if(!user){showToast(t("studentExportFail"),"warn");return;}
+    const qs=state.quiz.questions;
+    const answers=state.quiz.answers;
+    const showDetail=state.appData.settings.showAnswer;
+    const details=qs.map((q,i)=>{
+      const base={type:q.type,title:q.title,isCorrect:isAnswerCorrect(answers[i],q.correct,q.type)};
+      if(showDetail){
+        base.correct=q.correct;
+        base.userAnswer=answers[i];
+        if(q.explanation)base.explanation=q.explanation;
+      }
+      return base;
+    });
+    const data={name:user.name,uid:user.uid,verifyCode:user.verifyCode||"",gender:user.gender,subject:state.appData.settings.subject,examTitle:state.appData.settings.examTitle,examSubtitle:state.appData.settings.examSubtitle,details:details};
+    const content="window.STUDENT_RESULT="+JSON.stringify(data,null,2)+";";
+    const blob=new Blob([content],{type:"text/javascript"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="student_result_"+user.name+".js";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    showToast(t("studentExported"),"success");
+  }catch(err){showToast(t("studentExportFail"),"warn");}
+}
+
 function loadData(data){
   state.appData.admin=(data.admin&&typeof data.admin==="object")?{name:data.admin.name||"Administrator",password:data.admin.password||"password"}:{name:"Administrator",password:"password"};
   const merged=Object.assign({},DEFAULT_SETTINGS,data.settings||{});
@@ -607,7 +829,11 @@ function loadData(data){
   state.appData.settings.uidLength=UID_LENGTH_OPTIONS.indexOf(toNum(merged.uidLength,18))>=0?toNum(merged.uidLength,18):18;
   state.appData.settings.examStartTime=normalizeDateTime(merged.examStartTime);
   state.appData.settings.language=normalizeLang(merged.language);
-  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&Array.isArray(q.options)&&q.options.length>0).map(normalizeQuestion):[];
+  state.appData.settings.examTitle=String(merged.examTitle||"");
+  state.appData.settings.examSubtitle=String(merged.examSubtitle||"");
+  state.appData.settings.typeOrder=normalizeTypeOrder(merged.typeOrder);
+  state.appData.settings.typeQuotas={single:Math.max(0,toNum((merged.typeQuotas||{}).single,0)),multiple:Math.max(0,toNum((merged.typeQuotas||{}).multiple,0)),judge:Math.max(0,toNum((merged.typeQuotas||{}).judge,0)),fill:Math.max(0,toNum((merged.typeQuotas||{}).fill,0))};
+  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&(q.type==="fill"||q.type==="judge"||(Array.isArray(q.options)&&q.options.length>0))).map(normalizeQuestion):[];
   state.appData.users=Array.isArray(data.users)?data.users.filter((u)=>u&&u.uid).map((u)=>({_id:newId(),name:u.name||"",gender:u.gender||"other",uid:u.uid,verifyCode:u.verifyCode||""})):[];
   const regenCount=verifyImportedUsers(state.appData.users);
   state.currentTheme=state.appData.settings.theme||"dark";
@@ -620,6 +846,7 @@ function loadData(data){
   state.quiz.lastResult=null;
   state.selection.questions.clear();
   state.selection.users.clear();
+  state.qFilter="all";
   $("importCard").style.display="none";
   $("workspace").classList.add("active");
   $("quizArea").classList.remove("active");
@@ -630,21 +857,74 @@ function loadData(data){
   if(regenCount>0)showToast(t("uidVerifyWarn"),"warn");
   setTimeout(()=>{const end=getExamEndTime();if(end!==null&&Date.now()>end)showExpiredExamModal();},350);
 }
+
 function showExpiredExamModal(){openModal('<h2>'+t("examEndedTitle")+'</h2><p style="font-size:14px;color:var(--text-2);line-height:1.6">'+t("examEndedDesc")+'</p><div class="modal-actions"><button class="btn btn-secondary" id="expClose">'+t("close")+'</button><button class="btn btn-primary" id="expImport">'+t("importNewExam")+'</button></div>',false);$("expClose").onclick=()=>closeModal();$("expImport").onclick=()=>{closeModal();$("fileInput").click();};}
 function importDataFromFile(file){if(!file)return;const reader=new FileReader();reader.onerror=()=>showToast(t("importFail"),"warn");reader.onload=(e)=>{try{const fn=new Function(e.target.result+"\nreturn (typeof window!=='undefined'&&window.APP_DATA)?window.APP_DATA:null;");const data=fn();if(!data||!Array.isArray(data.questions))throw new Error("invalid");loadData(data);showToast(t("importSuccess"),"success");}catch(err){showToast(t("importFail"),"warn");}};reader.readAsText(file);}
 function createNewData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}const doCreate=()=>{loadData({admin:state.appData.admin,settings:state.appData.settings,questions:[],users:[]});showToast(t("newDataCreated"),"success");};if(state.dirty){confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),doCreate);}else{doCreate();}}
-function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"Administrator",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentLang="en";state.currentUser="user";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
+function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"Administrator",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentLang="en";state.currentUser="user";state.qFilter="all";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
+
+function sampleByGroup(groups,typeOrder,limit){
+  const total=typeOrder.reduce((s,tp)=>s+(groups[tp]?groups[tp].length:0),0);
+  if(total<=limit){
+    let out=[];
+    typeOrder.forEach((tp)=>{if(groups[tp])out=out.concat(groups[tp]);});
+    return out;
+  }
+  const quotas={};
+  let allocated=0;
+  typeOrder.forEach((tp)=>{
+    const cnt=groups[tp]?groups[tp].length:0;
+    quotas[tp]=Math.floor(limit*cnt/total);
+    allocated+=quotas[tp];
+  });
+  let remain=limit-allocated;
+  while(remain>0){
+    let picked=false;
+    for(let i=0;i<typeOrder.length&&remain>0;i++){
+      const tp=typeOrder[i];
+      if(quotas[tp]<(groups[tp]?groups[tp].length:0)){quotas[tp]++;remain--;picked=true;}
+    }
+    if(!picked)break;
+  }
+  let out=[];
+  typeOrder.forEach((tp)=>{
+    if(groups[tp])out=out.concat(groups[tp].slice(0,quotas[tp]));
+  });
+  return out;
+}
 
 function buildSessionQuestions(){
-  let qs=state.appData.questions.map((q)=>{
+  const typeOrder=getTypeOrder();
+  const base=state.appData.questions.map((q)=>{
     const norm=normalizeQuestion(q);
-    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,options:norm.options.slice(),type:norm.type,correct:norm.type==="multiple"?[...norm.correct]:norm.correct};
+    const correct=norm.type==="multiple"?[...norm.correct]:norm.type==="fill"?[...norm.correct]:norm.correct;
+    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,options:norm.options.slice(),type:norm.type,correct,explanation:norm.explanation||""};
   });
-  if(state.appData.settings.randomQuestions)qs=shuffle(qs);
+  const groups={};
+  typeOrder.forEach((tp)=>{groups[tp]=[];});
+  base.forEach((q)=>{
+    if(!groups[q.type])groups[q.type]=[];
+    groups[q.type].push(q);
+  });
+  if(state.appData.settings.randomQuestions){
+    typeOrder.forEach((tp)=>{groups[tp]=shuffle(groups[tp]);});
+  }
+  const quotas=state.appData.settings.typeQuotas||{};
+  let qs=[];
+  typeOrder.forEach((tp)=>{
+    const list=groups[tp]||[];
+    const quota=Math.max(0,toNum(quotas[tp],0));
+    if(quota>0){
+      qs=qs.concat(list.slice(0,quota));
+    }else{
+      qs=qs.concat(list);
+    }
+  });
   const limit=state.appData.settings.examQuestionCount;
   if(limit>0&&qs.length>limit)qs=qs.slice(0,limit);
   if(state.appData.settings.randomOptions){
     qs=qs.map((q)=>{
+      if(q.type!=="single"&&q.type!=="multiple")return q;
       const opts=q.options.map((text,i)=>{
         const isCorrect=q.type==="multiple"?q.correct.indexOf(i)>=0:i===q.correct;
         return {text,isCorrect};
@@ -656,10 +936,16 @@ function buildSessionQuestions(){
       }else{
         newCorrect=opts.findIndex((o)=>o.isCorrect);
       }
-      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,type:q.type,options:opts.map((o)=>o.text),correct:newCorrect};
+      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,type:q.type,options:opts.map((o)=>o.text),correct:newCorrect,explanation:q.explanation||""};
     });
   }
   return qs;
+}
+
+function initQuizAnswer(q){
+  if(q.type==="multiple")return [];
+  if(q.type==="fill")return new Array(q.correct.length).fill("");
+  return null;
 }
 
 function renderQuizCards(){
@@ -685,28 +971,78 @@ function renderQuizCards(){
     if(q.audio){
       htmlParts.push('<div class="card-audio"><audio controls preload="metadata" src="'+esc(q.audio)+'"></audio></div>');
     }
-    const typeLabel=q.type==="multiple"?t("multipleChoice"):t("singleChoice");
-    htmlParts.push('<div class="q-header"><div class="q-num">'+(i+1)+'</div><span>'+t("progress",i+1,state.quiz.questions.length)+'</span><span class="q-type">'+typeLabel+'</span></div>');
-    htmlParts.push('<div class="q-text">'+esc(q.title)+'</div>');
-    const optParts=['<div class="options">'];
-    q.options.forEach((opt,j)=>{
-      const letter=String.fromCharCode(65+j);
-      let selected;
-      if(q.type==="multiple"){
-        selected=Array.isArray(state.quiz.answers[i])&&state.quiz.answers[i].indexOf(j)>=0;
+    htmlParts.push('<div class="q-header"><div class="q-num">'+(i+1)+'</div><span>'+t("progress",i+1,state.quiz.questions.length)+'</span><span class="q-type">'+typeLabel(q.type)+'</span></div>');
+    if(q.type==="fill"){
+      const blankCount=q.correct.length;
+      const vals=Array.isArray(state.quiz.answers[i])?state.quiz.answers[i]:new Array(blankCount).fill("");
+      const title=String(q.title);
+      const hasPlaceholder=countBlanks(title)>0;
+      if(hasPlaceholder&&countBlanks(title)===blankCount){
+        const parts=title.split(new RegExp(BLANK_PLACEHOLDER));
+        let inl='<div class="fill-inline-text">';
+        for(let b=0;b<parts.length;b++){
+          inl+='<span>'+esc(parts[b])+'</span>';
+          if(b<parts.length-1){
+            inl+='<input class="fill-inline-input" type="text" data-q="'+i+'" data-blank="'+b+'" value="'+esc(vals[b]||"")+'" placeholder="'+esc(t("blankAnswerLabel",b+1))+' " autocomplete="off">';
+          }
+        }
+        inl+='</div>';
+        htmlParts.push(inl);
       }else{
-        selected=state.quiz.answers[i]===j;
+        htmlParts.push('<div class="q-text">'+esc(title)+'</div>');
+        let list='<div class="fill-list-box">';
+        for(let b=0;b<blankCount;b++){
+          list+='<div class="fill-list-row"><span class="fill-index">'+esc(t("blankAnswerLabel",b+1))+'</span><input class="fill-input" type="text" data-q="'+i+'" data-blank="'+b+'" value="'+esc(vals[b]||"")+'" placeholder="'+esc(t("fillPlaceholder"))+'" autocomplete="off"></div>';
+        }
+        list+='</div>';
+        htmlParts.push(list);
       }
-      const cls="option"+(selected?" selected":"");
-      optParts.push('<div class="'+cls+'" data-q="'+i+'" data-opt="'+j+'"><div class="option-letter">'+letter+'</div><div class="option-text">'+esc(opt)+'</div></div>');
-    });
-    optParts.push('</div>');
-    htmlParts.push(optParts.join(""));
+    }else{
+      htmlParts.push('<div class="q-text">'+esc(q.title)+'</div>');
+      if(q.type==="judge"){
+        const optParts=['<div class="options judge-options">'];
+        [t("trueLabel"),t("falseLabel")].forEach((opt,j)=>{
+          const selected=state.quiz.answers[i]===j;
+          const cls="option judge-option"+(selected?" selected":"");
+          optParts.push('<div class="'+cls+'" data-q="'+i+'" data-opt="'+j+'"><div class="judge-symbol">'+esc(opt)+'</div></div>');
+        });
+        optParts.push('</div>');
+        htmlParts.push(optParts.join(""));
+      }else{
+        const optParts=['<div class="options">'];
+        q.options.forEach((opt,j)=>{
+          const letter=String.fromCharCode(65+j);
+          let selected;
+          if(q.type==="multiple"){
+            selected=Array.isArray(state.quiz.answers[i])&&state.quiz.answers[i].indexOf(j)>=0;
+          }else{
+            selected=state.quiz.answers[i]===j;
+          }
+          const cls="option"+(selected?" selected":"");
+          optParts.push('<div class="'+cls+'" data-q="'+i+'" data-opt="'+j+'"><div class="option-letter">'+letter+'</div><div class="option-text">'+esc(opt)+'</div></div>');
+        });
+        optParts.push('</div>');
+        htmlParts.push(optParts.join(""));
+      }
+    }
     card.innerHTML=htmlParts.join("");
     container.appendChild(card);
   });
   container.querySelectorAll(".option").forEach((el)=>{
     el.onclick=()=>handleOptionClick(el);
+  });
+  container.querySelectorAll(".fill-input,.fill-inline-input").forEach((input)=>{
+    const qi=Number(input.dataset.q);
+    const b=Number(input.dataset.blank);
+    input.oninput=(e)=>{
+      const q=state.quiz.questions[qi];
+      if(!q)return;
+      if(!Array.isArray(state.quiz.answers[qi])){
+        state.quiz.answers[qi]=new Array(q.correct.length).fill("");
+      }
+      state.quiz.answers[qi][b]=e.target.value;
+      updateProgress();
+    };
   });
 }
 
@@ -728,9 +1064,8 @@ function handleOptionClick(el){
     current.sort((a,b)=>a-b);
     state.quiz.answers[qi]=current;
   }else{
-    const isFirstPick=state.quiz.answers[qi]===null||state.quiz.answers[qi]===undefined;
     state.quiz.answers[qi]=oi;
-    if(isFirstPick&&qi===state.quiz.currentIndex&&state.quiz.currentIndex<state.quiz.questions.length-1){
+    if(qi===state.quiz.currentIndex&&state.quiz.currentIndex<state.quiz.questions.length-1){
       state.quiz.pendingAdvance=setTimeout(()=>{
         if(state.quiz.active&&state.quiz.currentIndex===qi){
           state.quiz.currentIndex++;
@@ -763,12 +1098,16 @@ function updateProgress(){
     const a=state.quiz.answers[i];
     if(q.type==="multiple"){
       if(Array.isArray(a)&&a.length>0)answered++;
+    }else if(q.type==="fill"){
+      const arr=Array.isArray(a)?a:[];
+      if(arr.length===q.correct.length&&arr.every((x)=>String(x==null?"":x).trim().length>0))answered++;
     }else{
       if(a!==null&&a!==undefined)answered++;
     }
   });
   $("progressText").textContent=t("progress",answered,total);
 }
+
 function updateQuizUI(){const cards=$("cardsContainer").querySelectorAll(".card");cards.forEach((card,i)=>card.classList.toggle("active",i===state.quiz.currentIndex));$("prevBtn").disabled=state.quiz.currentIndex===0;$("nextBtn").disabled=state.quiz.currentIndex>=state.quiz.questions.length-1;updateProgress();}
 function formatTime(sec){const m=Math.floor(sec/60);const s=sec%60;return m+":"+String(s).padStart(2,"0");}
 function formatHMS(sec){const h=Math.floor(sec/3600);const m=Math.floor((sec%3600)/60);const s=sec%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
@@ -816,23 +1155,39 @@ function playSpeech(text,onEnd){if(!window.speechSynthesis){showToast(t("playbac
 
 function showPreExamFlow(userInfo){
   if(state.appData.questions.length===0){showToast(t("noQuestionsWarning"),"warn");return;}
-  const hasNotice=!!(state.appData.settings.noticeText&&state.appData.settings.noticeText.trim());
+  const s=state.appData.settings;
+  const hasExamInfo=!!((s.examTitle&&s.examTitle.trim())||(s.examSubtitle&&s.examSubtitle.trim()));
+  const hasNotice=!!(s.noticeText&&s.noticeText.trim());
   const userKey=userInfo?userInfo.uid:"__guest__";
-  const hasAudio=!!state.appData.settings.enableAudio&&!state.quiz.audioConfirmedUsers.has(userKey);
+  const hasAudio=!!s.enableAudio&&!state.quiz.audioConfirmedUsers.has(userKey);
   const steps=[];
+  if(hasExamInfo)steps.push("examInfo");
   if(hasNotice)steps.push("notice");
   if(hasAudio)steps.push("audio");
   steps.push("info");
   let stepIndex=0;
   function renderStep(){
     const step=steps[stepIndex];
-    if(step==="notice")renderNoticeStep();
+    if(step==="examInfo")renderExamInfoStep();
+    else if(step==="notice")renderNoticeStep();
     else if(step==="audio")renderAudioStep();
     else if(step==="info")renderInfoStep();
   }
   function goNext(){stepIndex++;if(stepIndex>=steps.length){beginExamAfterLogin(userInfo);return;}renderStep();}
+  function renderExamInfoStep(){
+    const title=(s.examTitle||"").trim();
+    const subtitle=(s.examSubtitle||"").trim();
+    let inner='<div class="exam-info-box">';
+    if(title)inner+='<div class="exam-info-title">'+esc(title)+'</div>';
+    if(title&&subtitle)inner+='<div class="exam-info-divider"></div>';
+    if(subtitle)inner+='<div class="exam-info-subtitle">'+esc(subtitle)+'</div>';
+    inner+='</div>';
+    openModal(inner+'<div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="preNext">'+t("examInfoContinue")+'</button></div>',false);
+    $("preNext").onclick=()=>{goNext();};
+    $("preCancel").onclick=()=>{closeModal();restartFlow();};
+  }
   function renderNoticeStep(){
-    openModal('<h2>'+t("noticeTitleDisplay")+'</h2><div class="notice-box selectable">'+esc(state.appData.settings.noticeText)+'</div><div class="checkbox-row"><input type="checkbox" id="noticeCheck"><span>'+t("noticeConfirm")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="preNext" disabled>'+t("continueBtn")+'</button></div>',false);
+    openModal('<h2>'+t("noticeTitleDisplay")+'</h2><div class="notice-box selectable">'+esc(s.noticeText)+'</div><div class="checkbox-row"><input type="checkbox" id="noticeCheck"><span>'+t("noticeConfirm")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="preNext" disabled>'+t("continueBtn")+'</button></div>',false);
     const check=$("noticeCheck");const nextBtn=$("preNext");
     check.onchange=()=>{nextBtn.disabled=!check.checked;};
     nextBtn.onclick=()=>{goNext();};
@@ -848,9 +1203,9 @@ function showPreExamFlow(userInfo){
   function renderInfoStep(){
     const avatarText=(userInfo.name||"?").charAt(0).toUpperCase();
     const genderKey=userInfo.gender==="male"?"male":userInfo.gender==="female"?"female":"other";
-    const examTime=state.appData.settings.examStartTime?new Date(state.appData.settings.examStartTime).toLocaleString():t("startModeUnlimited");
-    const dur=state.appData.settings.examDuration>0?state.appData.settings.examDuration+" "+t("minutes"):t("examDurationUnlimited");
-    const subject=state.appData.settings.subject||t("unknown");
+    const examTime=s.examStartTime?new Date(s.examStartTime).toLocaleString():t("startModeUnlimited");
+    const dur=s.examDuration>0?s.examDuration+" "+t("minutes"):t("examDurationUnlimited");
+    const subject=s.subject||t("unknown");
     openModal('<h2>'+t("candidateInfoTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("candidateInfoDesc")+'</p><div class="info-card"><div class="info-avatar">'+esc(avatarText)+'</div><div class="info-row"><span class="info-label">'+t("userName")+'</span><span class="info-value">'+esc(userInfo.name)+'</span></div><div class="info-row"><span class="info-label">'+t("uid")+'</span><span class="info-value selectable" style="font-family:ui-monospace,monospace;font-size:12px">'+esc(userInfo.uid)+'</span></div><div class="info-row"><span class="info-label">'+t("gender")+'</span><span class="info-value">'+t(genderKey)+'</span></div><div class="info-row"><span class="info-label">'+t("examSubject")+'</span><span class="info-value">'+esc(subject)+'</span></div><div class="info-row"><span class="info-label">'+t("examTime")+'</span><span class="info-value">'+esc(examTime)+'</span></div><div class="info-row"><span class="info-label">'+t("examDurationLabel")+'</span><span class="info-value">'+esc(dur)+'</span></div></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="confirmInfoBtn">'+t("startAfterConfirm")+'</button></div>',false);
     $("confirmInfoBtn").onclick=()=>{goNext();};
     $("preCancel").onclick=()=>{closeModal();restartFlow();};
@@ -864,7 +1219,7 @@ function beginExamAfterLogin(userInfo){
   state.quiz.questions=buildSessionQuestions();
   state.quiz.active=true;
   state.quiz.currentIndex=0;
-  state.quiz.answers=state.quiz.questions.map((q)=>q.type==="multiple"?[]:null);
+  state.quiz.answers=state.quiz.questions.map((q)=>initQuizAnswer(q));
   state.quiz.currentUserInfo=userInfo||null;
   state.quiz.pendingAdvance=null;
   $("adminView").style.display="none";
@@ -924,6 +1279,10 @@ function submitQuiz(timeUp){
     state.quiz.questions.forEach((q,i)=>{
       const a=state.quiz.answers[i];
       if(q.type==="multiple"){if(!Array.isArray(a)||a.length===0)unanswered++;}
+      else if(q.type==="fill"){
+        const arr=Array.isArray(a)?a:[];
+        if(arr.length!==q.correct.length||arr.some((x)=>String(x==null?"":x).trim()===""))unanswered++;
+      }
       else{if(a===null||a===undefined)unanswered++;}
     });
     if(unanswered>0){showToast(t("mustAnswerAll"),"warn");return;}
@@ -945,7 +1304,7 @@ function submitQuiz(timeUp){
     score:finalScore,
     totalScore:totalScore,
     timeUp:timeUp,
-    questions:state.quiz.questions.map((q)=>({title:q.title,correct:q.correct,type:q.type,options:q.options.slice()})),
+    questions:state.quiz.questions.map((q)=>({title:q.title,correct:q.correct,type:q.type,options:q.options.slice(),explanation:q.explanation||""})),
     answers:state.quiz.answers.map((a)=>Array.isArray(a)?[...a]:a)
   };
   const user=state.quiz.currentUserInfo;
@@ -962,12 +1321,18 @@ function submitQuiz(timeUp){
       const userAns=state.quiz.answers[i];
       const ok=isAnswerCorrect(userAns,q.correct,q.type);
       let lines="";
-      if((q.type==="multiple"&&(!Array.isArray(userAns)||userAns.length===0))||(q.type!=="multiple"&&(userAns===null||userAns===undefined))){
+      const isEmpty=(q.type==="multiple")?(!Array.isArray(userAns)||userAns.length===0)
+                   :(q.type==="fill")?(!Array.isArray(userAns)||userAns.every((x)=>String(x==null?"":x).trim()===""))
+                   :(userAns===null||userAns===undefined);
+      if(isEmpty){
         lines+='<div class="result-line wrong">'+t("notAnswered")+'</div>';
       }else{
-        lines+='<div class="result-line '+(ok?"correct":"wrong")+'">'+t("yourAnswer",formatAnswer(userAns))+'</div>';
+        lines+='<div class="result-line '+(ok?"correct":"wrong")+'">'+t("yourAnswer",formatAnswer(userAns,q.type))+'</div>';
       }
-      if(!ok){lines+='<div class="result-line correct">'+t("correctAnswer",formatAnswer(q.correct))+'</div>';}
+      if(!ok){lines+='<div class="result-line correct">'+t("correctAnswer",formatAnswer(q.correct,q.type))+'</div>';}
+      if(q.explanation&&q.explanation.trim()){
+        lines+='<div class="explanation-box"><div class="explanation-label">'+t("explanationLabel")+'</div><div class="explanation-text">'+esc(q.explanation)+'</div></div>';
+      }
       listHtml+='<div class="result-item"><div class="result-item-title">'+(i+1)+'. '+esc(q.title)+'</div>'+lines+'</div>';
     });
   }
@@ -1011,7 +1376,126 @@ function renderResultActions(){
   }
 }
 
-function exportResultImage(){try{const r=state.quiz.lastResult;if(!r)return;const user=state.quiz.currentUserInfo;const qs=r.questions;const answers=r.answers;const totalScore=r.totalScore;const finalScore=r.score;const isLight=state.currentTheme==="light";const bg=isLight?"#ffffff":"#161618";const fg=isLight?"#1a1a1e":"#f0f0f0";const muted=isLight?"#5a5a62":"#a8a8b0";const border=isLight?"#e0e0e6":"#26262a";const success="#22c55e";const danger="#ef4444";const fontCN="'PingFang SC','Microsoft YaHei',system-ui,sans-serif";const width=900;const padding=60;const headerHeight=user?260:220;let itemHeights=0;qs.forEach((q,i)=>{itemHeights+=70;if(!isAnswerCorrect(answers[i],q.correct,q.type))itemHeights+=22;});const height=Math.max(600,headerHeight+itemHeights+padding+80);const canvas=document.createElement("canvas");const dpr=window.devicePixelRatio||1;canvas.width=width*dpr;canvas.height=height*dpr;const ctx=canvas.getContext("2d");ctx.scale(dpr,dpr);ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);ctx.strokeStyle=border;ctx.lineWidth=2;ctx.strokeRect(1,1,width-2,height-2);ctx.textAlign="center";if(user){ctx.fillStyle=fg;ctx.font="600 22px "+fontCN;ctx.fillText(user.name,width/2,50);}ctx.fillStyle=muted;ctx.font="600 14px "+fontCN;ctx.fillText(t("scoreLabel").toUpperCase(),width/2,user?90:60);ctx.fillStyle=fg;ctx.font="700 64px "+fontCN;ctx.fillText(finalScore+" / "+totalScore,width/2,user?160:130);ctx.fillStyle=muted;ctx.font="500 16px "+fontCN;ctx.fillText(t("progressCorrect",r.correctCount,r.total),width/2,user?195:165);if(user){ctx.textAlign="left";ctx.fillStyle=muted;ctx.font="500 12px ui-monospace,monospace";ctx.fillText(t("uid")+": "+user.uid,padding,230);}ctx.strokeStyle=border;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(padding,headerHeight+10);ctx.lineTo(width-padding,headerHeight+10);ctx.stroke();let y=headerHeight+50;ctx.textAlign="left";qs.forEach((q,i)=>{const userAns=answers[i];const ok=isAnswerCorrect(userAns,q.correct,q.type);ctx.fillStyle=fg;ctx.font="600 16px "+fontCN;let title=(i+1)+". "+q.title;if(title.length>60)title=title.slice(0,60)+"...";ctx.fillText(title,padding,y);y+=24;ctx.font="500 13px "+fontCN;if((q.type==="multiple"&&(!Array.isArray(userAns)||userAns.length===0))||(q.type!=="multiple"&&(userAns===null||userAns===undefined))){ctx.fillStyle=danger;ctx.fillText(t("notAnswered"),padding+20,y);}else{ctx.fillStyle=ok?success:danger;ctx.fillText(t("yourAnswer",formatAnswer(userAns)),padding+20,y);}y+=20;if(!ok){ctx.fillStyle=success;ctx.fillText(t("correctAnswer",formatAnswer(q.correct)),padding+20,y);y+=22;}y+=8;});ctx.fillStyle=muted;ctx.font="500 11px "+fontCN;ctx.textAlign="right";ctx.fillText("© "+new Date().getFullYear()+" fuey All Rights Reserved",width-padding,height-24);const url=canvas.toDataURL("image/png");const a=document.createElement("a");a.href=url;a.download="exam_result_"+Date.now()+".png";document.body.appendChild(a);a.click();document.body.removeChild(a);showToast(t("imageExported"),"success");}catch(err){showToast(t("imageExportFail"),"warn");}}
+function exportResultImage(){
+  try{
+    const r=state.quiz.lastResult;
+    if(!r)return;
+    const user=state.quiz.currentUserInfo;
+    const qs=r.questions;
+    const answers=r.answers;
+    const totalScore=r.totalScore;
+    const finalScore=r.score;
+    const showDetail=state.appData.settings.showAnswer;
+    const isLight=state.currentTheme==="light";
+    const bg=isLight?"#ffffff":"#161618";
+    const fg=isLight?"#1a1a1e":"#f0f0f0";
+    const muted=isLight?"#5a5a62":"#a8a8b0";
+    const border=isLight?"#e0e0e6":"#26262a";
+    const success="#22c55e";
+    const danger="#ef4444";
+    const fontCN="'PingFang SC','Microsoft YaHei',system-ui,sans-serif";
+    const width=900;
+    const padding=60;
+    const headerHeight=user?260:220;
+    let itemHeights=0;
+    if(showDetail){
+      qs.forEach((q,i)=>{
+        itemHeights+=70;
+        if(!isAnswerCorrect(answers[i],q.correct,q.type))itemHeights+=22;
+      });
+    }
+    const height=Math.max(600,headerHeight+itemHeights+padding+80);
+    const canvas=document.createElement("canvas");
+    const dpr=window.devicePixelRatio||1;
+    canvas.width=width*dpr;
+    canvas.height=height*dpr;
+    const ctx=canvas.getContext("2d");
+    ctx.scale(dpr,dpr);
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,width,height);
+    ctx.strokeStyle=border;
+    ctx.lineWidth=2;
+    ctx.strokeRect(1,1,width-2,height-2);
+    ctx.textAlign="center";
+    if(user){
+      ctx.fillStyle=fg;
+      ctx.font="600 22px "+fontCN;
+      ctx.fillText(user.name,width/2,50);
+    }
+    ctx.fillStyle=muted;
+    ctx.font="600 14px "+fontCN;
+    ctx.fillText(t("scoreLabel").toUpperCase(),width/2,user?90:60);
+    ctx.fillStyle=fg;
+    ctx.font="700 64px "+fontCN;
+    ctx.fillText(finalScore+" / "+totalScore,width/2,user?160:130);
+    ctx.fillStyle=muted;
+    ctx.font="500 16px "+fontCN;
+    ctx.fillText(t("progressCorrect",r.correctCount,r.total),width/2,user?195:165);
+    if(user){
+      ctx.textAlign="left";
+      ctx.fillStyle=muted;
+      ctx.font="500 12px ui-monospace,monospace";
+      ctx.fillText(t("uid")+": "+user.uid,padding,230);
+    }
+    ctx.strokeStyle=border;
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(padding,headerHeight+10);
+    ctx.lineTo(width-padding,headerHeight+10);
+    ctx.stroke();
+    if(showDetail){
+      let y=headerHeight+50;
+      ctx.textAlign="left";
+      qs.forEach((q,i)=>{
+        const userAns=answers[i];
+        const ok=isAnswerCorrect(userAns,q.correct,q.type);
+        ctx.fillStyle=fg;
+        ctx.font="600 16px "+fontCN;
+        let title=(i+1)+". "+q.title;
+        if(title.length>60)title=title.slice(0,60)+"...";
+        ctx.fillText(title,padding,y);
+        y+=24;
+        ctx.font="500 13px "+fontCN;
+        const isEmpty=(q.type==="multiple")?(!Array.isArray(userAns)||userAns.length===0):(q.type==="fill")?(!Array.isArray(userAns)||userAns.every((x)=>String(x==null?"":x).trim()==="")):(userAns===null||userAns===undefined);
+        if(isEmpty){
+          ctx.fillStyle=danger;
+          ctx.fillText(t("notAnswered"),padding+20,y);
+        }else{
+          ctx.fillStyle=ok?success:danger;
+          let txt=formatAnswer(userAns,q.type);
+          if(txt.length>50)txt=txt.slice(0,50)+"...";
+          ctx.fillText(t("yourAnswer",txt),padding+20,y);
+        }
+        y+=20;
+        if(!ok){
+          ctx.fillStyle=success;
+          let ctxt=formatAnswer(q.correct,q.type);
+          if(ctxt.length>50)ctxt=ctxt.slice(0,50)+"...";
+          ctx.fillText(t("correctAnswer",ctxt),padding+20,y);
+          y+=22;
+        }
+        y+=8;
+      });
+    }else{
+      ctx.textAlign="center";
+      ctx.fillStyle=muted;
+      ctx.font="500 14px "+fontCN;
+      ctx.fillText(t("showAnswerDisabled"),width/2,headerHeight+60);
+    }
+    ctx.fillStyle=muted;
+    ctx.font="500 11px "+fontCN;
+    ctx.textAlign="right";
+    ctx.fillText("© "+new Date().getFullYear()+" fuey All Rights Reserved",width-padding,height-24);
+    const url=canvas.toDataURL("image/png");
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="exam_result_"+Date.now()+".png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast(t("imageExported"),"success");
+  }catch(err){showToast(t("imageExportFail"),"warn");}
+}
 
 function openLoginModal(onSuccess){
   if(state.appData.users.length===0){showToast(t("noUsers"),"warn");return;}
@@ -1038,23 +1522,60 @@ function openLoginModal(onSuccess){
   credInput.onkeydown=(e)=>{if(e.key==="Enter"){e.preventDefault();submit();}};
 }
 
-function renderStepIndicator(){const steps=[1,2,3];return '<div class="step-indicator">'+steps.map((s)=>'<div class="step-dot'+(state.wizard.step>=s?" active":"")+'"></div>').join("")+'</div>';}
+function getWizardSteps(){return (state.wizard.type==="single"||state.wizard.type==="multiple")?[1,2,3]:[1,3];}
+function renderStepIndicator(){const steps=getWizardSteps();const currentIdx=steps.indexOf(state.wizard.step);return '<div class="step-indicator">'+steps.map((s,i)=>'<div class="step-dot'+(i<=currentIdx?" active":"")+'"></div>').join("")+'</div>';}
 function buildListToolbar(prefix){return '<div class="list-toolbar"><button class="btn btn-secondary btn-sm" id="'+prefix+'SelectAll">'+t("selectAll")+'</button><button class="btn btn-secondary btn-sm" id="'+prefix+'DeselectAll">'+t("deselectAll")+'</button><button class="btn btn-danger btn-sm" id="'+prefix+'DeleteBtn">'+t("deleteSelected")+'</button><div class="spacer"></div><span class="selected-count" id="'+prefix+'SelectedCount">'+t("selectedCount",0)+'</span></div>';}
 function updateListToolbar(prefix){const sel=prefix==="q"?state.selection.questions:state.selection.users;const countEl=$(prefix+"SelectedCount");const delBtn=$(prefix+"DeleteBtn");if(countEl)countEl.textContent=t("selectedCount",sel.size);if(delBtn)delBtn.disabled=sel.size===0;}
-function bindListToolbar(prefix,refreshFn){const getSel=()=>prefix==="q"?state.selection.questions:state.selection.users;$(prefix+"SelectAll").onclick=()=>{const data=prefix==="q"?getQuestions():getUsers();for(let i=0;i<data.length;i++)getSel().add(data[i]._id);refreshFn();updateListToolbar(prefix);};$(prefix+"DeselectAll").onclick=()=>{getSel().clear();refreshFn();updateListToolbar(prefix);};$(prefix+"DeleteBtn").onclick=()=>{const sel=getSel();if(sel.size===0)return;const count=sel.size;confirmDialog(t("delete"),t("deleteSelectedConfirm",count),t("delete"),t("cancel"),()=>{if(prefix==="q"){state.appData.questions=state.appData.questions.filter((item)=>!sel.has(item._id));}else{state.appData.users=state.appData.users.filter((item)=>!sel.has(item._id));}sel.clear();markDirty();updateStats();showToast(t("deleteSelectedSuccess",count),"success");refreshFn();updateListToolbar(prefix);});};}
+function bindListToolbar(prefix,refreshFn){
+  const getSel=()=>prefix==="q"?state.selection.questions:state.selection.users;
+  $(prefix+"SelectAll").onclick=()=>{
+    let data;
+    if(prefix==="q"){
+      data=getQuestions();
+      if(state.qFilter!=="all")data=data.filter((q)=>q.type===state.qFilter);
+    }else{
+      data=getUsers();
+    }
+    for(let i=0;i<data.length;i++)getSel().add(data[i]._id);
+    refreshFn();
+    updateListToolbar(prefix);
+  };
+  $(prefix+"DeselectAll").onclick=()=>{getSel().clear();refreshFn();updateListToolbar(prefix);};
+  $(prefix+"DeleteBtn").onclick=()=>{
+    const sel=getSel();
+    if(sel.size===0)return;
+    const count=sel.size;
+    confirmDialog(t("delete"),t("deleteSelectedConfirm",count),t("delete"),t("cancel"),()=>{
+      if(prefix==="q"){state.appData.questions=state.appData.questions.filter((item)=>!sel.has(item._id));}
+      else{state.appData.users=state.appData.users.filter((item)=>!sel.has(item._id));}
+      sel.clear();
+      markDirty();updateStats();
+      showToast(t("deleteSelectedSuccess",count),"success");
+      refreshFn();
+      updateListToolbar(prefix);
+    });
+  };
+}
 
 function renderQuestionListItems(){
   const list=$("qList");
   if(!list)return;
-  const questions=getQuestions();
+  let questions=getQuestions();
+  if(state.qFilter!=="all"){
+    questions=questions.filter((q)=>q.type===state.qFilter);
+  }else{
+    const order=getTypeOrder();
+    questions=[...questions].sort((a,b)=>order.indexOf(a.type)-order.indexOf(b.type));
+  }
   if(questions.length===0){list.innerHTML='<div class="empty-state">'+t("noQuestions")+'</div>';return;}
   list.innerHTML="";
   questions.forEach((q,i)=>{
     const item=document.createElement("div");
     item.className="list-item";
+    item.draggable=true;
+    item.dataset.id=q._id;
     const checked=state.selection.questions.has(q._id)?" checked":"";
-    const typeLabel=q.type==="multiple"?t("multipleChoice"):t("singleChoice");
-    item.innerHTML='<input type="checkbox" data-sel="'+q._id+'"'+checked+'><div class="list-item-body"><div class="list-item-title">'+(i+1)+'. '+esc(q.title)+'</div><div class="list-item-meta">'+typeLabel+'</div></div><div class="list-item-actions"><button class="btn btn-danger btn-sm" data-del="'+q._id+'">'+t("delete")+'</button></div>';
+    item.innerHTML='<div class="drag-handle" title="'+esc(t("dragToReorder"))+'"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3" r="1.1"/><circle cx="11" cy="3" r="1.1"/><circle cx="5" cy="8" r="1.1"/><circle cx="11" cy="8" r="1.1"/><circle cx="5" cy="13" r="1.1"/><circle cx="11" cy="13" r="1.1"/></svg></div><input type="checkbox" draggable="false" data-sel="'+q._id+'"'+checked+'><div class="list-item-body"><div class="list-item-title">'+(i+1)+'. '+esc(q.title)+'</div><div class="list-item-meta">'+esc(typeLabel(q.type))+'</div></div><div class="list-item-actions"><button class="btn btn-danger btn-sm" draggable="false" data-del="'+q._id+'">'+t("delete")+'</button></div>';
     list.appendChild(item);
   });
   list.querySelectorAll("[data-del]").forEach((btn)=>{
@@ -1078,6 +1599,79 @@ function renderQuestionListItems(){
       updateListToolbar("q");
     };
   });
+  bindQuestionDragEvents();
+}
+
+function bindQuestionDragEvents(){
+  const items=document.querySelectorAll("#qList .list-item");
+  items.forEach((item)=>{
+    item.addEventListener("dragstart",(e)=>{
+      const t2=e.target;
+      if(t2&&(t2.tagName==="INPUT"||t2.tagName==="BUTTON"||(t2.closest&&(t2.closest("input")||t2.closest("button"))))){
+        e.preventDefault();
+        return;
+      }
+      state.dragSrcId=item.dataset.id;
+      item.classList.add("dragging");
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed="move";
+        try{
+          if(TRANSPARENT_DRAG_CANVAS)e.dataTransfer.setDragImage(TRANSPARENT_DRAG_CANVAS,0,0);
+          e.dataTransfer.setData("text/plain",state.dragSrcId);
+        }catch(_){}
+      }
+    });
+    item.addEventListener("dragover",(e)=>{
+      e.preventDefault();
+      if(e.dataTransfer)e.dataTransfer.dropEffect="move";
+      if(!state.dragSrcId||state.dragSrcId===item.dataset.id)return;
+      const rect=item.getBoundingClientRect();
+      const midpoint=rect.top+rect.height/2;
+      const isTop=e.clientY<midpoint;
+      item.classList.toggle("drag-over-top",isTop);
+      item.classList.toggle("drag-over-bottom",!isTop);
+    });
+    item.addEventListener("dragleave",(e)=>{
+      if(!item.contains(e.relatedTarget)){
+        item.classList.remove("drag-over-top","drag-over-bottom");
+      }
+    });
+    item.addEventListener("drop",(e)=>{
+      e.preventDefault();
+      const targetId=item.dataset.id;
+      const isAfter=item.classList.contains("drag-over-bottom");
+      item.classList.remove("drag-over-top","drag-over-bottom");
+      if(!state.dragSrcId||state.dragSrcId===targetId){state.dragSrcId=null;return;}
+      reorderQuestions(state.dragSrcId,targetId,isAfter);
+      state.dragSrcId=null;
+    });
+    item.addEventListener("dragend",()=>{
+      item.classList.remove("dragging");
+      document.querySelectorAll("#qList .list-item").forEach((el)=>el.classList.remove("drag-over-top","drag-over-bottom"));
+      state.dragSrcId=null;
+    });
+  });
+}
+
+function reorderQuestions(srcId,targetId,isAfter){
+  const qs=state.appData.questions;
+  const srcItem=qs.find((q)=>q._id===srcId);
+  const tgtItem=qs.find((q)=>q._id===targetId);
+  if(!srcItem||!tgtItem)return;
+  if(srcItem.type!==tgtItem.type)return;
+  const order=getTypeOrder();
+  const sorted=[...qs].sort((a,b)=>order.indexOf(a.type)-order.indexOf(b.type));
+  const srcIdx=sorted.indexOf(srcItem);
+  const tgtIdx=sorted.indexOf(tgtItem);
+  if(srcIdx<0||tgtIdx<0||srcIdx===tgtIdx)return;
+  sorted.splice(srcIdx,1);
+  const newTgtIdx=sorted.indexOf(tgtItem);
+  const insertAt=isAfter?newTgtIdx+1:newTgtIdx;
+  sorted.splice(insertAt,0,srcItem);
+  state.appData.questions.length=0;
+  sorted.forEach((q)=>state.appData.questions.push(q));
+  markDirty();
+  renderQuestionListItems();
 }
 
 function renderUserListItems(){
@@ -1123,13 +1717,91 @@ function renderUserListItems(){
   });
 }
 
+function bindTypeTabDragEvents(){
+  const tabs=document.querySelectorAll('#qTypeTabs .type-tab[data-type]');
+  tabs.forEach((tab)=>{
+    tab.addEventListener('dragstart',(e)=>{
+      state.dragSrcType=tab.dataset.type;
+      tab.classList.add('dragging');
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed='move';
+        try{
+          if(TRANSPARENT_DRAG_CANVAS)e.dataTransfer.setDragImage(TRANSPARENT_DRAG_CANVAS,0,0);
+          e.dataTransfer.setData('text/plain',state.dragSrcType);
+        }catch(_){}
+      }
+    });
+    tab.addEventListener('dragover',(e)=>{
+      e.preventDefault();
+      if(!state.dragSrcType||state.dragSrcType===tab.dataset.type)return;
+      if(e.dataTransfer)e.dataTransfer.dropEffect='move';
+      const rect=tab.getBoundingClientRect();
+      const midX=rect.left+rect.width/2;
+      tab.classList.toggle('drag-over-left',e.clientX<midX);
+      tab.classList.toggle('drag-over-right',e.clientX>=midX);
+    });
+    tab.addEventListener('dragleave',(e)=>{
+      if(!tab.contains(e.relatedTarget)){
+        tab.classList.remove('drag-over-left','drag-over-right');
+      }
+    });
+    tab.addEventListener('drop',(e)=>{
+      e.preventDefault();
+      const rect=tab.getBoundingClientRect();
+      const midX=rect.left+rect.width/2;
+      const isBefore=e.clientX<midX;
+      tab.classList.remove('drag-over-left','drag-over-right');
+      const targetType=tab.dataset.type;
+      if(!state.dragSrcType||state.dragSrcType===targetType){state.dragSrcType=null;return;}
+      const order=getTypeOrder();
+      const srcIdx=order.indexOf(state.dragSrcType);
+      if(srcIdx<0){state.dragSrcType=null;return;}
+      order.splice(srcIdx,1);
+      const newTgtIdx=order.indexOf(targetType);
+      const insertAt=isBefore?newTgtIdx:newTgtIdx+1;
+      order.splice(insertAt,0,state.dragSrcType);
+      state.appData.settings.typeOrder=order;
+      state.dragSrcType=null;
+      markDirty();
+      renderQuestionEditorModal();
+    });
+    tab.addEventListener('dragend',()=>{
+      tab.classList.remove('dragging');
+      document.querySelectorAll('#qTypeTabs .type-tab').forEach((el)=>{
+        el.classList.remove('drag-over-left','drag-over-right');
+      });
+      state.dragSrcType=null;
+    });
+  });
+}
+
 function renderQuestionEditorModal(){
   let html='<h2>'+t("setQuestions")+'</h2>';
+  const order=getTypeOrder();
+  html+='<div class="type-tabs" id="qTypeTabs">';
+  html+='<button type="button" class="type-tab'+(state.qFilter==="all"?" active":"")+'" data-filter="all">'+t("allTypes")+'</button>';
+  order.forEach((tp)=>{
+    const active=state.qFilter===tp?" active":"";
+    html+='<button type="button" class="type-tab'+active+'" data-type="'+tp+'" draggable="true">'+typeLabel(tp)+'</button>';
+  });
+  html+='</div>';
+  html+='<div class="type-tabs-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg><span>'+t("typeTabsHint")+'</span></div>';
   html+='<div style="display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" id="qAddBtn">+ '+t("addQuestion")+'</button></div>';
   html+=buildListToolbar("q");
   html+='<div class="list-container" id="qList" style="max-height:360px"></div>';
   html+='<div class="modal-actions"><button class="btn btn-secondary" id="qClose">'+t("close")+'</button></div>';
   openModal(html,false);
+  document.querySelectorAll("#qTypeTabs .type-tab").forEach((tab)=>{
+    tab.onclick=()=>{
+      if(tab.dataset.filter){
+        state.qFilter="all";
+      }else if(tab.dataset.type){
+        state.qFilter=tab.dataset.type;
+      }
+      renderQuestionEditorModal();
+    };
+  });
+  bindTypeTabDragEvents();
   renderQuestionListItems();
   updateListToolbar("q");
   bindListToolbar("q",renderQuestionListItems);
@@ -1153,19 +1825,66 @@ function renderUserEditorModal(){
 
 function openQuestionEditor(){state.selection.questions.clear();renderQuestionEditorModal();}
 function openUserEditor(){state.selection.users.clear();renderUserEditorModal();}
-function openQuestionWizard(){state.wizard={step:1,type:"single",image:"",audio:"",title:"",optionCount:4,options:["","","",""],correct:[0],includeImage:false,includeAudio:false};renderWizard();}
+
+function openQuestionWizard(){
+  const defaultType=(state.qFilter&&state.qFilter!=="all")?state.qFilter:"single";
+  state.wizard={
+    step:1,
+    type:defaultType,
+    image:"",
+    audio:"",
+    title:"",
+    optionCount:4,
+    options:["","","",""],
+    correct: defaultType==="fill" ? [""] : [0],
+    includeImage:false,
+    includeAudio:false,
+    includeExplanation:false,
+    explanation:"",
+    blankAnswers: defaultType==="fill" ? [""] : []
+  };
+  renderWizard();
+}
+
+function updateWizardBlankHint(){
+  const hint=$("wBlankHint");
+  if(!hint)return;
+  const title=$("wTitle")?$("wTitle").value:state.wizard.title;
+  const count=countBlanks(title);
+  if(count===0){
+    hint.textContent=t("blankHintEmpty");
+    hint.classList.remove("has-blanks");
+  }else{
+    hint.textContent=t("blankHint",count);
+    hint.classList.add("has-blanks");
+  }
+}
 
 function renderWizard(){
   const w=state.wizard;
   let html='<h2>'+t("addQuestion")+'</h2>'+renderStepIndicator();
   if(w.step===1){
     html+='<h3>'+t("step1")+'</h3>';
-    html+='<div class="form-group"><label>'+t("questionType")+'</label><select id="wType" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none"><option value="single"'+(w.type==="single"?" selected":"")+'>'+t("singleChoice")+'</option><option value="multiple"'+(w.type==="multiple"?" selected":"")+'>'+t("multipleChoice")+'</option></select></div>';
-    html+='<div class="form-group"><label>'+t("questionText")+'</label><input id="wTitle" value="'+esc(w.title||"")+'"></div>';
+    let typeRadios="";
+    QUESTION_TYPES.forEach((tp)=>{
+      const checked=w.type===tp?" checked":"";
+      typeRadios+='<label class="radio-option"><input type="radio" name="wType" value="'+tp+'"'+checked+'><span>'+typeLabel(tp)+'</span></label>';
+    });
+    html+='<div class="form-group"><label>'+t("questionType")+'</label><div class="radio-row" id="wTypeGroup">'+typeRadios+'</div></div>';
+    if(w.type==="fill"){
+      const blankCount=countBlanks(w.title);
+      const hintText=blankCount===0?t("blankHintEmpty"):t("blankHint",blankCount);
+      const hintCls=blankCount===0?"":" has-blanks";
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><div class="title-input-wrap"><input id="wTitle" value="'+esc(w.title||"")+'" placeholder="'+t("fillPlaceholder")+'"><button type="button" class="add-blank-btn" id="wAddBlank" title="'+t("addBlankBtn")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div><div class="blank-hint'+hintCls+'" id="wBlankHint">'+hintText+'</div></div>';
+    }else{
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><input id="wTitle" value="'+esc(w.title||"")+'"></div>';
+    }
     html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeImage"'+(w.includeImage?" checked":"")+'><span>'+t("toggleImage")+'</span></div>';
     html+='<div class="form-group" id="wImageGroup" style="display:'+(w.includeImage?"flex":"none")+'"><label>'+t("addImage")+'</label><textarea id="wImage" placeholder="'+t("questionImageHint")+'">'+esc(w.image||"")+'</textarea></div>';
     html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeAudio"'+(w.includeAudio?" checked":"")+'><span>'+t("toggleAudio")+'</span></div>';
     html+='<div class="form-group" id="wAudioGroup" style="display:'+(w.includeAudio?"flex":"none")+'"><label>'+t("addAudio")+'</label><input id="wAudio" type="text" placeholder="'+t("audioHint")+'" value="'+esc(w.audio||"")+'"></div>';
+    html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeExplanation"'+(w.includeExplanation?" checked":"")+'><span>'+t("toggleExplanation")+'</span></div>';
+    html+='<div class="form-group" id="wExplanationGroup" style="display:'+(w.includeExplanation?"flex":"none")+'"><label>'+t("explanationLabel")+'</label><textarea id="wExplanation" placeholder="'+t("explanationPlaceholder")+'">'+esc(w.explanation||"")+'</textarea></div>';
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="wNext">'+t("next")+'</button></div>';
   }else if(w.step===2){
     html+='<h3>'+t("step2")+'</h3>';
@@ -1178,7 +1897,7 @@ function renderWizard(){
     html+='</div>';
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="wNext">'+t("next")+'</button></div>';
   }else{
-    html+='<h3>'+t("step3")+'</h3>';
+    html+='<h3>'+(w.type==="fill"?t("step3Fill"):t("step3"))+'</h3>';
     if(w.type==="multiple"){
       html+='<div class="form-group"><label>'+t("correctOptions")+'</label><div id="wCorrectBox">';
       for(let i=0;i<w.optionCount;i++){
@@ -1187,31 +1906,101 @@ function renderWizard(){
         html+='<label class="checkbox-row" style="margin-bottom:6px"><input type="checkbox" data-correct="'+i+'"'+checked+'><span>'+letter+'. '+esc(w.options[i]||"")+'</span></label>';
       }
       html+='</div></div>';
+    }else if(w.type==="judge"){
+      const isTrue=w.correct[0]===0;
+      html+='<div class="form-group"><label>'+t("correctOption")+'</label><div class="radio-row">';
+      html+='<label class="radio-option"><input type="radio" name="judgeCorrect" value="0"'+(isTrue?" checked":"")+'><span style="font-size:22px;line-height:1">'+t("trueLabel")+'</span></label>';
+      html+='<label class="radio-option"><input type="radio" name="judgeCorrect" value="1"'+(!isTrue?" checked":"")+'><span style="font-size:22px;line-height:1">'+t("falseLabel")+'</span></label>';
+      html+='</div></div>';
+    }else if(w.type==="fill"){
+      const blankCount=countBlanks(w.title);
+      if(blankCount===0){
+        html+='<div class="empty-state">'+t("blankRequired")+'</div>';
+        html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button></div>';
+        openModal(html,false);
+        $("wCancel").onclick=()=>{renderQuestionEditorModal();};
+        $("wBack").onclick=()=>{collectFillAnswers();w.step=1;renderWizard();};
+        return;
+      }
+      if(!Array.isArray(w.blankAnswers))w.blankAnswers=[];
+      while(w.blankAnswers.length<blankCount)w.blankAnswers.push("");
+      w.blankAnswers=w.blankAnswers.slice(0,blankCount);
+      html+='<div class="form-group"><label>'+t("fillAnswer")+'</label><div id="wBlankAnswersBox">';
+      for(let i=0;i<blankCount;i++){
+        html+='<div class="blank-answer-row"><span class="blank-index">'+esc(t("blankAnswerLabel",i+1))+'</span><input type="text" id="wBlank_'+i+'" value="'+esc(w.blankAnswers[i]||"")+'" placeholder="'+esc(t("blankAnswerHint"))+'"></div>';
+      }
+      html+='</div></div>';
     }else{
-      html+='<div class="form-group"><label>'+t("correctOption")+'</label><select id="wCorrect" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none">';
+      html+='<div class="form-group"><label>'+t("correctOption")+'</label><div class="radio-row" id="wCorrectGroup" style="flex-direction:column;gap:6px">';
       for(let i=0;i<w.optionCount;i++){
         const letter=String.fromCharCode(65+i);
-        html+='<option value="'+i+'"'+(w.correct[0]===i?" selected":"")+'>'+letter+'. '+esc(w.options[i]||"")+'</option>';
+        const checked=w.correct[0]===i?" checked":"";
+        html+='<label class="checkbox-row" style="margin-bottom:0"><input type="radio" name="wCorrect" value="'+i+'"'+checked+'><span>'+letter+'. '+esc(w.options[i]||"")+'</span></label>';
       }
-      html+='</select></div>';
+      html+='</div></div>';
     }
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="wSave">'+t("complete")+'</button></div>';
   }
   openModal(html,false);
   $("wCancel").onclick=()=>{renderQuestionEditorModal();};
   if(w.step===1){
-    $("wType").onchange=(e)=>{w.type=e.target.value;w.correct=[0];};
+    document.querySelectorAll('input[name="wType"]').forEach((radio)=>{
+      radio.onchange=()=>{
+        if($("wTitle"))w.title=$("wTitle").value;
+        if($("wImage"))w.image=$("wImage").value;
+        if($("wAudio"))w.audio=$("wAudio").value;
+        if($("wExplanation"))w.explanation=$("wExplanation").value;
+        const oldType=w.type;
+        w.type=radio.value;
+        if(w.type==="fill"&&oldType!=="fill"){w.correct=[""];w.blankAnswers=[];}
+        else if(w.type==="single"||w.type==="multiple"){w.correct=[0];}
+        else if(w.type==="judge"){w.correct=[0];}
+        renderWizard();
+      };
+    });
+    if($("wAddBlank")){
+      $("wAddBlank").onclick=()=>{
+        const input=$("wTitle");
+        const start=input.selectionStart==null?input.value.length:input.selectionStart;
+        const end=input.selectionEnd==null?input.value.length:input.selectionEnd;
+        const val=input.value;
+        const newVal=val.slice(0,start)+BLANK_PLACEHOLDER+val.slice(end);
+        input.value=newVal;
+        const newPos=start+BLANK_PLACEHOLDER.length;
+        input.selectionStart=newPos;
+        input.selectionEnd=newPos;
+        input.focus();
+        w.title=newVal;
+        updateWizardBlankHint();
+      };
+      const titleInput=$("wTitle");
+      titleInput.addEventListener("input",()=>{updateWizardBlankHint();});
+    }
     $("wIncludeImage").onchange=(e)=>{$("wImageGroup").style.display=e.target.checked?"flex":"none";w.includeImage=e.target.checked;};
     $("wIncludeAudio").onchange=(e)=>{$("wAudioGroup").style.display=e.target.checked?"flex":"none";w.includeAudio=e.target.checked;};
-    const titleEl=$("wTitle");setTimeout(()=>titleEl.focus(),50);
+    $("wIncludeExplanation").onchange=(e)=>{$("wExplanationGroup").style.display=e.target.checked?"flex":"none";w.includeExplanation=e.target.checked;};
+    const titleEl=$("wTitle");if(titleEl)setTimeout(()=>titleEl.focus(),50);
     $("wNext").onclick=()=>{
       const title=$("wTitle").value.trim();
       if(!title){showToast(t("titleRequired"),"warn");return;}
       w.title=title;
       w.image=w.includeImage?$("wImage").value.trim():"";
       w.audio=w.includeAudio?$("wAudio").value.trim():"";
-      if(w.options.length<w.optionCount)w.options=Array.from({length:w.optionCount},(_,i)=>w.options[i]||"");
-      w.step=2;renderWizard();
+      w.explanation=w.includeExplanation?$("wExplanation").value.trim():"";
+      if(w.type==="single"||w.type==="multiple"){
+        if(w.options.length<w.optionCount)w.options=Array.from({length:w.optionCount},(_,i)=>w.options[i]||"");
+        w.step=2;
+      }else if(w.type==="fill"){
+        const blankCount=countBlanks(w.title);
+        if(blankCount===0){showToast(t("blankRequired"),"warn");return;}
+        if(!Array.isArray(w.blankAnswers))w.blankAnswers=[];
+        while(w.blankAnswers.length<blankCount)w.blankAnswers.push("");
+        w.blankAnswers=w.blankAnswers.slice(0,blankCount);
+        w.step=3;
+      }else{
+        w.step=3;
+      }
+      renderWizard();
     };
   }else if(w.step===2){
     $("wGen").onclick=()=>{
@@ -1220,8 +2009,10 @@ function renderWizard(){
       const newOptions=[];
       for(let i=0;i<count;i++){const prev=$("wOpt_"+i);newOptions.push(prev?prev.value:(w.options[i]||""));}
       w.options=newOptions;
-      w.correct=w.correct.filter((i)=>i<count);
-      if(w.correct.length===0)w.correct=[0];
+      if(Array.isArray(w.correct)){
+        w.correct=w.correct.filter((i)=>i<count);
+        if(w.correct.length===0)w.correct=[0];
+      }
       renderWizard();
     };
     $("wBack").onclick=()=>{collectOptions();w.step=1;renderWizard();};
@@ -1234,40 +2025,71 @@ function renderWizard(){
     };
   }else{
     if(w.type==="multiple"){
-      const boxes=document.querySelectorAll("[data-correct]");
-      boxes.forEach((cb)=>{
+      document.querySelectorAll("[data-correct]").forEach((cb)=>{
         cb.onchange=()=>{
           const arr=[];
           document.querySelectorAll("[data-correct]").forEach((c)=>{if(c.checked)arr.push(Number(c.dataset.correct));});
           w.correct=arr.sort((a,b)=>a-b);
         };
       });
-    }else{
-      $("wCorrect").onchange=(e)=>{w.correct=[parseInt(e.target.value)];};
+    }else if(w.type==="judge"){
+      document.querySelectorAll('input[name="judgeCorrect"]').forEach((r)=>{
+        r.onchange=()=>{
+          const checked=document.querySelector('input[name="judgeCorrect"]:checked');
+          if(checked)w.correct=[Number(checked.value)];
+        };
+      });
+    }else if(w.type==="fill"){
+      const blankCount=countBlanks(w.title);
+      for(let i=0;i<blankCount;i++){
+        const el=$("wBlank_"+i);
+        if(el){el.oninput=(e)=>{w.blankAnswers[i]=e.target.value;};}
+      }
     }
     $("wBack").onclick=()=>{
       collectOptions();
-      if(w.type==="multiple"){
-        const arr=[];
-        document.querySelectorAll("[data-correct]").forEach((c)=>{if(c.checked)arr.push(Number(c.dataset.correct));});
-        w.correct=arr.sort((a,b)=>a-b);
-      }else{
-        w.correct=[toNum($("wCorrect").value,0)];
-      }
-      w.step=2;renderWizard();
+      if(w.type==="single"||w.type==="multiple"){w.step=2;}
+      else{w.step=1;}
+      renderWizard();
     };
     $("wSave").onclick=()=>{
       collectOptions();
+      let finalCorrect;
       if(w.type==="multiple"){
         const arr=[];
         document.querySelectorAll("[data-correct]").forEach((c)=>{if(c.checked)arr.push(Number(c.dataset.correct));});
         if(arr.length===0){showToast(t("correctOptions"),"warn");return;}
-        w.correct=arr.sort((a,b)=>a-b);
+        finalCorrect=arr.sort((a,b)=>a-b);
+      }else if(w.type==="judge"){
+        const checked=document.querySelector('input[name="judgeCorrect"]:checked');
+        if(!checked){showToast(t("correctOption"),"warn");return;}
+        finalCorrect=Number(checked.value);
+      }else if(w.type==="fill"){
+        const blankCount=countBlanks(w.title);
+        if(blankCount===0){showToast(t("blankRequired"),"warn");return;}
+        const answers=[];
+        for(let i=0;i<blankCount;i++){
+          const el=$("wBlank_"+i);
+          const val=el?el.value.trim():"";
+          if(!val){showToast(t("blankAnswerRequired",i+1),"warn");return;}
+          answers.push(val);
+        }
+        finalCorrect=answers;
       }else{
-        w.correct=[toNum($("wCorrect").value,0)];
+        const checked=document.querySelector('input[name="wCorrect"]:checked');
+        finalCorrect=checked?parseInt(checked.value):0;
       }
-      const finalCorrect=w.type==="multiple"?w.correct:w.correct[0];
-      state.appData.questions.push({_id:newId(),image:w.image||"",audio:w.audio||"",title:w.title,options:w.options.slice(),type:w.type,correct:finalCorrect});
+      const optionsToSave=(w.type==="single"||w.type==="multiple")?w.options.slice():[];
+      state.appData.questions.push({
+        _id:newId(),
+        type:w.type,
+        title:w.title,
+        image:w.image||"",
+        audio:w.audio||"",
+        options:optionsToSave,
+        correct:finalCorrect,
+        explanation:w.includeExplanation?(w.explanation||""):""
+      });
       markDirty();
       showToast(t("questionAdded"),"success");
       renderQuestionEditorModal();
@@ -1286,13 +2108,31 @@ function collectOptions(){
   state.wizard.options=newOptions;
 }
 
+function collectFillAnswers(){
+  const blankCount=countBlanks(state.wizard.title);
+  const answers=[];
+  for(let i=0;i<blankCount;i++){
+    const el=$("wBlank_"+i);
+    if(el)answers.push(el.value);
+    else answers.push((state.wizard.blankAnswers&&state.wizard.blankAnswers[i])||"");
+  }
+  state.wizard.blankAnswers=answers;
+}
+
 function openUserForm(){
-  openModal('<h2>'+t("addUser")+'</h2><div class="form-group"><label>'+t("userName")+'</label><input id="uName"></div><div class="form-group"><label>'+t("gender")+'</label><select id="uGender" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none"><option value="male">'+t("male")+'</option><option value="female">'+t("female")+'</option><option value="other">'+t("other")+'</option></select></div><div class="modal-actions"><button class="btn btn-secondary" id="uCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="uSave">'+t("complete")+'</button></div>',false);
+  let genderRadios="";
+  const genderOpts=[{v:"male",l:t("male")},{v:"female",l:t("female")},{v:"other",l:t("other")}];
+  genderOpts.forEach((g,idx)=>{
+    const checked=idx===0?" checked":"";
+    genderRadios+='<label class="radio-option"><input type="radio" name="uGender" value="'+g.v+'"'+checked+'><span>'+g.l+'</span></label>';
+  });
+  openModal('<h2>'+t("addUser")+'</h2><div class="form-group"><label>'+t("userName")+'</label><input id="uName"></div><div class="form-group"><label>'+t("gender")+'</label><div class="radio-row" id="uGenderGroup">'+genderRadios+'</div></div><div class="modal-actions"><button class="btn btn-secondary" id="uCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="uSave">'+t("complete")+'</button></div>',false);
   setTimeout(()=>$("uName").focus(),50);
   $("uCancel").onclick=()=>{renderUserEditorModal();};
   $("uSave").onclick=()=>{
     const name=$("uName").value.trim();
-    const gender=$("uGender").value;
+    const genderEl=document.querySelector('input[name="uGender"]:checked');
+    const gender=genderEl?genderEl.value:"other";
     if(!name){showToast(t("nameRequired"),"warn");return;}
     const list=state.appData.users;
     const uidLen=state.appData.settings.uidLength;
@@ -1333,11 +2173,29 @@ function openAdminSettings(){
     const active=(s.examDuration===v)?" active":"";
     presets+='<button type="button" class="duration-preset'+active+'" data-val="'+v+'">'+label+'</button>';
   });
+  let startModeRadios="";
+  const startModeOpts=[
+    {v:"",l:t("startModeUnlimited")},
+    {v:"now",l:t("startModeNow")},
+    {v:"custom",l:t("startModeCustom")}
+  ];
+  startModeOpts.forEach((m)=>{
+    const checked=startMode===m.v?" checked":"";
+    startModeRadios+='<label class="radio-option"><input type="radio" name="asStartMode" value="'+m.v+'"'+checked+'><span>'+m.l+'</span></label>';
+  });
   const durVal=s.examDuration>0?s.examDuration:"";
   const noticeText=s.noticeText||"";
   const audioTestText=s.audioTestText||"";
   const qCountVal=s.examQuestionCount||0;
-  openModal('<h2>'+t("adminSettings")+'</h2><h3>'+t("basicSettings")+'</h3><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><h3>'+t("examSettings")+'</h3><div class="form-group"><label>'+t("examStartMode")+'</label><select id="asStartMode" style="width:100%;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;outline:none"><option value=""'+(startMode===""?" selected":"")+'>'+t("startModeUnlimited")+'</option><option value="now"'+(startMode==="now"?" selected":"")+'>'+t("startModeNow")+'</option><option value="custom"'+(startMode==="custom"?" selected":"")+'>'+t("startModeCustom")+'</option></select></div><div class="form-group" id="asStartCustomGroup" style="display:'+(startMode==="custom"?"flex":"none")+'"><label>&nbsp;</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"></div><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div><h3>'+t("uidSettings")+'</h3><div class="radio-row">'+uidRadios+'</div><h3>'+t("noticeSettings")+'</h3><div class="form-group"><textarea id="asNotice" rows="5" placeholder="'+t("noticePlaceholder")+'">'+esc(noticeText)+'</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">'+t("noticePreset")+'</button></div><h3>'+t("audioSettings")+'</h3><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="3" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><h3>'+t("featureSettings")+'</h3><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asDisableCustom"'+(s.disableCustom?" checked":"")+'><span>'+t("disableCustom")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRequireAll"'+(s.requireAll?" checked":"")+'><span>'+t("requireAll")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asShowAnswer"'+(s.showAnswer?" checked":"")+'><span>'+t("showAnswer")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomQ"'+(s.randomQuestions?" checked":"")+'><span>'+t("randomQuestions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomO"'+(s.randomOptions?" checked":"")+'><span>'+t("randomOptions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"'+(s.allowStudentExport?" checked":"")+'><span>'+t("allowStudentExport")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
+  const _q=s.typeQuotas||{};
+  const quotaSingleVal=Math.max(0,toNum(_q.single,0));
+  const quotaMultipleVal=Math.max(0,toNum(_q.multiple,0));
+  const quotaJudgeVal=Math.max(0,toNum(_q.judge,0));
+  const quotaFillVal=Math.max(0,toNum(_q.fill,0));
+  const examTitle=s.examTitle||"";
+  const examSubtitle=s.examSubtitle||"";
+  const customGroupDisplay=(startMode==="custom"||startMode==="now")?"flex":"none";
+  openModal('<h2>'+t("adminSettings")+'</h2><h3>'+t("basicSettings")+'</h3><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><div class="form-group"><label>'+t("examTitleLabel")+'</label><input id="asExamTitle" value="'+esc(examTitle)+'" placeholder="'+t("examTitlePlaceholder")+'"></div><div class="form-group"><label>'+t("examSubtitleLabel")+'</label><input id="asExamSubtitle" value="'+esc(examSubtitle)+'" placeholder="'+t("examSubtitlePlaceholder")+'"></div><button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><h3>'+t("examSettings")+'</h3><div class="form-group"><label>'+t("examStartMode")+'</label><div class="radio-row" id="asStartModeGroup">'+startModeRadios+'</div></div><div class="form-group" id="asStartCustomGroup" style="display:'+customGroupDisplay+'"><label>'+t("examStartMode")+'</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"></div><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div><h3>'+t("typeQuotasSection")+'</h3><div class="form-row"><div class="form-group"><label>'+t("quotaSingle")+'</label><input id="asQuotaSingle" type="number" min="0" value="'+quotaSingleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaMultiple")+'</label><input id="asQuotaMultiple" type="number" min="0" value="'+quotaMultipleVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaJudge")+'</label><input id="asQuotaJudge" type="number" min="0" value="'+quotaJudgeVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaFill")+'</label><input id="asQuotaFill" type="number" min="0" value="'+quotaFillVal+'" placeholder="0"></div></div><p style="font-size:11px;color:var(--text-3);margin-top:-6px">'+t("quotaHint")+'</p><h3>'+t("uidSettings")+'</h3><div class="radio-row">'+uidRadios+'</div><h3>'+t("noticeSettings")+'</h3><div class="form-group"><textarea id="asNotice" rows="5" placeholder="'+t("noticePlaceholder")+'">'+esc(noticeText)+'</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">'+t("noticePreset")+'</button></div><h3>'+t("audioSettings")+'</h3><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="3" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><h3>'+t("featureSettings")+'</h3><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asDisableCustom"'+(s.disableCustom?" checked":"")+'><span>'+t("disableCustom")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRequireAll"'+(s.requireAll?" checked":"")+'><span>'+t("requireAll")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asShowAnswer"'+(s.showAnswer?" checked":"")+'><span>'+t("showAnswer")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomQ"'+(s.randomQuestions?" checked":"")+'><span>'+t("randomQuestions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomO"'+(s.randomOptions?" checked":"")+'><span>'+t("randomOptions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"'+(s.allowStudentExport?" checked":"")+'><span>'+t("allowStudentExport")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
   $("asChangePwd").onclick=()=>openChangePassword();
   $("asNoticePreset").onclick=()=>{$("asNotice").value=t("noticePresetDefault");};
   document.querySelectorAll(".duration-preset").forEach((btn)=>{
@@ -1348,23 +2206,33 @@ function openAdminSettings(){
       $("asDuration").value=v>0?v:"";
     };
   });
-  $("asStartMode").onchange=(e)=>{
-    const group=$("asStartCustomGroup");
-    if(e.target.value==="custom"){group.style.display="flex";setTimeout(()=>$("asStartCustom").focus(),50);}
-    else if(e.target.value==="now"){group.style.display="flex";$("asStartCustom").value=formatLocalDateTime(new Date());}
-    else{group.style.display="none";}
-  };
+  document.querySelectorAll('input[name="asStartMode"]').forEach((radio)=>{
+    radio.onchange=()=>{
+      const group=$("asStartCustomGroup");
+      const v=radio.value;
+      if(v==="custom"){group.style.display="flex";setTimeout(()=>$("asStartCustom").focus(),50);}
+      else if(v==="now"){group.style.display="flex";$("asStartCustom").value=formatLocalDateTime(new Date());}
+      else{group.style.display="none";}
+    };
+  });
   $("asCancel").onclick=()=>{closeModal();};
   $("asSave").onclick=()=>{
     const name=$("asName").value.trim()||"Administrator";
     const subject=$("asSubject").value.trim();
+    const title=$("asExamTitle").value.trim();
+    const subtitle=$("asExamSubtitle").value.trim();
     const totalScore=toNum($("asTotalScore").value,0);
     if(!totalScore||totalScore<=0){showToast(t("totalScoreInvalid"),"warn");return;}
     const qCount=Math.max(0,toNum($("asQCount").value,0));
-    const mode=$("asStartMode").value;
+    const modeEl=document.querySelector('input[name="asStartMode"]:checked');
+    const mode=modeEl?modeEl.value:"";
     let startTime="";
-    if(mode==="now")startTime=formatLocalDateTime(new Date());
-    else if(mode==="custom")startTime=$("asStartCustom").value||"";
+    if(mode==="now"){
+      startTime=formatLocalDateTime(new Date());
+    }else if(mode==="custom"){
+      startTime=$("asStartCustom").value||"";
+      if(!startTime){showToast(t("startTimeRequired"),"warn");return;}
+    }
     const uidRadio=document.querySelector('input[name="uidLen"]:checked');
     const uidLen=uidRadio?parseInt(uidRadio.value):18;
     const oldUidLen=state.appData.settings.uidLength;
@@ -1378,8 +2246,11 @@ function openAdminSettings(){
       state.appData.settings.examDuration=dur;
       state.appData.settings.totalScore=totalScore;
       state.appData.settings.examQuestionCount=qCount;
+      state.appData.settings.typeQuotas={single:Math.max(0,toNum($("asQuotaSingle").value,0)),multiple:Math.max(0,toNum($("asQuotaMultiple").value,0)),judge:Math.max(0,toNum($("asQuotaJudge").value,0)),fill:Math.max(0,toNum($("asQuotaFill").value,0))};
       state.appData.settings.uidLength=uidLen;
       state.appData.settings.subject=subject;
+      state.appData.settings.examTitle=title;
+      state.appData.settings.examSubtitle=subtitle;
       state.appData.settings.noticeText=noticeTextVal;
       state.appData.settings.audioTestText=audioTestTextVal;
       state.appData.settings.allowGuest=$("asAllowGuest").checked;
@@ -1503,6 +2374,7 @@ function bindEvents(){
   };
   $("btnCancelFullscreen").onclick=()=>{cancelFullscreenFlow();restartFlow();};
   $("modalOverlay").onclick=(e)=>{if(e.target===$("modalOverlay")&&state.modalClosable)closeModal();};
+  $("confirmOverlay").onclick=(e)=>{if(e.target===$("confirmOverlay"))$("confirmOverlay").classList.remove("open");};
   document.addEventListener("contextmenu",(e)=>{e.preventDefault();warnThrottled(t("warningRightClick"));});
   document.addEventListener("keydown",(e)=>{
     const tag=(e.target.tagName||"").toLowerCase();
