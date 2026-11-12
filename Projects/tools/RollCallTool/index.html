@@ -353,6 +353,7 @@ const i18n = {
 let pwd = (typeof adminPwd !== "undefined" && typeof adminPwd === "string") ? adminPwd : "";
 let list = (typeof nameList !== "undefined" && Array.isArray(nameList)) ? nameList.slice() : [];
 let used = new Set();
+let currentIdx = -1;
 let rolling = false;
 let timer = null;
 let isEditVerified = false;
@@ -424,6 +425,7 @@ function stopRolling(){
 function clearDisplay(){
   show.textContent = "—";
   show.classList.remove("picked");
+  currentIdx = -1;
 }
 
 function exportConfigFile(){
@@ -435,13 +437,15 @@ const nameList = ${JSON.stringify(list, null, 2)};
 
 // UI language: zh / en / ja
 const language = ${JSON.stringify(currentLang)};`;
-  const blob = new Blob([content], {type: "text/javascript"});
+  const blob = new Blob([content], {type: "text/javascript;charset=utf-8"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = "config.js";
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
   setStatus("statusSaved");
   setTimeout(() => {
     if(statusKey === "statusSaved") setStatus("statusLoaded", list.length);
@@ -453,7 +457,7 @@ function importConfigFile(file){
   reader.onload = e => {
     try {
       const code = e.target.result;
-      const fn = new Function(code + "\nvar __lang = typeof language !== 'undefined' ? language : 'en';\nreturn { adminPwd, nameList, language: __lang };");
+      const fn = new Function(code + "\nreturn { adminPwd, nameList, language: typeof language !== 'undefined' ? language : 'en' };");
       const res = fn();
       if(typeof res.adminPwd !== "string" || !Array.isArray(res.nameList)) throw new Error("invalid");
       pwd = res.adminPwd;
@@ -474,6 +478,7 @@ function importConfigFile(file){
       alert(T().statusImportFail);
     }
   };
+  reader.onerror = () => alert(T().statusImportFail);
   reader.readAsText(file);
 }
 
@@ -487,27 +492,31 @@ startBtn.onclick = () => {
     startBtn.textContent = T().stop;
     show.classList.remove("picked");
     timer = setInterval(() => {
-      const remaining = list.filter(x => !used.has(x));
+      const remaining = [];
+      for(let i = 0; i < list.length; i++){
+        if(!used.has(i)) remaining.push(i);
+      }
       if(remaining.length === 0){
         stopRolling();
         clearDisplay();
         setStatus("statusAllDone");
         return;
       }
-      show.textContent = remaining[Math.floor(Math.random() * remaining.length)];
+      currentIdx = remaining[Math.floor(Math.random() * remaining.length)];
+      show.textContent = list[currentIdx];
     }, 80);
   } else {
     stopRolling();
-    const picked = show.textContent;
-    show.classList.add("picked");
-    if(picked && picked !== "—"){
-      used.add(picked);
+    if(currentIdx >= 0 && !used.has(currentIdx)){
+      used.add(currentIdx);
+      show.classList.add("picked");
     }
     if(used.size >= list.length){
       setStatus("statusAllDone");
     } else {
       setStatus("statusRemaining", list.length, used.size);
     }
+    currentIdx = -1;
   }
 };
 
