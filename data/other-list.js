@@ -11,6 +11,10 @@ window.__OTHER_DATA__ = {
         {
             name: { zh: "考试系统", en: "Exam System" },
             url: "https://fueyseek.github.io/Projects/tools/ExamSystem"
+        },
+        {
+            name: { zh: "考试数据查看器", en: "Exam Data Viewer" },
+            url: "https://fueyseek.github.io/Projects/tools/ExamDataViewer"
         }
     ]
 };
