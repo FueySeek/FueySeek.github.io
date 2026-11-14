@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fuey App Download</title>
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fueyseek.github.io" crossorigin>
+    <link rel="preconnect" href="https://api.github.com" crossorigin>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' stroke='%230071e3' stroke-width='6' fill='none'/><path d='M50 26 L50 60 M34 46 L50 62 L66 46' stroke='%230071e3' stroke-width='7' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M32 72 L68 72' stroke='%230071e3' stroke-width='7' stroke-linecap='round'/></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+    <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("fuey-theme") || "light");</script>
+    <script>
+        (function () {
+            var lastWarnAt = 0;
+            var WARN_TEXT = {
+                en: "This action is not allowed",
+                zh: "该操作已被禁止",
+                "zh-Hant": "該操作已被禁止",
+                lzh: "此為已禁",
+                ja: "この操作は禁止されています",
+                ko: "이 작업은 금지되었습니다",
+                fr: "Cette action est interdite",
+                de: "Diese Aktion ist nicht erlaubt",
+                es: "Esta acción está prohibida",
+                ru: "Это действие запрещено",
+                ar: "هذا الإجراء محظور"
+            };
+            function getWarnText() {
+                var lang = localStorage.getItem("fuey-lang") || "en";
+                return WARN_TEXT[lang] || WARN_TEXT.en;
+            }
+            function ensureToast() {
+                var el = document.getElementById("devWarnToast");
+                if (!el) {
+                    el = document.createElement("div");
+                    el.id = "devWarnToast";
+                    el.className = "dev-warn-toast";
+                    document.body.appendChild(el);
+                }
+                return el;
+            }
+            function showWarn() {
+                var now = Date.now();
+                if (now - lastWarnAt < 700) return;
+                lastWarnAt = now;
+                var el = ensureToast();
+                el.textContent = getWarnText();
+                el.classList.remove("show");
+                void el.offsetWidth;
+                el.classList.add("show");
+                clearTimeout(el._timer);
+                el._timer = setTimeout(function () { el.classList.remove("show"); }, 1900);
+            }
+            function onReady() {
+                document.addEventListener("contextmenu", function (e) {
+                    e.preventDefault();
+                    showWarn();
+                    return false;
+                });
+                document.addEventListener("keydown", function (e) {
+                    var k = e.keyCode || e.which;
+                    if (k === 123) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showWarn();
+                        return false;
+                    }
+                    if (e.ctrlKey && e.shiftKey && (k === 73 || k === 74 || k === 67 || k === 75)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showWarn();
+                        return false;
+                    }
+                    if (e.ctrlKey && (k === 85 || k === 83 || k === 80)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showWarn();
+                        return false;
+                    }
+                    if (e.metaKey && e.altKey && (k === 73 || k === 74 || k === 67 || k === 85)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showWarn();
+                        return false;
+                    }
+                }, true);
+                document.addEventListener("dragstart", function (e) {
+                    if (e.target && e.target.tagName === "IMG") e.preventDefault();
+                });
+            }
+            if (document.body) onReady();
+            else document.addEventListener("DOMContentLoaded", onReady);
+        })();
+    </script>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/market.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/overlay.css">
+</head>
+<body>
+    <div class="card" id="mainCard">
+        <button id="openSettings" class="settings-btn" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+
+        <div class="logo">Fuey App Download</div>
+
+        <div class="main-tabs" id="mainTabs">
+            <div class="main-tab-indicator" id="mainTabIndicator"></div>
+            <button class="main-tab active" data-tab="app" id="tabBtnApp"></button>
+            <button class="main-tab" data-tab="market" id="tabBtnMarket"></button>
+            <button class="main-tab" data-tab="custom" id="tabBtnCustom"></button>
+        </div>
+
+        <div class="tab-panel-wrap">
+            <div class="tab-panel active" id="tabApp">
+                <div class="version-tag" id="versionTag"></div>
+                <div class="platform-list" id="platformList"></div>
+                <div class="detected-hint" id="detectedHint"></div>
+                <button class="site-visit-btn" id="siteVisitBtn"></button>
+            </div>
+
+            <div class="tab-panel" id="tabMarket">
+                <div class="market-search">
+                    <input type="text" class="market-input" id="marketInput">
+                    <button class="market-search-btn" id="marketSearchBtn"></button>
+                </div>
+                <div class="market-quick">
+                    <button class="market-quick-btn active" data-mode="trending" id="mQBtTrending"></button>
+                    <button class="market-quick-btn" data-mode="fueyseek" id="mQBtFueySeek"></button>
+                </div>
+                <div class="market-body" id="marketBody"></div>
+            </div>
+
+            <div class="tab-panel" id="tabCustom">
+                <div class="custom-url-row">
+                    <input type="text" class="custom-url-input" id="customUrlInput">
+                    <button class="custom-url-btn" id="customParseBtn"></button>
+                </div>
+                <div class="custom-empty-hint" id="customEmptyHint"></div>
+                <div class="custom-result" id="customResult" style="display:none;">
+                    <div class="custom-info-row">
+                        <div class="custom-info-label" id="customSourceLabel"></div>
+                        <div class="custom-info-value" id="customSourceValue"></div>
+                    </div>
+                    <div class="custom-filename-group">
+                        <div class="custom-info-label" id="customFilenameLabel"></div>
+                        <div class="custom-filename-row">
+                            <span class="file-icon file-icon-file" id="customFileIcon"></span>
+                            <input type="text" class="custom-filename-input" id="customFilenameInput">
+                        </div>
+                    </div>
+                    <div class="custom-error" id="customError"></div>
+                    <button class="custom-start-btn" id="customStartBtn"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <h3 id="settingsTitle"></h3>
+                <button id="closeSettings" class="close-btn">✕</button>
+            </div>
+            <div class="settings-body" id="settingsBody">
+                <div class="setting-group">
+                    <label id="themeLabel"></label>
+                    <div class="segmented-box" id="themeBox">
+                        <div class="segmented-indicator" id="themeIndicator"></div>
+                        <button class="seg-btn" id="themeLight" data-theme="light"></button>
+                        <button class="seg-btn" id="themeDark" data-theme="dark"></button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label id="langLabel"></label>
+                    <div class="segmented-box" id="langBox">
+                        <div class="segmented-indicator" id="langIndicator"></div>
+                        <button class="seg-btn" id="langEn" data-lang="en">English</button>
+                        <button class="seg-btn" id="langZh" data-lang="zh">中文</button>
+                        <button class="seg-btn" id="langOther" data-lang="other"></button>
+                    </div>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-dropdown-toggle" id="langDropdownToggle">
+                            <span id="langDropdownLabel"></span>
+                            <svg class="lang-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="lang-dropdown-panel" id="langDropdownPanel">
+                            <div class="lang-dropdown-scroll" id="langDropdownScroll"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label id="ghTokenInputLabel"></label>
+                    <div class="gh-token-row">
+                        <input type="password" id="ghTokenInput" class="gh-token-input" autocomplete="off" spellcheck="false">
+                        <button id="ghTokenSave" class="gh-token-btn"></button>
+                        <button id="ghTokenClear" class="gh-token-btn danger"></button>
+                    </div>
+                    <p class="lang-hint" id="ghTokenHint"></p>
+                </div>
+                <div class="setting-group">
+                    <label id="ghApiLabel"></label>
+                    <div class="gh-api-status">
+                        <div class="gh-api-row"><span class="gh-api-key" id="ghCoreLabel"></span><span class="gh-api-val" id="ghCoreValue">—</span></div>
+                        <div class="gh-api-row"><span class="gh-api-key" id="ghSearchLabel"></span><span class="gh-api-val" id="ghSearchValue">—</span></div>
+                        <div class="gh-api-row"><span class="gh-api-key" id="ghResetLabel"></span><span class="gh-api-val" id="ghResetValue">—</span></div>
+                        <div class="gh-api-row"><span class="gh-api-key" id="ghTokenStateLabel"></span><span class="gh-api-val" id="ghTokenStateValue">—</span></div>
+                    </div>
+                    <button id="ghRefreshBtn" class="gh-refresh-btn"></button>
+                </div>
+                <div class="setting-group">
+                    <label id="clearCacheLabel"></label>
+                    <p class="lang-hint" id="clearCacheHint" style="margin-top:0;margin-bottom:8px;"></p>
+                    <button id="clearCacheBtn" class="cache-clear-btn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-footer"><span class="footer-text">© 2020-<span id="footerYear">2026</span> Fuey All Rights Reserved</span></div>
+
+    <div class="download-overlay" id="downloadOverlay">
+        <div class="dl-downloading-stage" id="dlDownloadingStage">
+            <div class="dl-center-anchor">
+                <div class="dl-spinner-wrap">
+                    <svg class="dl-spinner-svg" viewBox="0 0 48 48"><circle class="dl-spinner-circle" cx="24" cy="24" r="18"></circle></svg>
+                </div>
+                <div class="dl-progress-track">
+                    <div class="dl-progress-fill" id="dlProgressFill"></div>
+                </div>
+                <div class="dl-progress-label" id="dlProgressLabel"></div>
+            </div>
+            <div class="dl-bottom-status"><div class="dl-status-text" id="dlStatusText"></div></div>
+        </div>
+        <div class="dl-done-stage" id="dlDoneStage">
+            <div class="dl-done-icon" id="dlDoneIcon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="dl-done-title" id="dlDoneTitle"></div>
+            <div class="dl-done-path-box">
+                <div class="dl-done-path-label" id="dlDonePathLabel"></div>
+                <div class="dl-done-path-value" id="dlDonePathValue"></div>
+            </div>
+            <div class="dl-done-hint" id="dlDoneHint"></div>
+            <div class="dl-done-actions">
+                <button class="dl-redownload-btn" id="dlRedownloadBtn"></button>
+                <button class="dl-back-btn" id="dlBackBtn"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cache-overlay" id="cacheOverlay">
+        <div class="cache-inner">
+            <div class="dl-spinner-wrap"><svg class="dl-spinner-svg" viewBox="0 0 48 48"><circle class="dl-spinner-circle" cx="24" cy="24" r="18"></circle></svg></div>
+            <div class="dl-progress-track"><div class="dl-progress-fill" id="cacheProgressFill"></div></div>
+            <div class="cache-title" id="cacheTitle"></div>
+            <div class="cache-count" id="cacheCount"></div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/download.js"></script>
+    <script src="js/market.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
