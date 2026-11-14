@@ -18,7 +18,7 @@ window.__OTHER_DATA__ = {
         },
         {
             name: { zh: "Fuey App Download", en: "Fuey App Download" },
-            url: "https://fueyseek.github.io/Projects/tools/Projects/tools/FueyAppDownload"
+            url: "https://fueyseek.github.io/Projects/tools/FueyAppDownload"
         }
     ]
 };
