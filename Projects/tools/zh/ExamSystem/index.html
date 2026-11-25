@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -17,7 +17,7 @@ input,textarea,.selectable,.selectable *{user-select:text;-webkit-user-select:te
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-2)}
 *{scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background var(--t),color var(--t);color-scheme:dark}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background var(--t),color var(--t);color-scheme:dark}
 body.light{color-scheme:light}
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;position:relative;z-index:100;border-bottom:1px solid var(--border)}
 .header-title{font-size:17px;font-weight:600;letter-spacing:0.01em}
@@ -57,7 +57,7 @@ input.input-field:hover,.form-group input:hover,.form-group textarea:hover{borde
 input.input-field:focus,.form-group input:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
 body.light input.input-field:focus,body.light .form-group input:focus,body.light .form-group textarea:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
 .form-group input[type="datetime-local"]{font-family:inherit;font-variant-numeric:tabular-nums;cursor:pointer}
-.form-group textarea{resize:vertical;min-height:80px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;line-height:1.6}
+.form-group textarea{resize:vertical;min-height:80px;font-family:inherit;font-size:14px;line-height:1.6}
 .btn{font-family:inherit;font-size:13px;font-weight:500;padding:10px 18px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;transition:all var(--t);white-space:nowrap;letter-spacing:0.01em;display:inline-flex;align-items:center;justify-content:center;gap:6px;position:relative;overflow:hidden}
 .btn::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity var(--t);pointer-events:none}
 .btn:active{transform:scale(0.97)}
@@ -123,6 +123,8 @@ body.light input.input-field:focus,body.light .form-group input:focus,body.light
 .card-image svg{max-width:100%;height:auto;display:block}
 .card-audio{width:100%}
 .card-audio audio{width:100%;border-radius:var(--r-sm)}
+.card-audio-text{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.card-audio-text .audio-text-hint{font-size:12px;color:var(--text-3)}
 .q-header{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--text-3);letter-spacing:0.06em;font-weight:600}
 .q-num{width:30px;height:30px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);letter-spacing:0}
 .q-type{font-size:10px;padding:3px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-3);text-transform:none}
@@ -314,6 +316,31 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
 .judge-symbol{font-size:36px}
 .fill-inline-input{min-width:80px;max-width:160px}
 }
+
+.q-text,.fill-inline-text,.option-text,.result-item-title,.result-line,.subjective-input,.subjective-note,.subjective-meta{white-space:pre-wrap;overflow-wrap:anywhere}
+.reading-passage{font-weight:500;line-height:1.85;padding:18px 20px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg)}
+.subjective-box{display:flex;flex-direction:column;gap:8px}
+.subjective-input{width:100%;min-height:110px;resize:vertical;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:15px;line-height:1.7;font-family:inherit;padding:14px 16px;outline:none;transition:all var(--t)}
+.subjective-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light .subjective-input:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.subjective-meta{font-size:12px;color:var(--text-3);text-align:right}
+.subjective-note{background:var(--surface-2);border:1px dashed var(--border-2);border-radius:var(--r);padding:16px 18px;font-size:13px;color:var(--text-2);line-height:1.7}
+.result-line.neutral{color:var(--text-2)}
+.result-sub.subjective-note{color:var(--warning)}
+.title-input-wrap textarea{flex:1;min-width:0;font-family:inherit;font-size:14px;line-height:1.6;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:var(--r-sm);outline:none;resize:vertical;transition:all var(--t)}
+.title-input-wrap textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,240,240,0.08)}
+body.light .title-input-wrap textarea:focus{box-shadow:0 0 0 3px rgba(26,26,30,0.08)}
+.audio-dictation{display:flex;flex-direction:column;gap:10px;width:100%;border-top:1px solid var(--border);padding-top:16px}
+.audio-dictation label{font-size:12px;color:var(--text-3);font-weight:500;letter-spacing:0.04em;text-transform:uppercase}
+.audio-dictation textarea{width:100%;min-height:90px;resize:vertical;font-family:inherit;font-size:14px;line-height:1.6;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);padding:12px 14px;outline:none}
+.audio-dictation textarea:focus{border-color:var(--accent)}
+.audio-dictation-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.audio-check-status{font-size:13px;color:var(--text-3)}
+.audio-check-status.ok{color:var(--success)}
+.audio-check-status.bad{color:var(--danger)}
+.card-image-wrap{max-width:100%;display:flex;justify-content:center}
+.card-image-wrap img{max-width:100%;border-radius:var(--r);max-height:320px;object-fit:contain}
+
 </style>
 </head>
 <body>
@@ -349,7 +376,7 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/><circle cx="19" cy="5" r="1.5" fill="currentColor" stroke="none"/></svg>
             </div>
             <div>
-                <div class="user-name">管理员</div>
+                <div class="user-name" id="adminNameDisplay">管理员</div>
                 <div class="user-role" id="adminRoleDisplay">管理员</div>
             </div>
         </div>
@@ -373,14 +400,15 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 <div class="main" id="mainArea">
     <div class="import-card" id="importCard">
         <h2 id="importTitle">考试系统</h2>
-        <p id="importDesc">导入数据文件或新建数据表开始使用。</p>
+        <p id="importDesc">导入数据文件，或新建数据表开始使用。</p>
         <div class="import-actions">
-            <label class="import-btn" for="fileInput" id="importBtnLabel">导入</label>
+            <label class="import-btn" for="fileInput" id="importBtnLabel">导入数据</label>
             <button class="new-btn" id="btnNewData" style="display:none">新建数据表</button>
         </div>
         <input type="file" id="fileInput" class="file-input" accept=".js">
@@ -422,7 +450,7 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
                 <span class="progress-text" id="progressText">0 / 0</span>
                 <div class="progress-actions">
                     <span class="timer" id="timerDisplay" style="display:none"></span>
-                    <button class="btn btn-secondary btn-sm" id="btnExitQuiz">退出考试</button>
+                    <button class="btn btn-secondary btn-sm" id="btnExitQuiz">退出</button>
                 </div>
             </div>
             <div id="cardsContainer"></div>
@@ -439,7 +467,7 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
         </div>
     </div>
 </div>
-<div class="footer">© 2020-2026 fuey All Rights Reserved</div>
+<div class="footer">© 2020-2026 fuey 版权所有</div>
 <div class="toast" id="toast"></div>
 <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="confirmOverlay"><div class="modal" id="confirmContent"></div></div>
@@ -464,7 +492,8 @@ body.light .blank-answer-row:focus-within{box-shadow:0 0 0 3px rgba(26,26,30,0.0
 </div>
 <script>
 const I18N={
-headerTitle:"考试系统",userSectionLabel:"用户",userRoleStudent:"考生",userRoleAdmin:"管理员",adminSectionLabel:"管理",settingsLabel:"设置",themeLabel:"主题",themeDark:"深色",themeLight:"浅色",
+zh:{
+headerTitle:"考试系统",userSectionLabel:"用户",userRoleStudent:"考生",userRoleAdmin:"管理员",adminSectionLabel:"管理",settingsLabel:"设置",themeLabel:"主题",themeDark:"深色",themeLight:"浅色",languageLabel:"语言",
 importTitle:"考试系统",importDesc:"导入数据文件或新建数据表开始使用。",importBtn:"导入",newDataBtn:"新建数据表",reImportBtn:"重新导入",
 importSuccess:"导入成功",importFail:"导入失败",exportSuccess:"导出成功",exportFail:"导出失败",imageExported:"成绩图片已导出",imageExportFail:"成绩图片导出失败",studentExported:"成绩已导出",studentExportFail:"成绩导出失败",
 clearDataBtn:"清空",clearDataConfirmTitle:"清空所有数据？",clearDataConfirm:"此操作将删除所有已导入的题目、考生和设置，且无法撤销。是否继续？",clearDataDone:"数据已清空",cannotClearInExam:"考试进行中无法清空数据",cannotSwitchDuringExam:"考试进行中无法切换用户",
@@ -485,7 +514,7 @@ allowGuest:"允许体验操作",disableCustom:"禁用自定义设置",requireAll
 subject:"科目",subjectPlaceholder:"例如：语文、数学、英语",
 noticeTitle:"考生须知",noticePlaceholder:"输入考生须知内容",noticePreset:"加载预设",
 noticePresetDefault:"1. 请准时进入考场。\n2. 禁止任何形式的作弊。\n3. 手机等电子设备必须关闭并放置在指定区域。\n4. 考试期间保持安静。\n5. 考试期间禁止截屏、拍照、录屏等行为。\n6. 请在规定时间内提交答案。\n7. 线上考试：请在开始前确保网络连接稳定。\n8. 线上考试：考试期间不得切换窗口或应用程序。\n9. 线上考试：考试时长严格执行。\n10. 如遇技术问题，请立即联系监考人员。",
-audioTestText:"自定义音频测试内容",audioTestTextHint:"留空则使用默认内容",audioTestContent:"生活就像海洋，只有意志坚强的人，才能到达彼岸。",
+audioTestText:"自定义音频测试内容",audioTestTextHint:"留空则使用对应语言的默认内容",audioTestContent:"生活就像海洋，只有意志坚强的人，才能到达彼岸。",
 adminSettingsSaved:"管理员设置已保存",passwordChanged:"密码已修改",timeUp:"时间到",scoreLabel:"得分",yourAnswer:"你的答案：{0}",correctAnswer:"正确答案：{0}",notAnswered:"未作答",mustAnswerAll:"请完成所有题目",
 warningRightClick:"右键已被禁用",warningDevtools:"开发者工具已被禁用",warningSource:"查看源代码已被禁用",
 switchUserConfirm:"切换到用户？",switchUserConfirmMsg:"切换后将失去管理员权限，需要重新输入密码才能切回。",switchUserOk:"切换",switchUserCancel:"留在当前",
@@ -512,18 +541,28 @@ dragToReorder:"拖动排序",
 typeTabsHint:"拖动题型标签可调整大题出场顺序，考试将按此顺序出题。",
 typeOrderHint:"考试题目将按当前标签顺序分组呈现。",
 typeQuotasSection:"题型配额",quotaSingle:"单选题数",quotaMultiple:"多选题数",quotaJudge:"判断题数",quotaFill:"填空题数",quotaHint:"0 = 该类型全部出题",
+readingQuestion:"阅读题",shortAnswer:"自答题",essayQuestion:"作文题",
+subjectivePlaceholder:"请在此作答...",subjectiveAnswer:"你的答案：{0}",subjectiveNotGraded:"本题不自动评分，答案将提交人工审阅。",subjectivePending:"{0} 道主观题不计入分数",subjectiveNoAnswer:"此类题目不自动评分，无需设置正确答案。",subjectiveTitleHint:"请输入阅读材料或题目内容，支持换行。",charCount:"{0} 字",
+step3Subjective:"第 3 步 · 确认",
+quotaReading:"阅读题数",quotaShort:"自答题数",quotaEssay:"作文题数",
+audioDictation:"听力听写",audioDictationHint:"要求考生在继续前输入音频文本",audioTranscriptLabel:"请输入你听到的内容",audioTranscriptPlaceholder:"在此输入音频文本...",audioCheckBtn:"核对",audioCheckCorrect:"正确，可以继续。",audioCheckWrong:"不太对，请重新播放后再试一次。",audioDictationRequired:"请输入正确的音频文本后继续。",audioPlaying:"播放中...",subjectiveAnswerLabel:"你的答案",
+playAudioText:"播放听力文本",audioTextLabel:"听力文本（浏览器朗读）",audioTextHint:"输入要朗读的听力文本，播放时由浏览器语音合成朗读，无需音频链接。",fullscreenExitLogout:"您已退出全屏，考试已结束。",
 startTimeRequired:"请设置自定义开始时间"
+}
 };
 
 const UID_LENGTH_OPTIONS=[9,18,32];
 const VERIFY_LENGTH=9;
 const FULLSCREEN_TIMEOUT=30;
+const SUPPORTED_LANGS=["zh"];
 const AUDIO_CONFIRMED_KEY="audioConfirmedUsers";
-const QUESTION_TYPES=["single","multiple","judge","fill"];
+const QUESTION_TYPES=["single","multiple","judge","fill","reading","short","essay"];
+const SUBJECTIVE_TYPES=["reading","short","essay"];
 const BLANK_PLACEHOLDER="___";
-const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:true,randomQuestions:false,randomOptions:false,enableAudio:false,allowStudentExport:false,subject:"",noticeText:"",audioTestText:"",examTitle:"",examSubtitle:"",typeOrder:["single","multiple","judge","fill"],typeQuotas:{single:0,multiple:0,judge:0,fill:0}};
+const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",language:"zh",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:true,randomQuestions:false,randomOptions:false,enableAudio:false,audioDictation:true,allowStudentExport:false,subject:"",noticeText:"",audioTestText:"",examTitle:"",examSubtitle:"",typeOrder:["single","multiple","judge","fill","reading","short","essay"],typeQuotas:{single:0,multiple:0,judge:0,fill:0,reading:0,short:0,essay:0}};
 
 const state={
+  currentLang:"zh",
   currentTheme:"dark",
   currentUser:"user",
   modalClosable:true,
@@ -557,6 +596,8 @@ const state={
 };
 
 const $=(id)=>document.getElementById(id);
+let speechToken=0;
+let currentUtterance=null;
 
 function esc(s){
   if(s===null||s===undefined)return "";
@@ -569,11 +610,16 @@ function esc(s){
   return str;
 }
 
+function isSubjectiveType(type){return SUBJECTIVE_TYPES.indexOf(type)>=0;}
+
 function typeLabel(type){
   if(type==="single")return t("singleChoice");
   if(type==="multiple")return t("multipleChoice");
   if(type==="judge")return t("judgeQuestion");
   if(type==="fill")return t("fillQuestion");
+  if(type==="reading")return t("readingQuestion");
+  if(type==="short")return t("shortAnswer");
+  if(type==="essay")return t("essayQuestion");
   return t("singleChoice");
 }
 
@@ -607,7 +653,8 @@ function saveAudioConfirmedUsers(){try{localStorage.setItem(AUDIO_CONFIRMED_KEY,
 function markDirty(){state.dirty=true;refreshDirtyBadge();}
 function markClean(){state.dirty=false;refreshDirtyBadge();}
 function refreshDirtyBadge(){const b=$("dirtyBadge");if(!b)return;b.style.display=state.dirty?"inline-flex":"none";const span=$("dirtyText");if(span)span.textContent=t("dirtyBadge");}
-function t(key,...args){let str=I18N[key]||key;args.forEach((arg,i)=>{str=str.split("{"+i+"}").join(String(arg));});return str;}
+function normalizeLang(code){return "zh";}
+function t(key,...args){let str=I18N.zh[key]||key;args.forEach((arg,i)=>{str=str.split("{"+i+"}").join(String(arg));});return str;}
 function showToast(msg,type){const el=$("toast");el.textContent=msg;el.classList.remove("warn","success");if(type==="warn")el.classList.add("warn");else if(type==="success")el.classList.add("success");el.classList.add("show");clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>el.classList.remove("show"),2200);}
 function warnThrottled(msg){const now=Date.now();if(now-state.lastWarn<1500)return;state.lastWarn=now;showToast(msg,"warn");}
 function applyTheme(){document.body.classList.toggle("light",state.currentTheme==="light");}
@@ -615,37 +662,18 @@ function formatLocalDateTime(date){const pad=(n)=>String(n).padStart(2,"0");retu
 function normalizeDateTime(s){if(!s)return "";if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(s))return s.slice(0,16);const d=new Date(s);if(isNaN(d))return "";return formatLocalDateTime(d);}
 function setCustomSelect(id,value){const el=$(id);if(!el)return;el.dataset.value=value;const label=el.querySelector(".custom-select-label");const opt=el.querySelector('.custom-select-option[data-value="'+value+'"]');if(label&&opt)label.textContent=opt.textContent;el.querySelectorAll(".custom-select-option").forEach((o)=>{o.classList.toggle("selected",o.dataset.value===value);});}
 function refreshThemeLabels(){const el=$("themeSelect");if(!el)return;const opts=el.querySelectorAll(".custom-select-option");if(opts[0])opts[0].textContent=t("themeDark");if(opts[1])opts[1].textContent=t("themeLight");setCustomSelect("themeSelect",state.currentTheme);}
-function initCustomSelects(){
-  const sel=$("themeSelect");
-  if(!sel)return;
-  const btn=sel.querySelector(".custom-select-btn");
-  if(btn){btn.onclick=(e)=>{e.stopPropagation();sel.classList.toggle("open");};}
-  sel.querySelectorAll(".custom-select-option").forEach((opt)=>{
-    opt.onclick=(e)=>{
-      e.stopPropagation();
-      sel.classList.remove("open");
-      const val=opt.dataset.value;
-      setCustomSelect("themeSelect",val);
-      if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){
-        setCustomSelect("themeSelect",state.currentTheme);
-        showToast(t("disabledByAdmin"),"warn");
-        return;
-      }
-      state.currentTheme=val;
-      state.appData.settings.theme=val;
-      applyTheme();
-      markDirty();
-    };
-  });
-  document.addEventListener("click",()=>{sel.classList.remove("open");});
-}
+function initCustomSelects(){document.querySelectorAll(".custom-select").forEach((sel)=>{const btn=sel.querySelector(".custom-select-btn");if(btn){btn.onclick=(e)=>{e.stopPropagation();document.querySelectorAll(".custom-select").forEach((s)=>{if(s!==sel)s.classList.remove("open");});sel.classList.toggle("open");};}sel.querySelectorAll(".custom-select-option").forEach((opt)=>{opt.onclick=(e)=>{e.stopPropagation();sel.classList.remove("open");const val=opt.dataset.value;setCustomSelect(sel.id,val);if(sel.id==="themeSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("themeSelect",state.currentTheme);showToast(t("disabledByAdmin"),"warn");return;}state.currentTheme=val;state.appData.settings.theme=val;applyTheme();markDirty();}};});});document.addEventListener("click",()=>{document.querySelectorAll(".custom-select").forEach((s)=>s.classList.remove("open"));});}
 
 function applyLang(){
+  state.currentLang=normalizeLang(state.currentLang);
   document.documentElement.lang="zh-CN";
+  const adminNameEl=$("adminNameDisplay");
+  if(adminNameEl)adminNameEl.textContent=state.appData.admin.name||"管理员";
   document.title=t("headerTitle");
-  const map={headerTitle:"headerTitle",userSectionLabel:"userSectionLabel",userRoleDisplay:"userRoleStudent",adminRoleDisplay:"userRoleAdmin",adminSectionLabel:"adminSectionLabel",settingsLabel:"settingsLabel",themeLabel:"themeLabel",importTitle:"importTitle",importDesc:"importDesc",importBtnLabel:"importBtn",btnNewData:"newDataBtn",btnReImport:"reImportBtn",btnAdminImport:"importBtn",btnClearData:"clearDataBtn",statQuestionsLabel:"statQuestionsLabel",statUsersLabel:"statUsersLabel",statScoreLabel:"statScoreLabel",statDurationLabel:"statDurationLabel",actQuestionsTitle:"actQuestionsTitle",actQuestionsDesc:"actQuestionsDesc",actUsersTitle:"actUsersTitle",actUsersDesc:"actUsersDesc",actSettingsTitle:"actSettingsTitle",actSettingsDesc:"actSettingsDesc",actExportTitle:"actExportTitle",actExportDesc:"actExportDesc",userWelcomeTitle:"userWelcomeTitle",userWelcomeDesc:"userWelcomeDesc",btnStartQuiz:"startQuiz",btnGuestQuiz:"guestQuiz",btnSubmit:"submit",btnExitQuiz:"exitQuiz",waitingTitle:"examReady",waitingDesc:"waitingExamDesc",btnCancelWaiting:"cancelWaiting",fullscreenTitle:"fullscreenTitle",btnEnterFullscreen:"enterFullscreen",btnCancelFullscreen:"cancelFullscreen"};
+  const map={headerTitle:"headerTitle",userSectionLabel:"userSectionLabel",userRoleDisplay:"userRoleStudent",adminRoleDisplay:"userRoleAdmin",adminSectionLabel:"adminSectionLabel",settingsLabel:"settingsLabel",themeLabel:"themeLabel",languageLabel:"languageLabel",importTitle:"importTitle",importDesc:"importDesc",importBtnLabel:"importBtn",btnNewData:"newDataBtn",btnReImport:"reImportBtn",btnAdminImport:"importBtn",btnClearData:"clearDataBtn",statQuestionsLabel:"statQuestionsLabel",statUsersLabel:"statUsersLabel",statScoreLabel:"statScoreLabel",statDurationLabel:"statDurationLabel",actQuestionsTitle:"actQuestionsTitle",actQuestionsDesc:"actQuestionsDesc",actUsersTitle:"actUsersTitle",actUsersDesc:"actUsersDesc",actSettingsTitle:"actSettingsTitle",actSettingsDesc:"actSettingsDesc",actExportTitle:"actExportTitle",actExportDesc:"actExportDesc",userWelcomeTitle:"userWelcomeTitle",userWelcomeDesc:"userWelcomeDesc",btnStartQuiz:"startQuiz",btnGuestQuiz:"guestQuiz",btnSubmit:"submit",btnExitQuiz:"exitQuiz",waitingTitle:"examReady",waitingDesc:"waitingExamDesc",btnCancelWaiting:"cancelWaiting",fullscreenTitle:"fullscreenTitle",btnEnterFullscreen:"enterFullscreen",btnCancelFullscreen:"cancelFullscreen"};
   Object.entries(map).forEach(([id,key])=>{const el=$(id);if(el)el.textContent=t(key);});
   refreshThemeLabels();
+  
   updateRoleUI();
   updateStats();
   refreshDirtyBadge();
@@ -655,7 +683,7 @@ function toNum(v,def){const n=parseInt(v);return isNaN(n)?def:n;}
 function updateStats(){$("statQuestions").textContent=state.appData.questions.length;$("statUsers").textContent=state.appData.users.length;$("statScore").textContent=state.appData.settings.totalScore;const dur=state.appData.settings.examDuration;$("statDuration").textContent=dur>0?dur+" "+t("minutes"):t("examDurationUnlimited");}
 function updateRoleUI(){const isAdmin=state.currentUser==="admin";$("userCard").classList.toggle("active",!isAdmin);$("adminCard").classList.toggle("active",isAdmin);const canCustom=isAdmin||!state.appData.settings.disableCustom;$("themeSelect").classList.toggle("disabled",!canCustom);$("adminActions").style.display=isAdmin?"flex":"none";const newBtn=$("btnNewData");if(newBtn)newBtn.style.display=isAdmin?"inline-flex":"none";const reImportBtn=$("btnReImport");if(reImportBtn)reImportBtn.style.display=isAdmin?"none":"inline-flex";if(!state.quiz.active&&!$("resultArea").classList.contains("active")){if(isAdmin){$("adminView").style.display="flex";$("userView").style.display="none";$("quizArea").classList.remove("active");}else{$("adminView").style.display="none";$("userView").style.display="flex";$("quizArea").classList.remove("active");}}const guestBtn=$("btnGuestQuiz");if(guestBtn)guestBtn.style.display=(state.appData.settings.allowGuest&&!isAdmin)?"inline-flex":"none";}
 function openModal(html,closable){state.modalClosable=closable!==false;$("modalContent").innerHTML=html;$("modalOverlay").classList.add("open");}
-function closeModal(){state.modalClosable=true;$("modalOverlay").classList.remove("open");$("modalContent").innerHTML="";}
+function closeModal(){stopAllMedia();state.modalClosable=true;$("modalOverlay").classList.remove("open");$("modalContent").innerHTML="";}
 function confirmDialog(title,message,okText,cancelText,onOk){
   const overlay=$("confirmOverlay");
   const content=$("confirmContent");
@@ -677,7 +705,9 @@ function normalizeQuestion(q){
     type=Array.isArray(q.correct)?"multiple":"single";
   }
   let correct;
-  if(type==="fill"){
+  if(isSubjectiveType(type)){
+    correct=null;
+  }else if(type==="fill"){
     if(Array.isArray(q.correct)){
       correct=q.correct.map((x)=>String(x==null?"":x).trim());
     }else{
@@ -692,7 +722,7 @@ function normalizeQuestion(q){
     const n=Number(q.correct);
     correct=isNaN(n)?0:n;
   }
-  return {_id:q._id||newId(),title:q.title||"",image:q.image||"",audio:q.audio||"",options:Array.isArray(q.options)?q.options.slice():[],type,correct,explanation:q.explanation||""};
+  return {_id:q._id||newId(),title:q.title||"",image:q.image||"",audio:q.audio||"",audioText:q.audioText||"",options:Array.isArray(q.options)?q.options.slice():[],type,correct,explanation:q.explanation||""};
 }
 
 function getQuestions(){return state.appData.questions;}
@@ -703,6 +733,7 @@ function checkExamTimeWindow(){const startTime=getExamStartTime();if(startTime==
 function verifyImportedUsers(users){let regenCount=0;users.forEach((u)=>{if(needsVerifyCode(u.uid)){const expected=generateVerifyCode(u.uid);if(!u.verifyCode||u.verifyCode!==expected){u.verifyCode=expected;regenCount++;}}});return regenCount;}
 
 function isAnswerCorrect(userAns,correct,type){
+  if(isSubjectiveType(type))return false;
   if(type==="fill"){
     const cArr=Array.isArray(correct)?correct:[String(correct==null?"":correct)];
     const uArr=Array.isArray(userAns)?userAns:[String(userAns==null?"":userAns)];
@@ -729,6 +760,7 @@ function isAnswerCorrect(userAns,correct,type){
 }
 
 function formatAnswer(correct,type){
+  if(isSubjectiveType(type))return String(correct==null?"":correct);
   if(type==="fill"){
     const arr=Array.isArray(correct)?correct:[correct];
     return arr.map((a)=>'"'+String(a==null?"":a)+'"').join(", ");
@@ -751,12 +783,14 @@ function exportStudentResult(){
     const answers=state.quiz.answers;
     const showDetail=state.appData.settings.showAnswer;
     const details=qs.map((q,i)=>{
-      const base={type:q.type,title:q.title,isCorrect:isAnswerCorrect(answers[i],q.correct,q.type)};
-      if(showDetail){
-        base.correct=q.correct;
+      const subjective=isSubjectiveType(q.type);
+      const base={type:q.type,title:q.title,isCorrect:subjective?null:isAnswerCorrect(answers[i],q.correct,q.type)};
+      if(subjective||showDetail){
         base.userAnswer=answers[i];
-        if(q.explanation)base.explanation=q.explanation;
+        if(!subjective&&showDetail)base.correct=q.correct;
+        if(showDetail&&q.explanation)base.explanation=q.explanation;
       }
+      if(subjective)base.subjective=true;
       return base;
     });
     const data={name:user.name,uid:user.uid,verifyCode:user.verifyCode||"",gender:user.gender,subject:state.appData.settings.subject,examTitle:state.appData.settings.examTitle,examSubtitle:state.appData.settings.examSubtitle,details:details};
@@ -783,14 +817,17 @@ function loadData(data){
   state.appData.settings.examQuestionCount=Math.max(0,toNum(merged.examQuestionCount,0));
   state.appData.settings.uidLength=UID_LENGTH_OPTIONS.indexOf(toNum(merged.uidLength,18))>=0?toNum(merged.uidLength,18):18;
   state.appData.settings.examStartTime=normalizeDateTime(merged.examStartTime);
+  state.appData.settings.language=normalizeLang(merged.language);
   state.appData.settings.examTitle=String(merged.examTitle||"");
   state.appData.settings.examSubtitle=String(merged.examSubtitle||"");
   state.appData.settings.typeOrder=normalizeTypeOrder(merged.typeOrder);
-  state.appData.settings.typeQuotas={single:Math.max(0,toNum((merged.typeQuotas||{}).single,0)),multiple:Math.max(0,toNum((merged.typeQuotas||{}).multiple,0)),judge:Math.max(0,toNum((merged.typeQuotas||{}).judge,0)),fill:Math.max(0,toNum((merged.typeQuotas||{}).fill,0))};
-  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&(q.type==="fill"||q.type==="judge"||(Array.isArray(q.options)&&q.options.length>0))).map(normalizeQuestion):[];
+  state.appData.settings.typeQuotas={single:Math.max(0,toNum((merged.typeQuotas||{}).single,0)),multiple:Math.max(0,toNum((merged.typeQuotas||{}).multiple,0)),judge:Math.max(0,toNum((merged.typeQuotas||{}).judge,0)),fill:Math.max(0,toNum((merged.typeQuotas||{}).fill,0)),reading:Math.max(0,toNum((merged.typeQuotas||{}).reading,0)),short:Math.max(0,toNum((merged.typeQuotas||{}).short,0)),essay:Math.max(0,toNum((merged.typeQuotas||{}).essay,0))};
+  state.appData.settings.audioDictation=merged.audioDictation!==false;
+  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&(q.type==="fill"||q.type==="judge"||isSubjectiveType(q.type)||(Array.isArray(q.options)&&q.options.length>0))).map(normalizeQuestion):[];
   state.appData.users=Array.isArray(data.users)?data.users.filter((u)=>u&&u.uid).map((u)=>({_id:newId(),name:u.name||"",gender:u.gender||"other",uid:u.uid,verifyCode:u.verifyCode||""})):[];
   const regenCount=verifyImportedUsers(state.appData.users);
   state.currentTheme=state.appData.settings.theme||"dark";
+  state.currentLang="zh";
   state.quiz.active=false;
   state.quiz.answers=[];
   state.quiz.questions=[];
@@ -814,14 +851,44 @@ function loadData(data){
 function showExpiredExamModal(){openModal('<h2>'+t("examEndedTitle")+'</h2><p style="font-size:14px;color:var(--text-2);line-height:1.6">'+t("examEndedDesc")+'</p><div class="modal-actions"><button class="btn btn-secondary" id="expClose">'+t("close")+'</button><button class="btn btn-primary" id="expImport">'+t("importNewExam")+'</button></div>',false);$("expClose").onclick=()=>closeModal();$("expImport").onclick=()=>{closeModal();$("fileInput").click();};}
 function importDataFromFile(file){if(!file)return;const reader=new FileReader();reader.onerror=()=>showToast(t("importFail"),"warn");reader.onload=(e)=>{try{const fn=new Function(e.target.result+"\nreturn (typeof window!=='undefined'&&window.APP_DATA)?window.APP_DATA:null;");const data=fn();if(!data||!Array.isArray(data.questions))throw new Error("invalid");loadData(data);showToast(t("importSuccess"),"success");}catch(err){showToast(t("importFail"),"warn");}};reader.readAsText(file);}
 function createNewData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}const doCreate=()=>{loadData({admin:state.appData.admin,settings:state.appData.settings,questions:[],users:[]});showToast(t("newDataCreated"),"success");};if(state.dirty){confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),doCreate);}else{doCreate();}}
-function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"管理员",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentUser="user";state.qFilter="all";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
+function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"管理员",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentLang="zh";state.currentUser="user";state.qFilter="all";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
+
+function sampleByGroup(groups,typeOrder,limit){
+  const total=typeOrder.reduce((s,tp)=>s+(groups[tp]?groups[tp].length:0),0);
+  if(total<=limit){
+    let out=[];
+    typeOrder.forEach((tp)=>{if(groups[tp])out=out.concat(groups[tp]);});
+    return out;
+  }
+  const quotas={};
+  let allocated=0;
+  typeOrder.forEach((tp)=>{
+    const cnt=groups[tp]?groups[tp].length:0;
+    quotas[tp]=Math.floor(limit*cnt/total);
+    allocated+=quotas[tp];
+  });
+  let remain=limit-allocated;
+  while(remain>0){
+    let picked=false;
+    for(let i=0;i<typeOrder.length&&remain>0;i++){
+      const tp=typeOrder[i];
+      if(quotas[tp]<(groups[tp]?groups[tp].length:0)){quotas[tp]++;remain--;picked=true;}
+    }
+    if(!picked)break;
+  }
+  let out=[];
+  typeOrder.forEach((tp)=>{
+    if(groups[tp])out=out.concat(groups[tp].slice(0,quotas[tp]));
+  });
+  return out;
+}
 
 function buildSessionQuestions(){
   const typeOrder=getTypeOrder();
   const base=state.appData.questions.map((q)=>{
     const norm=normalizeQuestion(q);
     const correct=norm.type==="multiple"?[...norm.correct]:norm.type==="fill"?[...norm.correct]:norm.correct;
-    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,options:norm.options.slice(),type:norm.type,correct,explanation:norm.explanation||""};
+    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,audioText:norm.audioText,options:norm.options.slice(),type:norm.type,correct,explanation:norm.explanation||""};
   });
   const groups={};
   typeOrder.forEach((tp)=>{groups[tp]=[];});
@@ -859,16 +926,42 @@ function buildSessionQuestions(){
       }else{
         newCorrect=opts.findIndex((o)=>o.isCorrect);
       }
-      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,type:q.type,options:opts.map((o)=>o.text),correct:newCorrect,explanation:q.explanation||""};
+      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,audioText:q.audioText,type:q.type,options:opts.map((o)=>o.text),correct:newCorrect,explanation:q.explanation||""};
     });
   }
   return qs;
 }
 
 function initQuizAnswer(q){
+  if(isSubjectiveType(q.type))return "";
   if(q.type==="multiple")return [];
   if(q.type==="fill")return new Array(q.correct.length).fill("");
   return null;
+}
+
+function extractSvgMarkup(image){
+  const raw=String(image==null?"":image);
+  const start=raw.search(/<svg[\s>]/i);
+  if(start<0)return "";
+  let svg=raw.slice(start);
+  const end=svg.toLowerCase().lastIndexOf("</svg>");
+  if(end>=0)svg=svg.slice(0,end+6);
+  else svg+="</svg>";
+  const firstTagEnd=svg.indexOf(">");
+  if(firstTagEnd>=0&&!/\sxmlns\s*=/.test(svg.slice(0,firstTagEnd+1))){
+    svg=svg.replace(/<svg/i,'<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  return svg;
+}
+
+function buildQuestionImageHtml(image){
+  const raw=String(image==null?"":image).trim();
+  if(!raw)return "";
+  if(/^data:image\//i.test(raw))return '<img class="card-image" src="'+esc(raw)+'" alt="">';
+  if(/^<img[\s>]/i.test(raw))return '<div class="card-image-wrap">'+raw+'</div>';
+  const svg=extractSvgMarkup(raw);
+  if(svg)return '<div class="card-image svg-image">'+svg+'</div>';
+  return '<img class="card-image" src="'+esc(raw)+'" alt="">';
 }
 
 function renderQuizCards(){
@@ -883,16 +976,14 @@ function renderQuizCards(){
     card.className="card"+(i===state.quiz.currentIndex?" active":"");
     const htmlParts=[];
     if(q.image){
-      const trimmedImg=String(q.image).trim();
-      const isSvg=trimmedImg.length>=4&&trimmedImg.slice(0,4)==="<svg";
-      if(isSvg){
-        htmlParts.push('<div class="card-image">'+trimmedImg+'</div>');
-      }else{
-        htmlParts.push('<img class="card-image" src="'+esc(q.image)+'" alt="">');
-      }
+      const imageHtml=buildQuestionImageHtml(q.image);
+      if(imageHtml)htmlParts.push(imageHtml);
     }
     if(q.audio){
       htmlParts.push('<div class="card-audio"><audio controls preload="metadata" src="'+esc(q.audio)+'"></audio></div>');
+    }
+    if(q.audioText){
+      htmlParts.push('<div class="card-audio card-audio-text"><button type="button" class="btn btn-secondary audio-play-btn" data-q="'+i+'">'+t("playAudioText")+'</button><span class="audio-text-hint">'+t("audioTextLabel")+'</span></div>');
     }
     htmlParts.push('<div class="q-header"><div class="q-num">'+(i+1)+'</div><span>'+t("progress",i+1,state.quiz.questions.length)+'</span><span class="q-type">'+typeLabel(q.type)+'</span></div>');
     if(q.type==="fill"){
@@ -920,6 +1011,11 @@ function renderQuizCards(){
         list+='</div>';
         htmlParts.push(list);
       }
+    }else if(isSubjectiveType(q.type)){
+      const val=typeof state.quiz.answers[i]==="string"?state.quiz.answers[i]:"";
+      const rows=q.type==="essay"?10:(q.type==="reading"?8:5);
+      htmlParts.push('<div class="q-text'+(q.type==="reading"?" reading-passage":"")+'">'+esc(q.title)+'</div>');
+      htmlParts.push('<div class="subjective-box"><textarea class="subjective-input" data-q="'+i+'" rows="'+rows+'" placeholder="'+esc(t("subjectivePlaceholder"))+'">'+esc(val)+'</textarea><div class="subjective-meta" data-count="'+i+'">'+esc(t("charCount",val.length))+'</div></div>');
     }else{
       htmlParts.push('<div class="q-text">'+esc(q.title)+'</div>');
       if(q.type==="judge"){
@@ -967,6 +1063,31 @@ function renderQuizCards(){
       updateProgress();
     };
   });
+  container.querySelectorAll(".subjective-input").forEach((input)=>{
+    const qi=Number(input.dataset.q);
+    input.oninput=(e)=>{
+      state.quiz.answers[qi]=e.target.value;
+      const meta=container.querySelector('.subjective-meta[data-count="'+qi+'"]');
+      if(meta)meta.textContent=t("charCount",e.target.value.length);
+      updateProgress();
+    };
+  });
+  container.querySelectorAll(".audio-play-btn").forEach((btn)=>{
+    btn.onclick=()=>{
+      const qi=Number(btn.dataset.q);
+      const q=state.quiz.questions[qi];
+      if(!q||!q.audioText)return;
+      container.querySelectorAll("audio").forEach((a)=>{try{a.pause();}catch(_){}});
+      container.querySelectorAll(".audio-play-btn").forEach((b)=>{b.disabled=false;b.textContent=t("playAudioText");});
+      btn.disabled=true;
+      btn.textContent=t("audioPlaying");
+      playSpeech(q.audioText,()=>{
+        btn.disabled=false;
+        btn.textContent=t("playAudioText");
+      });
+    };
+  });
+  container.querySelectorAll("audio").forEach((a)=>{a.onplay=()=>stopSpeech();});
 }
 
 function handleOptionClick(el){
@@ -1024,6 +1145,8 @@ function updateProgress(){
     }else if(q.type==="fill"){
       const arr=Array.isArray(a)?a:[];
       if(arr.length===q.correct.length&&arr.every((x)=>String(x==null?"":x).trim().length>0))answered++;
+    }else if(isSubjectiveType(q.type)){
+      if(String(a==null?"":a).trim().length>0)answered++;
     }else{
       if(a!==null&&a!==undefined)answered++;
     }
@@ -1031,7 +1154,21 @@ function updateProgress(){
   $("progressText").textContent=t("progress",answered,total);
 }
 
-function updateQuizUI(){const cards=$("cardsContainer").querySelectorAll(".card");cards.forEach((card,i)=>card.classList.toggle("active",i===state.quiz.currentIndex));$("prevBtn").disabled=state.quiz.currentIndex===0;$("nextBtn").disabled=state.quiz.currentIndex>=state.quiz.questions.length-1;updateProgress();}
+function updateQuizUI(){
+  stopSpeech();
+  const cards=$("cardsContainer").querySelectorAll(".card");
+  cards.forEach((card,i)=>{
+    const active=i===state.quiz.currentIndex;
+    card.classList.toggle("active",active);
+    if(!active){
+      card.querySelectorAll("audio").forEach((a)=>{try{a.pause();}catch(_){}});
+      card.querySelectorAll(".audio-play-btn").forEach((btn)=>{btn.disabled=false;btn.textContent=t("playAudioText");});
+    }
+  });
+  $("prevBtn").disabled=state.quiz.currentIndex===0;
+  $("nextBtn").disabled=state.quiz.currentIndex>=state.quiz.questions.length-1;
+  updateProgress();
+}
 function formatTime(sec){const m=Math.floor(sec/60);const s=sec%60;return m+":"+String(s).padStart(2,"0");}
 function formatHMS(sec){const h=Math.floor(sec/3600);const m=Math.floor((sec%3600)/60);const s=sec%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
 
@@ -1055,6 +1192,7 @@ function isFullscreen(){return!!(document.fullscreenElement||document.webkitFull
 function requestFullscreenFlow(onSuccess){state.fullscreen.onSuccess=onSuccess;state.fullscreen.countdown=FULLSCREEN_TIMEOUT;state.fullscreen.active=true;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);$("fullscreenOverlay").classList.add("open");clearInterval(state.fullscreen.interval);state.fullscreen.interval=setInterval(()=>{if(isFullscreen()){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;$("fullscreenOverlay").classList.remove("open");if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}return;}state.fullscreen.countdown--;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);if(state.fullscreen.countdown<=0){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");showToast(t("fullscreenTimeout"),"warn");restartFlow();}},1000);}
 function cancelFullscreenFlow(){if(state.fullscreen.interval)clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");}
 function restartFlow(){
+  stopAllMedia();
   if(state.quiz.pendingAdvance){clearTimeout(state.quiz.pendingAdvance);state.quiz.pendingAdvance=null;}
   if(state.quiz.timerInterval){clearInterval(state.quiz.timerInterval);state.quiz.timerInterval=null;}
   if(state.quiz.waitInterval){clearInterval(state.quiz.waitInterval);state.quiz.waitInterval=null;}
@@ -1074,7 +1212,32 @@ function restartFlow(){
   applyLang();
 }
 function getAudioTestText(){const custom=state.appData.settings.audioTestText;if(custom&&custom.trim())return custom;return t("audioTestContent");}
-function playSpeech(text,onEnd){if(!window.speechSynthesis){showToast(t("playbackNotSupported"),"warn");if(onEnd)onEnd();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="zh-CN";u.rate=0.95;u.pitch=1;u.onend=()=>{if(onEnd)onEnd();};u.onerror=()=>{if(onEnd)onEnd();};window.speechSynthesis.speak(u);}
+function stopSpeech(){
+  speechToken++;
+  currentUtterance=null;
+  if(window.speechSynthesis){try{window.speechSynthesis.cancel();}catch(err){}}
+}
+function stopAllMedia(){
+  stopSpeech();
+  document.querySelectorAll("audio").forEach((a)=>{try{a.pause();}catch(err){}});
+  document.querySelectorAll(".audio-play-btn").forEach((btn)=>{btn.disabled=false;btn.textContent=t("playAudioText");});
+}
+function playSpeech(text,onEnd){
+  if(!window.speechSynthesis){showToast(t("playbackNotSupported"),"warn");if(onEnd)onEnd();return;}
+  stopSpeech();
+  const token=speechToken;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=/[\u3040-\u30ff\u3400-\u9fff]/.test(String(text||""))?"zh-CN":"en-US";
+  u.rate=0.95;
+  u.pitch=1;
+  u.onend=()=>{if(currentUtterance===u)currentUtterance=null;if(token===speechToken&&onEnd)onEnd();};
+  u.onerror=()=>{if(currentUtterance===u)currentUtterance=null;if(token===speechToken&&onEnd)onEnd();};
+  currentUtterance=u;
+  window.speechSynthesis.speak(u);
+}
+function normalizeAudioText(text){
+  return String(text==null?"":text).toLowerCase().replace(/[\s\p{P}\p{S}]/gu,"");
+}
 
 function showPreExamFlow(userInfo){
   if(state.appData.questions.length===0){showToast(t("noQuestionsWarning"),"warn");return;}
@@ -1117,16 +1280,51 @@ function showPreExamFlow(userInfo){
     $("preCancel").onclick=()=>{closeModal();restartFlow();};
   }
   function renderAudioStep(){
-    openModal('<h2>'+t("audioTestTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("audioTestDesc")+'</p><div class="audio-test-box"><button class="btn btn-secondary" id="playAudioBtn">'+t("audioTestPlay")+'</button><div class="audio-test-status" id="audioStatus"></div><button class="btn btn-primary" id="confirmAudioBtn" style="display:none">'+t("audioTestConfirm")+'</button></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button></div>',false);
-    const playBtn=$("playAudioBtn");const statusEl=$("audioStatus");const confirmBtn=$("confirmAudioBtn");
-    playBtn.onclick=()=>{playBtn.disabled=true;statusEl.textContent="...";playSpeech(getAudioTestText(),()=>{playBtn.disabled=false;statusEl.textContent="";confirmBtn.style.display="inline-flex";});};
+    const dictation=!!s.audioDictation;
+    const dictationHtml=dictation?'<div class="audio-dictation" id="audioDictation" style="display:none"><label>'+t("audioTranscriptLabel")+'</label><textarea id="audioTranscript" rows="3" placeholder="'+t("audioTranscriptPlaceholder")+'"></textarea><div class="audio-dictation-row"><button class="btn btn-secondary btn-sm" id="checkAudioBtn">'+t("audioCheckBtn")+'</button><span class="audio-check-status" id="audioCheckStatus"></span></div></div>':'';
+    openModal('<h2>'+t("audioTestTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("audioTestDesc")+'</p><div class="audio-test-box"><button class="btn btn-secondary" id="playAudioBtn">'+t("audioTestPlay")+'</button><div class="audio-test-status" id="audioStatus"></div>'+dictationHtml+'<button class="btn btn-primary" id="confirmAudioBtn" style="display:none">'+t("audioTestConfirm")+'</button></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button></div>',false);
+    const playBtn=$("playAudioBtn");
+    const statusEl=$("audioStatus");
+    const confirmBtn=$("confirmAudioBtn");
+    playBtn.onclick=()=>{
+      playBtn.disabled=true;
+      statusEl.textContent=t("audioPlaying");
+      confirmBtn.style.display="none";
+      if(dictation){$("audioDictation").style.display="none";$("audioCheckStatus").textContent="";}
+      playSpeech(getAudioTestText(),()=>{
+        playBtn.disabled=false;
+        statusEl.textContent="";
+        if(dictation){$("audioDictation").style.display="flex";$("audioTranscript").focus();}
+        else{confirmBtn.style.display="inline-flex";}
+      });
+    };
+    if(dictation){
+      const input=$("audioTranscript");
+      const checkStatus=$("audioCheckStatus");
+      const check=()=>{
+        const expected=normalizeAudioText(getAudioTestText());
+        const actual=normalizeAudioText(input.value);
+        if(!actual){showToast(t("audioDictationRequired"),"warn");input.focus();return;}
+        if(expected&&actual===expected){
+          checkStatus.textContent=t("audioCheckCorrect");
+          checkStatus.className="audio-check-status ok";
+          confirmBtn.style.display="inline-flex";
+        }else{
+          checkStatus.textContent=t("audioCheckWrong");
+          checkStatus.className="audio-check-status bad";
+          confirmBtn.style.display="none";
+        }
+      };
+      $("checkAudioBtn").onclick=check;
+      input.addEventListener("keydown",(e)=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();check();}});
+    }
     confirmBtn.onclick=()=>{if(userInfo){state.quiz.audioConfirmedUsers.add(userKey);saveAudioConfirmedUsers();}goNext();};
-    $("preCancel").onclick=()=>{closeModal();restartFlow();};
+    $("preCancel").onclick=()=>{stopAllMedia();closeModal();restartFlow();};
   }
   function renderInfoStep(){
     const avatarText=(userInfo.name||"?").charAt(0).toUpperCase();
     const genderKey=userInfo.gender==="male"?"male":userInfo.gender==="female"?"female":"other";
-    const examTime=s.examStartTime?new Date(s.examStartTime).toLocaleString("zh-CN"):t("startModeUnlimited");
+    const examTime=s.examStartTime?new Date(s.examStartTime).toLocaleString():t("startModeUnlimited");
     const dur=s.examDuration>0?s.examDuration+" "+t("minutes"):t("examDurationUnlimited");
     const subject=s.subject||t("unknown");
     openModal('<h2>'+t("candidateInfoTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("candidateInfoDesc")+'</p><div class="info-card"><div class="info-avatar">'+esc(avatarText)+'</div><div class="info-row"><span class="info-label">'+t("userName")+'</span><span class="info-value">'+esc(userInfo.name)+'</span></div><div class="info-row"><span class="info-label">'+t("uid")+'</span><span class="info-value selectable" style="font-family:ui-monospace,monospace;font-size:12px">'+esc(userInfo.uid)+'</span></div><div class="info-row"><span class="info-label">'+t("gender")+'</span><span class="info-value">'+t(genderKey)+'</span></div><div class="info-row"><span class="info-label">'+t("examSubject")+'</span><span class="info-value">'+esc(subject)+'</span></div><div class="info-row"><span class="info-label">'+t("examTime")+'</span><span class="info-value">'+esc(examTime)+'</span></div><div class="info-row"><span class="info-label">'+t("examDurationLabel")+'</span><span class="info-value">'+esc(dur)+'</span></div></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="confirmInfoBtn">'+t("startAfterConfirm")+'</button></div>',false);
@@ -1206,24 +1404,30 @@ function submitQuiz(timeUp){
         const arr=Array.isArray(a)?a:[];
         if(arr.length!==q.correct.length||arr.some((x)=>String(x==null?"":x).trim()===""))unanswered++;
       }
+      else if(isSubjectiveType(q.type)){if(String(a==null?"":a).trim()==="")unanswered++;}
       else{if(a===null||a===undefined)unanswered++;}
     });
     if(unanswered>0){showToast(t("mustAnswerAll"),"warn");return;}
   }
+  stopAllMedia();
   state.quiz.active=false;
   if(state.quiz.timerInterval){clearInterval(state.quiz.timerInterval);state.quiz.timerInterval=null;}
   $("timerDisplay").style.display="none";
   const total=state.quiz.questions.length;
+  const gradedTotal=state.quiz.questions.filter((q)=>!isSubjectiveType(q.type)).length;
+  const subjectiveTotal=total-gradedTotal;
   const totalScore=Math.max(1,toNum(state.appData.settings.totalScore,100));
   let correctCount=0;
-  state.quiz.questions.forEach((q,i)=>{if(isAnswerCorrect(state.quiz.answers[i],q.correct,q.type))correctCount++;});
-  const perScore=total>0?totalScore/total:0;
+  state.quiz.questions.forEach((q,i)=>{if(!isSubjectiveType(q.type)&&isAnswerCorrect(state.quiz.answers[i],q.correct,q.type))correctCount++;});
+  const perScore=gradedTotal>0?totalScore/gradedTotal:0;
   let finalScore=Math.round(correctCount*perScore);
   if(finalScore>totalScore)finalScore=totalScore;
   if(finalScore<0)finalScore=0;
   state.quiz.lastResult={
     correctCount:correctCount,
     total:total,
+    gradedTotal:gradedTotal,
+    subjectiveTotal:subjectiveTotal,
     score:finalScore,
     totalScore:totalScore,
     timeUp:timeUp,
@@ -1235,24 +1439,36 @@ function submitQuiz(timeUp){
   if(user)summaryHtml+='<div class="result-user">'+esc(user.name)+'</div>';
   summaryHtml+='<div class="result-label">'+(timeUp?t("timeUp")+" · ":"")+t("scoreLabel")+'</div>';
   summaryHtml+='<div class="result-score">'+finalScore+' / '+totalScore+'</div>';
-  summaryHtml+='<div class="result-sub">'+t("progressCorrect",correctCount,total)+'</div>';
+  if(gradedTotal>0)summaryHtml+='<div class="result-sub">'+t("progressCorrect",correctCount,gradedTotal)+'</div>';
+  if(subjectiveTotal>0)summaryHtml+='<div class="result-sub subjective-note">'+t("subjectivePending",subjectiveTotal)+'</div>';
   summaryHtml+='</div>';
   $("resultSummary").innerHTML=summaryHtml;
   let listHtml="";
   if(state.appData.settings.showAnswer){
     state.quiz.questions.forEach((q,i)=>{
       const userAns=state.quiz.answers[i];
-      const ok=isAnswerCorrect(userAns,q.correct,q.type);
+      const subjective=isSubjectiveType(q.type);
+      const ok=!subjective&&isAnswerCorrect(userAns,q.correct,q.type);
       let lines="";
-      const isEmpty=(q.type==="multiple")?(!Array.isArray(userAns)||userAns.length===0)
-                   :(q.type==="fill")?(!Array.isArray(userAns)||userAns.every((x)=>String(x==null?"":x).trim()===""))
-                   :(userAns===null||userAns===undefined);
-      if(isEmpty){
-        lines+='<div class="result-line wrong">'+t("notAnswered")+'</div>';
+      if(subjective){
+        const isEmpty=String(userAns==null?"":userAns).trim()==="";
+        if(isEmpty){
+          lines+='<div class="result-line wrong">'+t("notAnswered")+'</div>';
+        }else{
+          lines+='<div class="result-line neutral">'+t("yourAnswer",esc(formatAnswer(userAns,q.type)))+'</div>';
+        }
+        lines+='<div class="result-line neutral">'+t("subjectiveNotGraded")+'</div>';
       }else{
-        lines+='<div class="result-line '+(ok?"correct":"wrong")+'">'+t("yourAnswer",formatAnswer(userAns,q.type))+'</div>';
+        const isEmpty=(q.type==="multiple")?(!Array.isArray(userAns)||userAns.length===0)
+                     :(q.type==="fill")?(!Array.isArray(userAns)||userAns.every((x)=>String(x==null?"":x).trim()===""))
+                     :(userAns===null||userAns===undefined);
+        if(isEmpty){
+          lines+='<div class="result-line wrong">'+t("notAnswered")+'</div>';
+        }else{
+          lines+='<div class="result-line '+(ok?"correct":"wrong")+'">'+t("yourAnswer",esc(formatAnswer(userAns,q.type)))+'</div>';
+        }
+        if(!ok){lines+='<div class="result-line correct">'+t("correctAnswer",esc(formatAnswer(q.correct,q.type)))+'</div>';}
       }
-      if(!ok){lines+='<div class="result-line correct">'+t("correctAnswer",formatAnswer(q.correct,q.type))+'</div>';}
       if(q.explanation&&q.explanation.trim()){
         lines+='<div class="explanation-box"><div class="explanation-label">'+t("explanationLabel")+'</div><div class="explanation-text">'+esc(q.explanation)+'</div></div>';
       }
@@ -1324,7 +1540,8 @@ function exportResultImage(){
     if(showDetail){
       qs.forEach((q,i)=>{
         itemHeights+=70;
-        if(!isAnswerCorrect(answers[i],q.correct,q.type))itemHeights+=22;
+        if(isSubjectiveType(q.type))itemHeights+=22;
+        else if(!isAnswerCorrect(answers[i],q.correct,q.type))itemHeights+=22;
       });
     }
     const height=Math.max(600,headerHeight+itemHeights+padding+80);
@@ -1353,7 +1570,7 @@ function exportResultImage(){
     ctx.fillText(finalScore+" / "+totalScore,width/2,user?160:130);
     ctx.fillStyle=muted;
     ctx.font="500 16px "+fontCN;
-    ctx.fillText(t("progressCorrect",r.correctCount,r.total),width/2,user?195:165);
+    ctx.fillText(t("progressCorrect",r.correctCount,r.gradedTotal==null?r.total:r.gradedTotal),width/2,user?195:165);
     if(user){
       ctx.textAlign="left";
       ctx.fillStyle=muted;
@@ -1371,14 +1588,32 @@ function exportResultImage(){
       ctx.textAlign="left";
       qs.forEach((q,i)=>{
         const userAns=answers[i];
-        const ok=isAnswerCorrect(userAns,q.correct,q.type);
+        const subjective=isSubjectiveType(q.type);
+        const ok=!subjective&&isAnswerCorrect(userAns,q.correct,q.type);
         ctx.fillStyle=fg;
         ctx.font="600 16px "+fontCN;
-        let title=(i+1)+". "+q.title;
+        let title=(i+1)+". "+String(q.title||"").replace(/\s+/g," ");
         if(title.length>60)title=title.slice(0,60)+"...";
         ctx.fillText(title,padding,y);
         y+=24;
         ctx.font="500 13px "+fontCN;
+        if(subjective){
+          const ans=String(userAns==null?"":userAns).trim();
+          if(!ans){
+            ctx.fillStyle=danger;
+            ctx.fillText(t("notAnswered"),padding+20,y);
+          }else{
+            ctx.fillStyle=muted;
+            let txt=ans.replace(/\s+/g," ");
+            if(txt.length>50)txt=txt.slice(0,50)+"...";
+            ctx.fillText(t("yourAnswer",txt),padding+20,y);
+          }
+          y+=20;
+          ctx.fillStyle=muted;
+          ctx.fillText(t("subjectiveNotGraded"),padding+20,y);
+          y+=8;
+          return;
+        }
         const isEmpty=(q.type==="multiple")?(!Array.isArray(userAns)||userAns.length===0):(q.type==="fill")?(!Array.isArray(userAns)||userAns.every((x)=>String(x==null?"":x).trim()==="")):(userAns===null||userAns===undefined);
         if(isEmpty){
           ctx.fillStyle=danger;
@@ -1408,7 +1643,7 @@ function exportResultImage(){
     ctx.fillStyle=muted;
     ctx.font="500 11px "+fontCN;
     ctx.textAlign="right";
-    ctx.fillText("© "+new Date().getFullYear()+" fuey All Rights Reserved",width-padding,height-24);
+    ctx.fillText("© "+new Date().getFullYear()+" fuey 版权所有",width-padding,height-24);
     const url=canvas.toDataURL("image/png");
     const a=document.createElement("a");
     a.href=url;
@@ -1756,10 +1991,11 @@ function openQuestionWizard(){
     type:defaultType,
     image:"",
     audio:"",
+    audioText:"",
     title:"",
     optionCount:4,
     options:["","","",""],
-    correct: defaultType==="fill" ? [""] : [0],
+    correct: defaultType==="fill" ? [""] : (isSubjectiveType(defaultType) ? null : [0]),
     includeImage:false,
     includeAudio:false,
     includeExplanation:false,
@@ -1798,14 +2034,16 @@ function renderWizard(){
       const blankCount=countBlanks(w.title);
       const hintText=blankCount===0?t("blankHintEmpty"):t("blankHint",blankCount);
       const hintCls=blankCount===0?"":" has-blanks";
-      html+='<div class="form-group"><label>'+t("questionText")+'</label><div class="title-input-wrap"><input id="wTitle" value="'+esc(w.title||"")+'" placeholder="'+t("fillPlaceholder")+'"><button type="button" class="add-blank-btn" id="wAddBlank" title="'+t("addBlankBtn")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div><div class="blank-hint'+hintCls+'" id="wBlankHint">'+hintText+'</div></div>';
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><div class="title-input-wrap"><textarea id="wTitle" rows="3" placeholder="'+t("fillPlaceholder")+'">'+esc(w.title||"")+'</textarea><button type="button" class="add-blank-btn" id="wAddBlank" title="'+t("addBlankBtn")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div><div class="blank-hint'+hintCls+'" id="wBlankHint">'+hintText+'</div></div>';
+    }else if(isSubjectiveType(w.type)){
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><textarea id="wTitle" rows="6" placeholder="'+t("subjectiveTitleHint")+'">'+esc(w.title||"")+'</textarea></div>';
     }else{
-      html+='<div class="form-group"><label>'+t("questionText")+'</label><input id="wTitle" value="'+esc(w.title||"")+'"></div>';
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><textarea id="wTitle" rows="3">'+esc(w.title||"")+'</textarea></div>';
     }
     html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeImage"'+(w.includeImage?" checked":"")+'><span>'+t("toggleImage")+'</span></div>';
     html+='<div class="form-group" id="wImageGroup" style="display:'+(w.includeImage?"flex":"none")+'"><label>'+t("addImage")+'</label><textarea id="wImage" placeholder="'+t("questionImageHint")+'">'+esc(w.image||"")+'</textarea></div>';
     html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeAudio"'+(w.includeAudio?" checked":"")+'><span>'+t("toggleAudio")+'</span></div>';
-    html+='<div class="form-group" id="wAudioGroup" style="display:'+(w.includeAudio?"flex":"none")+'"><label>'+t("addAudio")+'</label><input id="wAudio" type="text" placeholder="'+t("audioHint")+'" value="'+esc(w.audio||"")+'"></div>';
+    html+='<div class="form-group" id="wAudioGroup" style="display:'+(w.includeAudio?"flex":"none")+'"><label>'+t("addAudio")+'</label><input id="wAudio" type="text" placeholder="'+t("audioHint")+'" value="'+esc(w.audio||"")+'"><label>'+t("audioTextLabel")+'</label><textarea id="wAudioText" rows="3" placeholder="'+t("audioTextHint")+'">'+esc(w.audioText||"")+'</textarea></div>';
     html+='<div class="checkbox-row"><input type="checkbox" id="wIncludeExplanation"'+(w.includeExplanation?" checked":"")+'><span>'+t("toggleExplanation")+'</span></div>';
     html+='<div class="form-group" id="wExplanationGroup" style="display:'+(w.includeExplanation?"flex":"none")+'"><label>'+t("explanationLabel")+'</label><textarea id="wExplanation" placeholder="'+t("explanationPlaceholder")+'">'+esc(w.explanation||"")+'</textarea></div>';
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="wNext">'+t("next")+'</button></div>';
@@ -1820,7 +2058,7 @@ function renderWizard(){
     html+='</div>';
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="wNext">'+t("next")+'</button></div>';
   }else{
-    html+='<h3>'+(w.type==="fill"?t("step3Fill"):t("step3"))+'</h3>';
+    html+='<h3>'+(w.type==="fill"?t("step3Fill"):(isSubjectiveType(w.type)?t("step3Subjective"):t("step3")))+'</h3>';
     if(w.type==="multiple"){
       html+='<div class="form-group"><label>'+t("correctOptions")+'</label><div id="wCorrectBox">';
       for(let i=0;i<w.optionCount;i++){
@@ -1853,6 +2091,8 @@ function renderWizard(){
         html+='<div class="blank-answer-row"><span class="blank-index">'+esc(t("blankAnswerLabel",i+1))+'</span><input type="text" id="wBlank_'+i+'" value="'+esc(w.blankAnswers[i]||"")+'" placeholder="'+esc(t("blankAnswerHint"))+'"></div>';
       }
       html+='</div></div>';
+    }else if(isSubjectiveType(w.type)){
+      html+='<div class="subjective-note">'+t("subjectiveNoAnswer")+'</div>';
     }else{
       html+='<div class="form-group"><label>'+t("correctOption")+'</label><div class="radio-row" id="wCorrectGroup" style="flex-direction:column;gap:6px">';
       for(let i=0;i<w.optionCount;i++){
@@ -1872,10 +2112,12 @@ function renderWizard(){
         if($("wTitle"))w.title=$("wTitle").value;
         if($("wImage"))w.image=$("wImage").value;
         if($("wAudio"))w.audio=$("wAudio").value;
+        if($("wAudioText"))w.audioText=$("wAudioText").value;
         if($("wExplanation"))w.explanation=$("wExplanation").value;
         const oldType=w.type;
         w.type=radio.value;
         if(w.type==="fill"&&oldType!=="fill"){w.correct=[""];w.blankAnswers=[];}
+        else if(isSubjectiveType(w.type)){w.correct=null;w.blankAnswers=[];}
         else if(w.type==="single"||w.type==="multiple"){w.correct=[0];}
         else if(w.type==="judge"){w.correct=[0];}
         renderWizard();
@@ -1909,6 +2151,7 @@ function renderWizard(){
       w.title=title;
       w.image=w.includeImage?$("wImage").value.trim():"";
       w.audio=w.includeAudio?$("wAudio").value.trim():"";
+      w.audioText=w.includeAudio?$("wAudioText").value.trim():"";
       w.explanation=w.includeExplanation?$("wExplanation").value.trim():"";
       if(w.type==="single"||w.type==="multiple"){
         if(w.options.length<w.optionCount)w.options=Array.from({length:w.optionCount},(_,i)=>w.options[i]||"");
@@ -1978,7 +2221,9 @@ function renderWizard(){
     $("wSave").onclick=()=>{
       collectOptions();
       let finalCorrect;
-      if(w.type==="multiple"){
+      if(isSubjectiveType(w.type)){
+        finalCorrect=null;
+      }else if(w.type==="multiple"){
         const arr=[];
         document.querySelectorAll("[data-correct]").forEach((c)=>{if(c.checked)arr.push(Number(c.dataset.correct));});
         if(arr.length===0){showToast(t("correctOptions"),"warn");return;}
@@ -2009,6 +2254,7 @@ function renderWizard(){
         title:w.title,
         image:w.image||"",
         audio:w.audio||"",
+        audioText:w.audioText||"",
         options:optionsToSave,
         correct:finalCorrect,
         explanation:w.includeExplanation?(w.explanation||""):""
@@ -2115,10 +2361,13 @@ function openAdminSettings(){
   const quotaMultipleVal=Math.max(0,toNum(_q.multiple,0));
   const quotaJudgeVal=Math.max(0,toNum(_q.judge,0));
   const quotaFillVal=Math.max(0,toNum(_q.fill,0));
+  const quotaReadingVal=Math.max(0,toNum(_q.reading,0));
+  const quotaShortVal=Math.max(0,toNum(_q.short,0));
+  const quotaEssayVal=Math.max(0,toNum(_q.essay,0));
   const examTitle=s.examTitle||"";
   const examSubtitle=s.examSubtitle||"";
   const customGroupDisplay=(startMode==="custom"||startMode==="now")?"flex":"none";
-  openModal('<h2>'+t("adminSettings")+'</h2><h3>'+t("basicSettings")+'</h3><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><div class="form-group"><label>'+t("examTitleLabel")+'</label><input id="asExamTitle" value="'+esc(examTitle)+'" placeholder="'+t("examTitlePlaceholder")+'"></div><div class="form-group"><label>'+t("examSubtitleLabel")+'</label><input id="asExamSubtitle" value="'+esc(examSubtitle)+'" placeholder="'+t("examSubtitlePlaceholder")+'"></div><button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><h3>'+t("examSettings")+'</h3><div class="form-group"><label>'+t("examStartMode")+'</label><div class="radio-row" id="asStartModeGroup">'+startModeRadios+'</div></div><div class="form-group" id="asStartCustomGroup" style="display:'+customGroupDisplay+'"><label>'+t("examStartMode")+'</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"></div><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div><h3>'+t("typeQuotasSection")+'</h3><div class="form-row"><div class="form-group"><label>'+t("quotaSingle")+'</label><input id="asQuotaSingle" type="number" min="0" value="'+quotaSingleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaMultiple")+'</label><input id="asQuotaMultiple" type="number" min="0" value="'+quotaMultipleVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaJudge")+'</label><input id="asQuotaJudge" type="number" min="0" value="'+quotaJudgeVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaFill")+'</label><input id="asQuotaFill" type="number" min="0" value="'+quotaFillVal+'" placeholder="0"></div></div><p style="font-size:11px;color:var(--text-3);margin-top:-6px">'+t("quotaHint")+'</p><h3>'+t("uidSettings")+'</h3><div class="radio-row">'+uidRadios+'</div><h3>'+t("noticeSettings")+'</h3><div class="form-group"><textarea id="asNotice" rows="5" placeholder="'+t("noticePlaceholder")+'">'+esc(noticeText)+'</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">'+t("noticePreset")+'</button></div><h3>'+t("audioSettings")+'</h3><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="3" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><h3>'+t("featureSettings")+'</h3><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asDisableCustom"'+(s.disableCustom?" checked":"")+'><span>'+t("disableCustom")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRequireAll"'+(s.requireAll?" checked":"")+'><span>'+t("requireAll")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asShowAnswer"'+(s.showAnswer?" checked":"")+'><span>'+t("showAnswer")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomQ"'+(s.randomQuestions?" checked":"")+'><span>'+t("randomQuestions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomO"'+(s.randomOptions?" checked":"")+'><span>'+t("randomOptions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"'+(s.allowStudentExport?" checked":"")+'><span>'+t("allowStudentExport")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
+  openModal('<h2>'+t("adminSettings")+'</h2><h3>'+t("basicSettings")+'</h3><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><div class="form-group"><label>'+t("examTitleLabel")+'</label><input id="asExamTitle" value="'+esc(examTitle)+'" placeholder="'+t("examTitlePlaceholder")+'"></div><div class="form-group"><label>'+t("examSubtitleLabel")+'</label><input id="asExamSubtitle" value="'+esc(examSubtitle)+'" placeholder="'+t("examSubtitlePlaceholder")+'"></div><button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><h3>'+t("examSettings")+'</h3><div class="form-group"><label>'+t("examStartMode")+'</label><div class="radio-row" id="asStartModeGroup">'+startModeRadios+'</div></div><div class="form-group" id="asStartCustomGroup" style="display:'+customGroupDisplay+'"><label>'+t("examStartMode")+'</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"></div><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div><h3>'+t("typeQuotasSection")+'</h3><div class="form-row"><div class="form-group"><label>'+t("quotaSingle")+'</label><input id="asQuotaSingle" type="number" min="0" value="'+quotaSingleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaMultiple")+'</label><input id="asQuotaMultiple" type="number" min="0" value="'+quotaMultipleVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaJudge")+'</label><input id="asQuotaJudge" type="number" min="0" value="'+quotaJudgeVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaFill")+'</label><input id="asQuotaFill" type="number" min="0" value="'+quotaFillVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaReading")+'</label><input id="asQuotaReading" type="number" min="0" value="'+quotaReadingVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaShort")+'</label><input id="asQuotaShort" type="number" min="0" value="'+quotaShortVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaEssay")+'</label><input id="asQuotaEssay" type="number" min="0" value="'+quotaEssayVal+'" placeholder="0"></div></div><p style="font-size:11px;color:var(--text-3);margin-top:-6px">'+t("quotaHint")+'</p><h3>'+t("uidSettings")+'</h3><div class="radio-row">'+uidRadios+'</div><h3>'+t("noticeSettings")+'</h3><div class="form-group"><textarea id="asNotice" rows="5" placeholder="'+t("noticePlaceholder")+'">'+esc(noticeText)+'</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">'+t("noticePreset")+'</button></div><h3>'+t("audioSettings")+'</h3><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="3" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><h3>'+t("featureSettings")+'</h3><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asDisableCustom"'+(s.disableCustom?" checked":"")+'><span>'+t("disableCustom")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRequireAll"'+(s.requireAll?" checked":"")+'><span>'+t("requireAll")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asShowAnswer"'+(s.showAnswer?" checked":"")+'><span>'+t("showAnswer")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomQ"'+(s.randomQuestions?" checked":"")+'><span>'+t("randomQuestions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomO"'+(s.randomOptions?" checked":"")+'><span>'+t("randomOptions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAudioDictation"'+(s.audioDictation?" checked":"")+'><span>'+t("audioDictation")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"'+(s.allowStudentExport?" checked":"")+'><span>'+t("allowStudentExport")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
   $("asChangePwd").onclick=()=>openChangePassword();
   $("asNoticePreset").onclick=()=>{$("asNotice").value=t("noticePresetDefault");};
   document.querySelectorAll(".duration-preset").forEach((btn)=>{
@@ -2169,7 +2418,7 @@ function openAdminSettings(){
       state.appData.settings.examDuration=dur;
       state.appData.settings.totalScore=totalScore;
       state.appData.settings.examQuestionCount=qCount;
-      state.appData.settings.typeQuotas={single:Math.max(0,toNum($("asQuotaSingle").value,0)),multiple:Math.max(0,toNum($("asQuotaMultiple").value,0)),judge:Math.max(0,toNum($("asQuotaJudge").value,0)),fill:Math.max(0,toNum($("asQuotaFill").value,0))};
+      state.appData.settings.typeQuotas={single:Math.max(0,toNum($("asQuotaSingle").value,0)),multiple:Math.max(0,toNum($("asQuotaMultiple").value,0)),judge:Math.max(0,toNum($("asQuotaJudge").value,0)),fill:Math.max(0,toNum($("asQuotaFill").value,0)),reading:Math.max(0,toNum($("asQuotaReading").value,0)),short:Math.max(0,toNum($("asQuotaShort").value,0)),essay:Math.max(0,toNum($("asQuotaEssay").value,0))};
       state.appData.settings.uidLength=uidLen;
       state.appData.settings.subject=subject;
       state.appData.settings.examTitle=title;
@@ -2183,6 +2432,7 @@ function openAdminSettings(){
       state.appData.settings.randomQuestions=$("asRandomQ").checked;
       state.appData.settings.randomOptions=$("asRandomO").checked;
       state.appData.settings.enableAudio=$("asEnableAudio").checked;
+      state.appData.settings.audioDictation=$("asAudioDictation").checked;
       state.appData.settings.allowStudentExport=$("asAllowStudentExport").checked;
       markDirty();
       showToast(t("adminSettingsSaved"),"success");
@@ -2322,7 +2572,8 @@ function bindEvents(){
       $("fullscreenOverlay").classList.remove("open");
       if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}
     }else if(!isFullscreen()&&state.quiz.active){
-      warnThrottled(t("fullscreenExitWarning"));
+      showToast(t("fullscreenExitLogout"),"warn");
+      restartFlow();
     }
   });
   window.addEventListener("beforeunload",(e)=>{
@@ -2335,6 +2586,8 @@ applyTheme();
 applyLang();
 bindEvents();
 initCustomSelects();
+
 </script>
 </body>
 </html>
+

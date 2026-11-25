@@ -201,7 +201,7 @@ body.dark .audio-card-icon.playing{animation:audioPulseDark 1.4s ease-in-out inf
 .q-item:hover{border-color:var(--border-2);box-shadow:var(--shadow-sm)}
 .q-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .q-num{font-size:11px;font-weight:800;color:var(--fg);padding:3px 8px;background:var(--surface-3);border:1px solid var(--border);border-radius:5px;letter-spacing:.02em;font-family:ui-monospace,monospace}
-.q-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;letter-spacing:.06em}
+.q-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;letter-spacing:.06em;text-transform:uppercase}
 .q-type.single{background:var(--info-bg);color:var(--info-fg)}
 .q-type.multiple{background:var(--warning-bg);color:var(--warning-fg)}
 .q-type.judge{background:var(--danger-bg);color:var(--danger-fg)}
@@ -234,7 +234,7 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
 .user-name-text{display:inline-flex;align-items:center;gap:4px}
 .user-name .copy-btn{width:22px;height:22px;border-radius:5px}
 .user-name .copy-btn svg{width:11px;height:11px}
-.user-gender{font-size:10px;font-weight:800;padding:2px 7px;background:var(--surface-3);border:1px solid var(--border);border-radius:5px;color:var(--muted);letter-spacing:.04em}
+.user-gender{font-size:10px;font-weight:800;padding:2px 7px;background:var(--surface-3);border:1px solid var(--border);border-radius:5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
 .user-field{display:flex;gap:8px;font-size:11px;padding:4px 0;align-items:center}
 .user-field-k{color:var(--muted);flex-shrink:0;min-width:70px;font-weight:600}
 .user-field-v{font-family:ui-monospace,monospace;font-size:11px;word-break:break-all;flex:1;min-width:0;color:var(--fg-2);font-weight:500}
@@ -308,6 +308,21 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
   .search{min-width:150px}
   .user-grid{grid-template-columns:1fr}
 }
+.q-title,.q-opt-text,.quiz-answer-line,.q-audio-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.q-type.reading{background:var(--info-bg);color:var(--info-fg)}
+.q-type.short{background:var(--warning-bg);color:var(--warning-fg)}
+.q-type.essay{background:var(--success-bg);color:var(--success-fg)}
+body.dark .q-type.reading{background:#0a1a33;color:#60a5fa}
+body.dark .q-type.short{background:#2a1a05;color:#fbbf24}
+body.dark .q-type.essay{background:#052e16;color:#4ade80}
+.q-badge.neutral{background:var(--surface-3);color:var(--muted);border:1px solid var(--border-2)}
+.q-audio-text{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted)}
+.q-audio-text .q-audio-play{padding:5px 10px;font-family:inherit;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-fg);border:none;border-radius:6px;cursor:pointer}
+.q-audio-text .q-audio-play:active{transform:scale(.97)}
+.quiz-subjective{width:100%;min-height:88px;padding:10px 14px;margin:8px 0;font-family:inherit;font-size:13px;line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--fg);outline:none;resize:vertical;transition:all var(--t)}
+.quiz-subjective:focus{border-color:var(--fg);box-shadow:0 0 0 3px var(--surface-3)}
+.quiz-subjective:disabled{opacity:.7;background:var(--surface-3)}
+.quiz-item.subjective.revealed{border-color:var(--border-2)}
 </style>
 </head>
 <body class="dark">
@@ -317,10 +332,10 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
       <div class="logo-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </div>
-      <span>考试数据查看器</span>
+      <span id="appTitle">考试数据查看器</span>
     </div>
     <div class="actions">
-      <button class="btn btn-icon" id="themeBtn" title="切换主题">
+      <button class="btn btn-icon" id="themeBtn" title="主题">
         <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
       </button>
     </div>
@@ -331,20 +346,20 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
         <div class="import-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <div class="import-title">加载数据文件</div>
-        <div class="import-desc">拖入或选择一个从考试系统导出的 .js 文件。</div>
+        <div class="import-title" id="importTitle">加载数据文件</div>
+        <div class="import-desc" id="importDesc">拖入或选择一个从考试系统导出的 .js 文件。</div>
         <button class="btn btn-primary" id="browseBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <span>选择文件</span>
+          <span id="browseText">选择文件</span>
         </button>
-        <div class="import-hint">仅支持 .js 文件</div>
+        <div class="import-hint" id="importHint">仅支持 .js 文件</div>
         <input type="file" id="fileInput" accept=".js" style="display:none">
       </div>
     </div>
     <div class="viewer-view" id="viewerView" style="display:none">
       <div class="viewer-top">
         <div class="vt-left">
-          <span class="file-badge" id="fileBadge">试卷</span>
+          <span class="file-badge" id="fileBadge">EXAM</span>
           <span class="file-name" id="fileName">—</span>
         </div>
         <div class="vt-center">
@@ -353,7 +368,7 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
         <div class="vt-right">
           <button class="btn" id="reimportBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            <span>重新导入</span>
+            <span id="reimportText">重新导入</span>
           </button>
         </div>
       </div>
@@ -365,121 +380,49 @@ body.dark .q-type.fill{background:#052e16;color:#4ade80}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const T = {
-  appTitle: '考试数据查看器',
-  importTitle: '加载数据文件',
-  importDesc: '拖入或选择一个从考试系统导出的 .js 文件。',
-  browseText: '选择文件',
-  importHint: '仅支持 .js 文件',
-  reimportText: '重新导入',
-  downloadText: '下载',
-  copyAllText: '复制全部',
-  tabOverview: '概览',
-  tabQuestions: '题目',
-  tabUsers: '考生',
-  tabDetails: '详情',
-  tabQuiz: '小测',
-  tabRaw: '原始数据',
-  sectionAdmin: '管理员',
-  sectionExam: '考试信息',
-  sectionStudent: '考生',
-  sectionAudio: '音频试听',
-  sectionScore: '成绩',
-  fieldName: '名称',
-  fieldPassword: '密码',
-  fieldSubject: '科目',
-  fieldTitle: '主标题',
-  fieldSubtitle: '副标题',
-  fieldDuration: '时长',
-  fieldTotalScore: '总分',
-  fieldStartTime: '开始时间',
-  fieldQuestionCount: '题目上限',
-  fieldQuota: '题型配额',
-  fieldOrder: '题型顺序',
-  fieldUid: 'UID',
-  fieldVerifyCode: '验证码',
-  fieldGender: '性别',
-  fieldScore: '得分',
-  fieldCorrect: '答对',
-  fieldAccuracy: '正确率',
-  fieldUserAnswer: '考生答案',
-  fieldCorrectAnswer: '正确答案',
-  typeSingle: '单选题',
-  typeMultiple: '多选题',
-  typeJudge: '判断题',
-  typeFill: '填空题',
-  filterAll: '全部',
-  searchPlaceholder: '搜索…',
-  emptyValue: '—',
-  noResults: '无匹配结果',
-  notAnswered: '未作答',
-  correct: '正确',
-  wrong: '错误',
-  unanswered: '未作答',
-  minutes: '分钟',
-  unlimited: '不限',
-  genderMale: '男',
-  genderFemale: '女',
-  genderOther: '其他',
-  noVerify: '无',
-  lines: '行',
-  bytes: 'B',
-  copied: '已复制',
-  copyFailed: '复制失败',
-  importFailed: '文件加载失败',
-  invalidFile: '无效的文件格式',
-  emptyFile: '文件内容为空',
-  exam: '试卷',
-  student: '成绩',
-  holdToShow: '按住显示密码',
-  audioTitle: '音频试听',
-  audioDesc: '播放音频测试，确认设备正常。',
-  audioPlay: '播放',
-  audioStop: '停止',
-  audioNotSupported: '当前浏览器不支持语音合成',
-  quizReveal: '查看答案',
-  quizRevealAll: '全部查看',
-  quizHideAll: '全部隐藏',
-  quizReset: '重置',
-  quizAnswered: '已答',
-  quizChecked: '已查看',
-  quizCorrect: '答对',
-  quizYourAnswer: '你的答案',
-  rightDisabled: '右键已禁用',
-  devDisabled: '开发者工具已禁用',
-  srcDisabled: '查看源代码已禁用'
+const I18N = {
+  zh: {
+    appTitle: '考试数据查看器', importTitle: '加载数据文件', importDesc: '拖入或选择一个从考试系统导出的 .js 文件。', browseText: '选择文件', importHint: '仅支持 .js 文件', reimportText: '重新导入', downloadText: '下载', copyAllText: '复制全部',
+    tabOverview: '概览', tabQuestions: '题目', tabUsers: '考生', tabDetails: '详情', tabQuiz: '小测', tabRaw: '原始数据',
+    sectionAdmin: '管理员', sectionExam: '考试信息', sectionStudent: '考生', sectionAudio: '音频试听', sectionScore: '成绩',
+    fieldName: '名称', fieldPassword: '密码', fieldSubject: '科目', fieldTitle: '主标题', fieldSubtitle: '副标题', fieldDuration: '时长', fieldTotalScore: '总分', fieldStartTime: '开始时间', fieldQuestionCount: '题目上限', fieldQuota: '题型配额', fieldOrder: '题型顺序', fieldUid: 'UID', fieldVerifyCode: '验证码', fieldGender: '性别', fieldScore: '得分', fieldCorrect: '答对', fieldAccuracy: '正确率', fieldUserAnswer: '考生答案', fieldCorrectAnswer: '正确答案', fieldAudioText: '听力文本', fieldAudioDictation: '听力听写', subjectiveNotGraded: '不自动评分', noCorrectAnswer: '无标准答案', enabled: '开启', disabled: '关闭',
+    typeSingle: '单选题', typeMultiple: '多选题', typeJudge: '判断题', typeFill: '填空题', typeReading: '阅读题', typeShort: '自答题', typeEssay: '作文题',
+    filterAll: '全部', searchPlaceholder: '搜索…', emptyValue: '—', noResults: '无匹配结果', notAnswered: '未作答', correct: '正确', wrong: '错误', unanswered: '未作答',
+    minutes: '分钟', unlimited: '不限', genderMale: '男', genderFemale: '女', genderOther: '其他', noVerify: '无', lines: '行', bytes: 'B',
+    copied: '已复制', copyFailed: '复制失败', importFailed: '文件加载失败', invalidFile: '无效的文件格式', emptyFile: '文件内容为空',
+    exam: '试卷', student: '成绩', holdToShow: '按住显示密码',
+    audioTitle: '音频试听', audioDesc: '播放音频测试，确认设备正常。', audioPlay: '播放', audioStop: '停止', audioNotSupported: '当前浏览器不支持语音合成', audioTextPlay: '播放听力文本', audioTextStop: '停止',
+    quizTitle: '练习模式', quizDesc: '作答后查看答案，自测掌握情况。', quizReveal: '查看答案', quizRevealAll: '全部查看', quizHideAll: '全部隐藏', quizReset: '重置', quizAnswered: '已答', quizChecked: '已查看', quizCorrect: '答对', quizYourAnswer: '你的答案', quizSummary: '小测完成', quizScoreLabel: '得分', quizSubjectivePlaceholder: '请在此作答...',
+    rightDisabled: '右键已禁用', devDisabled: '开发者工具已禁用', srcDisabled: '查看源代码已禁用'
+  }
 };
 const state = {
-  theme: 'dark',
-  fileName: '',
-  rawText: '',
-  dataType: null,
-  data: null,
-  tab: 'overview',
-  qFilter: 'all',
-  qSearch: '',
-  dFilter: 'all',
-  dSearch: '',
-  quizAnswers: {},
-  quizRevealed: {},
+  lang: 'zh', theme: 'dark', fileName: '', rawText: '', dataType: null, data: null, tab: 'overview',
+  qFilter: 'all', qSearch: '', dFilter: 'all', dSearch: '',
+  quizAnswers: {}, quizRevealed: {},
   audioPlaying: false,
-  toastTimer: null,
-  lastWarn: 0
+  toastTimer: null, lastWarn: 0
 };
 const $ = id => document.getElementById(id);
+const t = key => I18N.zh[key] || key;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const TYPE_LIST = ['single', 'multiple', 'judge', 'fill'];
+const TYPE_LIST = ['single', 'multiple', 'judge', 'fill', 'reading', 'short', 'essay'];
+const SUBJECTIVE_TYPES = ['reading', 'short', 'essay'];
+function isSubjectiveType(type) { return SUBJECTIVE_TYPES.indexOf(type) >= 0; }
 function typeLabel(type) {
-  if (type === 'single') return T.typeSingle;
-  if (type === 'multiple') return T.typeMultiple;
-  if (type === 'judge') return T.typeJudge;
-  if (type === 'fill') return T.typeFill;
+  if (type === 'single') return t('typeSingle');
+  if (type === 'multiple') return t('typeMultiple');
+  if (type === 'judge') return t('typeJudge');
+  if (type === 'fill') return t('typeFill');
+  if (type === 'reading') return t('typeReading');
+  if (type === 'short') return t('typeShort');
+  if (type === 'essay') return t('typeEssay');
   return type;
 }
 function copyText(text) {
   if (!text) return;
-  const done = () => showToast(T.copied);
-  const fail = () => showToast(T.copyFailed);
+  const done = () => showToast(t('copied'));
+  const fail = () => showToast(t('copyFailed'));
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(done).catch(() => { fallbackCopy(text) ? done() : fail(); });
   } else {
@@ -513,6 +456,7 @@ function warnThrottled(msg) {
 }
 function correctText(correct, type) {
   if (correct == null) return '';
+  if (isSubjectiveType(type)) return String(correct);
   if (type === 'fill') {
     const arr = Array.isArray(correct) ? correct : [String(correct)];
     return arr.map(a => '"' + String(a) + '"').join(', ');
@@ -523,6 +467,7 @@ function correctText(correct, type) {
 }
 function answerText(ans, type) {
   if (ans == null) return '';
+  if (isSubjectiveType(type)) return String(ans);
   if (type === 'fill') {
     const arr = Array.isArray(ans) ? ans : [String(ans)];
     if (arr.every(a => String(a || '').trim() === '')) return '';
@@ -534,11 +479,13 @@ function answerText(ans, type) {
 }
 function hasAnswer(ans, type) {
   if (ans == null) return false;
+  if (isSubjectiveType(type)) return String(ans).trim() !== '';
   if (type === 'fill') { const arr = Array.isArray(ans) ? ans : [String(ans)]; return arr.some(a => String(a || '').trim() !== ''); }
   if (Array.isArray(ans)) return ans.length > 0;
   return true;
 }
 function isCorrect(userAns, correct, type) {
+  if (isSubjectiveType(type)) return false;
   if (type === 'fill') {
     const ca = Array.isArray(correct) ? correct : [String(correct || '')];
     const ua = Array.isArray(userAns) ? userAns : [String(userAns || '')];
@@ -555,7 +502,7 @@ function isCorrect(userAns, correct, type) {
   }
   return Number(userAns) === Number(correct);
 }
-function fmtDuration(d) { return d > 0 ? d + ' ' + T.minutes : T.unlimited; }
+function fmtDuration(d) { return d > 0 ? d + ' ' + t('minutes') : t('unlimited'); }
 function iconCopy() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'; }
 function iconEye() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'; }
 function iconDownload() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>'; }
@@ -567,25 +514,25 @@ function copyBtn(value) {
 function kvRow(label, value, opts) {
   opts = opts || {};
   const empty = !value || !String(value).trim();
-  const display = empty ? T.emptyValue : value;
+  const display = empty ? t('emptyValue') : value;
   const cls = (opts.mono ? ' mono' : '') + (empty ? ' empty' : '');
   return '<div class="kv-row"><div class="kv-k">' + esc(label) + '</div><div class="kv-v' + cls + '">' + esc(display) + '</div>' + (opts.copy !== false && !empty ? copyBtn(value) : '<span style="width:28px"></span>') + '</div>';
 }
 function kvPasswordRow(label, value) {
-  if (!value) return '<div class="kv-row"><div class="kv-k">' + esc(label) + '</div><div class="kv-v empty">' + T.emptyValue + '</div><span style="width:60px"></span></div>';
+  if (!value) return '<div class="kv-row"><div class="kv-k">' + esc(label) + '</div><div class="kv-v empty">' + t('emptyValue') + '</div><span style="width:60px"></span></div>';
   const masked = '•'.repeat(Math.min(14, String(value).length));
   return '<div class="kv-row"><div class="kv-k">' + esc(label) + '</div><div class="kv-v mono"><div class="kv-v-inner"><span class="sel" id="pwdDisplay" data-real="' + esc(value) + '" data-mask="' + esc(masked) + '">' + esc(masked) + '</span></div></div><div style="display:flex;gap:4px;flex-shrink:0"><button class="copy-btn" data-copy="' + esc(value) + '">' + iconCopy() + '</button><button class="eye-btn" id="eyeBtn">' + iconEye() + '</button></div></div>';
 }
 function getTabs() {
-  const tabs = [{ id: 'overview', label: T.tabOverview }];
+  const tabs = [{ id: 'overview', label: t('tabOverview') }];
   if (state.dataType === 'exam') {
-    tabs.push({ id: 'questions', label: T.tabQuestions, count: (state.data.questions || []).length });
-    tabs.push({ id: 'users', label: T.tabUsers, count: (state.data.users || []).length });
-    tabs.push({ id: 'quiz', label: T.tabQuiz, count: (state.data.questions || []).length });
+    tabs.push({ id: 'questions', label: t('tabQuestions'), count: (state.data.questions || []).length });
+    tabs.push({ id: 'users', label: t('tabUsers'), count: (state.data.users || []).length });
+    tabs.push({ id: 'quiz', label: t('tabQuiz'), count: (state.data.questions || []).length });
   } else if (state.dataType === 'student') {
-    tabs.push({ id: 'details', label: T.tabDetails, count: (state.data.details || []).length });
+    tabs.push({ id: 'details', label: t('tabDetails'), count: (state.data.details || []).length });
   }
-  tabs.push({ id: 'raw', label: T.tabRaw });
+  tabs.push({ id: 'raw', label: t('tabRaw') });
   return tabs;
 }
 function renderTabs() {
@@ -604,60 +551,64 @@ function renderOverview() {
   if (state.dataType === 'exam') {
     const admin = d.admin || {};
     const s = d.settings || {};
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionAdmin + '</div></div><div class="kv-list">' + kvRow(T.fieldName, admin.name || '') + kvPasswordRow(T.fieldPassword, admin.password || '') + '</div></div>';
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionExam + '</div></div><div class="kv-list">' +
-      kvRow(T.fieldSubject, s.subject || '') +
-      kvRow(T.fieldTitle, s.examTitle || '') +
-      kvRow(T.fieldSubtitle, s.examSubtitle || '') +
-      kvRow(T.fieldStartTime, s.examStartTime || T.unlimited, { mono: true }) +
-      kvRow(T.fieldDuration, fmtDuration(s.examDuration || 0)) +
-      kvRow(T.fieldTotalScore, String(s.totalScore || '')) +
-      kvRow(T.fieldQuestionCount, s.examQuestionCount > 0 ? String(s.examQuestionCount) : T.unlimited) +
-      kvRow(T.fieldQuota, (() => { const q = s.typeQuotas || {}; return '单选:' + (q.single || 0) + ' · 多选:' + (q.multiple || 0) + ' · 判断:' + (q.judge || 0) + ' · 填空:' + (q.fill || 0); })()) +
-      (Array.isArray(s.typeOrder) ? kvRow(T.fieldOrder, s.typeOrder.map(typeLabel).join(' → ')) : '') +
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionAdmin') + '</div></div><div class="kv-list">' + kvRow(t('fieldName'), admin.name || '') + kvPasswordRow(t('fieldPassword'), admin.password || '') + '</div></div>';
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionExam') + '</div></div><div class="kv-list">' +
+      kvRow(t('fieldSubject'), s.subject || '') +
+      kvRow(t('fieldTitle'), s.examTitle || '') +
+      kvRow(t('fieldSubtitle'), s.examSubtitle || '') +
+      kvRow(t('fieldStartTime'), s.examStartTime || t('unlimited'), { mono: true }) +
+      kvRow(t('fieldDuration'), fmtDuration(s.examDuration || 0)) +
+      kvRow(t('fieldTotalScore'), String(s.totalScore || '')) +
+      kvRow(t('fieldQuestionCount'), s.examQuestionCount > 0 ? String(s.examQuestionCount) : t('unlimited')) +
+      kvRow(t('fieldAudioDictation'), s.audioDictation !== false ? t('enabled') : t('disabled')) +
+      kvRow(t('fieldQuota'), TYPE_LIST.map(tp => typeLabel(tp) + ':' + ((s.typeQuotas || {})[tp] || 0)).join(' · ')) +
+      (Array.isArray(s.typeOrder) ? kvRow(t('fieldOrder'), s.typeOrder.map(typeLabel).join(' → ')) : '') +
       '</div></div>';
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionAudio + '</div></div>';
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionAudio') + '</div></div>';
     html += '<div class="audio-card"><div class="audio-card-head">';
     html += '<div class="audio-card-icon" id="audioIcon">' + iconVolume() + '</div>';
-    html += '<div class="audio-card-info"><div class="audio-card-title">' + T.audioTitle + '</div><div class="audio-card-desc">' + T.audioDesc + '</div></div>';
-    html += '<button class="audio-card-btn" id="audioBtn">' + T.audioPlay + '</button>';
+    html += '<div class="audio-card-info"><div class="audio-card-title">' + esc(t('audioTitle')) + '</div><div class="audio-card-desc">' + esc(t('audioDesc')) + '</div></div>';
+    html += '<button class="audio-card-btn" id="audioBtn">' + esc(t('audioPlay')) + '</button>';
     html += '</div></div></div>';
   } else {
     const genderKey = d.gender === 'male' ? 'genderMale' : d.gender === 'female' ? 'genderFemale' : 'genderOther';
     const details = Array.isArray(d.details) ? d.details : [];
-    const total = details.length;
+    const subjectiveCount = details.filter(x => isSubjectiveType(x.type) || x.subjective).length;
+    const graded = details.filter(x => !isSubjectiveType(x.type) && !x.subjective);
+    const total = graded.length;
     let correct = 0;
-    details.forEach(x => { if (x.isCorrect) correct++; });
+    graded.forEach(x => { if (x.isCorrect) correct++; });
     const rate = total > 0 ? Math.round((correct / total) * 100) : 0;
     const totalScore = typeof d.totalScore === 'number' ? d.totalScore : null;
     const score = (totalScore !== null && total > 0) ? Math.round((correct / total) * totalScore) : null;
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionScore + '</div></div>';
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionScore') + '</div></div>';
     html += '<div class="kv-list">';
-    if (score !== null) html += kvRow(T.fieldScore, score + ' / ' + totalScore, { mono: false });
-    else html += kvRow(T.fieldScore, rate + '%');
-    html += kvRow(T.fieldCorrect, correct + ' / ' + total);
-    html += kvRow(T.fieldAccuracy, rate + '%');
+    if (score !== null) html += kvRow(t('fieldScore'), score + ' / ' + totalScore, { mono: false });
+    else html += kvRow(t('fieldScore'), rate + '%');
+    html += kvRow(t('fieldCorrect'), correct + ' / ' + total);
+    html += kvRow(t('fieldAccuracy'), rate + '%');
+    if (subjectiveCount > 0) html += kvRow(t('subjectiveNotGraded'), String(subjectiveCount));
     html += '</div></div>';
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionStudent + '</div></div><div class="kv-list">' +
-      kvRow(T.fieldName, d.name || '') +
-      kvRow(T.fieldUid, d.uid || '', { mono: true }) +
-      kvRow(T.fieldVerifyCode, d.verifyCode || T.noVerify, { mono: true }) +
-      kvRow(T.fieldGender, T[genderKey]) +
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionStudent') + '</div></div><div class="kv-list">' +
+      kvRow(t('fieldName'), d.name || '') +
+      kvRow(t('fieldUid'), d.uid || '', { mono: true }) +
+      kvRow(t('fieldVerifyCode'), d.verifyCode || t('noVerify'), { mono: true }) +
+      kvRow(t('fieldGender'), t(genderKey)) +
       '</div></div>';
-    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + T.sectionExam + '</div></div><div class="kv-list">' +
-      kvRow(T.fieldSubject, d.subject || '') +
-      kvRow(T.fieldTitle, d.examTitle || '') +
-      kvRow(T.fieldSubtitle, d.examSubtitle || '') +
+    html += '<div class="section"><div class="section-title"><div class="section-title-text">' + t('sectionExam') + '</div></div><div class="kv-list">' +
+      kvRow(t('fieldSubject'), d.subject || '') +
+      kvRow(t('fieldTitle'), d.examTitle || '') +
+      kvRow(t('fieldSubtitle'), d.examSubtitle || '') +
       '</div></div>';
   }
   return html;
 }
 function renderToolbar(searchId, filterId, activeFilter, searchVal) {
   let html = '<div class="toolbar">';
-  html += '<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="' + searchId + '" placeholder="' + T.searchPlaceholder + '" value="' + esc(searchVal) + '"></div>';
+  html += '<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="' + searchId + '" placeholder="' + esc(t('searchPlaceholder')) + '" value="' + esc(searchVal) + '"></div>';
   html += '<div class="filters" id="' + filterId + '">';
-  html += '<button class="chip' + (activeFilter === 'all' ? ' active' : '') + '" data-type="all">' + T.filterAll + '</button>';
-  TYPE_LIST.forEach(tp => { html += '<button class="chip' + (activeFilter === tp ? ' active' : '') + '" data-type="' + tp + '">' + typeLabel(tp) + '</button>'; });
+  html += '<button class="chip' + (activeFilter === 'all' ? ' active' : '') + '" data-type="all">' + esc(t('filterAll')) + '</button>';
+  TYPE_LIST.forEach(tp => { html += '<button class="chip' + (activeFilter === tp ? ' active' : '') + '" data-type="' + tp + '">' + esc(typeLabel(tp)) + '</button>'; });
   html += '</div></div>';
   return html;
 }
@@ -666,7 +617,7 @@ function filterList(items, filter, search) {
   return items.filter(item => {
     if (filter !== 'all' && item.type !== filter) return false;
     if (!q) return true;
-    const parts = [item.title || '', item.explanation || ''];
+    const parts = [item.title || '', item.explanation || '', item.audioText || ''];
     if (item.correct != null) parts.push(Array.isArray(item.correct) ? item.correct.join(' ') : String(item.correct));
     if (Array.isArray(item.options)) parts.push(item.options.join(' '));
     return parts.join(' ').toLowerCase().includes(q);
@@ -675,8 +626,9 @@ function filterList(items, filter, search) {
 function renderQuestionItem(q, index) {
   const type = q.type || 'single';
   let html = '<div class="q-item">';
-  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + typeLabel(type) + '</span></div>';
+  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span></div>';
   html += '<div class="q-title">' + esc(q.title || '') + '</div>';
+  if (q.audioText && String(q.audioText).trim()) html += '<div class="q-audio-text"><span>' + esc(t('fieldAudioText')) + ': ' + esc(q.audioText) + '</span><button class="q-audio-play" data-text="' + esc(q.audioText) + '">' + esc(t('audioTextPlay')) + '</button></div>';
   if (Array.isArray(q.options) && q.options.length) {
     html += '<div class="q-options">';
     q.options.forEach((opt, i) => {
@@ -685,7 +637,11 @@ function renderQuestionItem(q, index) {
     });
     html += '</div>';
   }
-  html += '<div class="q-meta"><span class="q-meta-item">' + T.fieldCorrectAnswer + ': <b>' + esc(correctText(q.correct, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(correctText(q.correct, type)) + '">' + iconCopy() + '</button></span></div>';
+  if (isSubjectiveType(type)) {
+    html += '<div class="q-meta"><span class="q-meta-item">' + esc(t('subjectiveNotGraded')) + '</span></div>';
+  } else {
+    html += '<div class="q-meta"><span class="q-meta-item">' + esc(t('fieldCorrectAnswer')) + ': <b>' + esc(correctText(q.correct, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(correctText(q.correct, type)) + '">' + iconCopy() + '</button></span></div>';
+  }
   if (q.explanation && String(q.explanation).trim()) html += '<div class="q-explanation">' + esc(q.explanation) + '</div>';
   html += '</div>';
   return html;
@@ -707,9 +663,9 @@ function renderUsers() {
   let html = '<div class="user-grid">';
   users.forEach(u => {
     const genderKey = u.gender === 'male' ? 'genderMale' : u.gender === 'female' ? 'genderFemale' : 'genderOther';
-    html += '<div class="user-card"><div class="user-name"><span class="user-name-text">' + esc(u.name || '') + copyBtn(u.name || '') + '</span><span class="user-gender">' + T[genderKey] + '</span></div>';
-    html += '<div class="user-field"><span class="user-field-k">' + T.fieldUid + '</span><span class="user-field-v sel">' + esc(u.uid || '') + '</span>' + copyBtn(u.uid || '') + '</div>';
-    if (u.verifyCode) html += '<div class="user-field"><span class="user-field-k">' + T.fieldVerifyCode + '</span><span class="user-field-v sel">' + esc(u.verifyCode) + '</span>' + copyBtn(u.verifyCode) + '</div>';
+    html += '<div class="user-card"><div class="user-name"><span class="user-name-text">' + esc(u.name || '') + copyBtn(u.name || '') + '</span><span class="user-gender">' + esc(t(genderKey)) + '</span></div>';
+    html += '<div class="user-field"><span class="user-field-k">' + esc(t('fieldUid')) + '</span><span class="user-field-v sel">' + esc(u.uid || '') + '</span>' + copyBtn(u.uid || '') + '</div>';
+    if (u.verifyCode) html += '<div class="user-field"><span class="user-field-k">' + esc(t('fieldVerifyCode')) + '</span><span class="user-field-v sel">' + esc(u.verifyCode) + '</span>' + copyBtn(u.verifyCode) + '</div>';
     html += '</div>';
   });
   html += '</div>';
@@ -717,15 +673,16 @@ function renderUsers() {
 }
 function renderDetailItem(item, index) {
   const type = item.type || 'single';
+  const subjective = isSubjectiveType(type) || item.subjective;
   const answered = hasAnswer(item.userAnswer, type);
-  const ok = !!item.isCorrect;
+  const ok = !subjective && !!item.isCorrect;
   let html = '<div class="q-item">';
-  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + typeLabel(type) + '</span><span class="q-badge ' + (ok ? 'ok' : 'no') + '">' + (ok ? T.correct : (answered ? T.wrong : T.notAnswered)) + '</span></div>';
+  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span><span class="q-badge ' + (subjective ? 'neutral' : (ok ? 'ok' : 'no')) + '">' + esc(subjective ? t('subjectiveNotGraded') : (ok ? t('correct') : (answered ? t('wrong') : t('notAnswered')))) + '</span></div>';
   html += '<div class="q-title">' + esc(item.title || '') + '</div>';
   html += '<div class="q-meta">';
-  if (answered) html += '<span class="q-meta-item">' + T.fieldUserAnswer + ': <b>' + esc(answerText(item.userAnswer, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(answerText(item.userAnswer, type)) + '">' + iconCopy() + '</button></span>';
-  else html += '<span class="q-meta-item">' + T.fieldUserAnswer + ': <b style="color:var(--subtle)">' + T.notAnswered + '</b></span>';
-  if (item.correct != null) html += '<span class="q-meta-item">' + T.fieldCorrectAnswer + ': <b>' + esc(correctText(item.correct, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(correctText(item.correct, type)) + '">' + iconCopy() + '</button></span>';
+  if (answered) html += '<span class="q-meta-item">' + esc(t('fieldUserAnswer')) + ': <b>' + esc(answerText(item.userAnswer, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(answerText(item.userAnswer, type)) + '">' + iconCopy() + '</button></span>';
+  else html += '<span class="q-meta-item">' + esc(t('fieldUserAnswer')) + ': <b style="color:var(--subtle)">' + esc(t('notAnswered')) + '</b></span>';
+  if (!subjective && item.correct != null) html += '<span class="q-meta-item">' + esc(t('fieldCorrectAnswer')) + ': <b>' + esc(correctText(item.correct, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(correctText(item.correct, type)) + '">' + iconCopy() + '</button></span>';
   html += '</div>';
   if (item.explanation && String(item.explanation).trim()) html += '<div class="q-explanation">' + esc(item.explanation) + '</div>';
   html += '</div>';
@@ -744,43 +701,51 @@ function renderDetails() {
 }
 function renderQuizHeader() {
   const qs = Array.isArray(state.data.questions) ? state.data.questions : [];
+  const graded = qs.filter(q => !isSubjectiveType(q.type));
   const answered = qs.filter((q, i) => hasAnswer(state.quizAnswers[i], q.type)).length;
   const checked = qs.filter((q, i) => state.quizRevealed[i]).length;
   let correct = 0;
-  qs.forEach((q, i) => { if (state.quizRevealed[i] && hasAnswer(state.quizAnswers[i], q.type) && isCorrect(state.quizAnswers[i], q.correct, q.type)) correct++; });
+  graded.forEach(q => {
+    const i = qs.indexOf(q);
+    if (state.quizRevealed[i] && hasAnswer(state.quizAnswers[i], q.type) && isCorrect(state.quizAnswers[i], q.correct, q.type)) correct++;
+  });
   const allChecked = checked === qs.length && qs.length > 0;
   let html = '<div class="quiz-header"><div class="quiz-progress">';
-  html += '<span>' + T.quizAnswered + '<b>' + answered + ' / ' + qs.length + '</b></span>';
-  html += '<span>' + T.quizChecked + '<b>' + checked + ' / ' + qs.length + '</b></span>';
-  if (allChecked) html += '<span>' + T.quizCorrect + '<b>' + correct + ' / ' + qs.length + '</b></span>';
+  html += '<span>' + esc(t('quizAnswered')) + '<b>' + answered + ' / ' + qs.length + '</b></span>';
+  html += '<span>' + esc(t('quizChecked')) + '<b>' + checked + ' / ' + qs.length + '</b></span>';
+  if (allChecked && graded.length > 0) html += '<span>' + esc(t('quizCorrect')) + '<b>' + correct + ' / ' + graded.length + '</b></span>';
   html += '</div><div class="quiz-actions">';
-  if (!allChecked && qs.length > 0) html += '<button class="btn" id="quizRevealAll">' + T.quizRevealAll + '</button>';
-  if (checked > 0) html += '<button class="btn" id="quizHideAll">' + T.quizHideAll + '</button>';
-  if (answered > 0 || checked > 0) html += '<button class="btn" id="quizReset">' + T.quizReset + '</button>';
+  if (!allChecked && qs.length > 0) html += '<button class="btn" id="quizRevealAll">' + esc(t('quizRevealAll')) + '</button>';
+  if (checked > 0) html += '<button class="btn" id="quizHideAll">' + esc(t('quizHideAll')) + '</button>';
+  if (answered > 0 || checked > 0) html += '<button class="btn" id="quizReset">' + esc(t('quizReset')) + '</button>';
   html += '</div></div>';
   if (allChecked) {
     const totalScore = (state.data.settings && state.data.settings.totalScore) || 100;
-    const pct = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
-    const score = qs.length > 0 ? Math.round((correct / qs.length) * totalScore) : 0;
-    html += '<div class="quiz-score"><div class="quiz-score-num">' + score + ' / ' + totalScore + '</div><div class="quiz-score-desc">' + T.quizCorrect + ': ' + correct + ' / ' + qs.length + ' · ' + T.fieldAccuracy + ': ' + pct + '%</div></div>';
+    const pct = graded.length > 0 ? Math.round((correct / graded.length) * 100) : 0;
+    const score = graded.length > 0 ? Math.round((correct / graded.length) * totalScore) : 0;
+    html += '<div class="quiz-score"><div class="quiz-score-num">' + score + ' / ' + totalScore + '</div><div class="quiz-score-desc">' + esc(t('quizCorrect')) + ': ' + correct + ' / ' + graded.length + ' · ' + esc(t('fieldAccuracy')) + ': ' + pct + '%</div></div>';
   }
   return html;
 }
 function renderQuizItem(q, index) {
   const type = q.type || 'single';
+  const subjective = isSubjectiveType(type);
   const userAns = state.quizAnswers[index];
   const revealed = state.quizRevealed[index];
-  const correct = revealed && isCorrect(userAns, q.correct, type);
-  let html = '<div class="quiz-item' + (revealed ? ' revealed ' + (correct ? 'correct' : 'wrong') : '') + '">';
-  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + typeLabel(type) + '</span>';
-  if (revealed) html += '<span class="q-badge ' + (correct ? 'ok' : 'no') + '">' + (correct ? T.correct : (hasAnswer(userAns, type) ? T.wrong : T.unanswered)) + '</span>';
+  const correct = revealed && !subjective && isCorrect(userAns, q.correct, type);
+  let html = '<div class="quiz-item' + (revealed ? ' revealed ' + (subjective ? 'subjective' : (correct ? 'correct' : 'wrong')) : '') + '">';
+  html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span>';
+  if (revealed) html += '<span class="q-badge ' + (subjective ? 'neutral' : (correct ? 'ok' : 'no')) + '">' + esc(subjective ? t('subjectiveNotGraded') : (correct ? t('correct') : (hasAnswer(userAns, type) ? t('wrong') : t('unanswered')))) + '</span>';
   html += '</div>';
   html += '<div class="q-title">' + esc(q.title || '') + '</div>';
-  if (type === 'fill') {
+  if (subjective) {
+    const val = typeof userAns === 'string' ? userAns : '';
+    html += '<textarea class="quiz-subjective" data-qi="' + index + '" rows="4" placeholder="' + esc(t('quizSubjectivePlaceholder')) + '"' + (revealed ? ' disabled' : '') + '>' + esc(val) + '</textarea>';
+  } else if (type === 'fill') {
     const vals = Array.isArray(userAns) ? userAns : (userAns ? [userAns] : ['']);
     const correctArr = Array.isArray(q.correct) ? q.correct : [q.correct];
     for (let i = 0; i < correctArr.length; i++) {
-      html += '<input type="text" class="quiz-input" data-qi="' + index + '" data-bi="' + i + '" value="' + esc(vals[i] || '') + '" placeholder="空 ' + (i + 1) + '"' + (revealed ? ' disabled' : '') + '>';
+      html += '<input type="text" class="quiz-input" data-qi="' + index + '" data-bi="' + i + '" value="' + esc(vals[i] || '') + '" placeholder="' + esc('Blank ' + (i + 1)) + '"' + (revealed ? ' disabled' : '') + '>';
     }
   } else {
     const opts = type === 'judge' ? ['✓', '✗'] : (q.options || []);
@@ -801,11 +766,16 @@ function renderQuizItem(q, index) {
   }
   if (revealed) {
     html += '<div class="quiz-answer">';
-    html += '<div class="quiz-answer-line">' + T.fieldCorrectAnswer + ': <b>' + esc(correctText(q.correct, type)) + '</b></div>';
-    if (hasAnswer(userAns, type) && !correct) html += '<div class="quiz-answer-line">' + T.quizYourAnswer + ': <b>' + esc(answerText(userAns, type)) + '</b></div>';
+    if (subjective) {
+      if (hasAnswer(userAns, type)) html += '<div class="quiz-answer-line">' + esc(t('quizYourAnswer')) + ': <b>' + esc(answerText(userAns, type)) + '</b></div>';
+      html += '<div class="quiz-answer-line">' + esc(t('subjectiveNotGraded')) + '</div>';
+    } else {
+      html += '<div class="quiz-answer-line">' + esc(t('fieldCorrectAnswer')) + ': <b>' + esc(correctText(q.correct, type)) + '</b></div>';
+      if (hasAnswer(userAns, type) && !correct) html += '<div class="quiz-answer-line">' + esc(t('quizYourAnswer')) + ': <b>' + esc(answerText(userAns, type)) + '</b></div>';
+    }
     html += '</div>';
   } else {
-    html += '<button class="quiz-reveal" data-reveal="' + index + '">' + T.quizReveal + '</button>';
+    html += '<button class="quiz-reveal" data-reveal="' + index + '">' + esc(t('quizReveal')) + '</button>';
   }
   if (q.explanation && String(q.explanation).trim() && revealed) html += '<div class="q-explanation">' + esc(q.explanation) + '</div>';
   html += '</div>';
@@ -823,17 +793,17 @@ function renderQuiz() {
 function renderRaw() {
   const lines = state.rawText.split('\n');
   let html = '<div class="raw-container">';
-  html += '<div class="raw-toolbar"><div class="raw-info"><span>' + esc(state.fileName || '') + '</span><span>' + lines.length + ' ' + T.lines + '</span><span>' + state.rawText.length + ' ' + T.bytes + '</span></div>';
-  html += '<div class="raw-actions"><button class="btn" id="downloadBtn">' + iconDownload() + T.downloadText + '</button><button class="btn" id="copyAllBtn">' + iconCopy() + T.copyAllText + '</button></div></div>';
+  html += '<div class="raw-toolbar"><div class="raw-info"><span>' + esc(state.fileName || '') + '</span><span>' + lines.length + ' ' + esc(t('lines')) + '</span><span>' + state.rawText.length + ' ' + esc(t('bytes')) + '</span></div>';
+  html += '<div class="raw-actions"><button class="btn" id="downloadBtn">' + iconDownload() + esc(t('downloadText')) + '</button><button class="btn" id="copyAllBtn">' + iconCopy() + esc(t('copyAllText')) + '</button></div></div>';
   html += '<div class="raw-code">';
   lines.forEach((line, i) => {
-    html += '<div class="code-line"><span class="code-line-num" data-line="' + (i + 1) + '" title="点击复制该行">' + (i + 1) + '</span><span class="code-line-content">' + esc(line) + '</span></div>';
+    html += '<div class="code-line"><span class="code-line-num" data-line="' + (i + 1) + '" title="Copy line">' + (i + 1) + '</span><span class="code-line-content">' + esc(line) + '</span></div>';
   });
   html += '</div></div>';
   return html;
 }
 function emptyState() {
-  return '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>' + T.noResults + '</p></div>';
+  return '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>' + esc(t('noResults')) + '</p></div>';
 }
 function bindCopyButtons(root) {
   root.querySelectorAll('[data-copy]').forEach(btn => {
@@ -866,21 +836,40 @@ function bindAudioPlayer() {
   const icon = $('audioIcon');
   if (!btn) return;
   btn.onclick = () => {
-    if (!window.speechSynthesis) { showToast(T.audioNotSupported); return; }
+    if (!window.speechSynthesis) { showToast(t('audioNotSupported')); return; }
     if (state.audioPlaying) { speechSynthesis.cancel(); return; }
     const s = (state.data.settings || {});
     const text = (s.audioTestText && s.audioTestText.trim()) ? s.audioTestText : '生活就像海洋，只有意志坚强的人，才能到达彼岸。';
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-CN';
+    u.lang = state.lang === 'zh' ? 'zh-CN' : 'en-US';
     u.rate = 0.95;
     state.audioPlaying = true;
-    btn.textContent = T.audioStop;
+    btn.textContent = t('audioStop');
     if (icon) icon.classList.add('playing');
-    u.onend = () => { state.audioPlaying = false; btn.textContent = T.audioPlay; if (icon) icon.classList.remove('playing'); };
-    u.onerror = () => { state.audioPlaying = false; btn.textContent = T.audioPlay; if (icon) icon.classList.remove('playing'); };
+    u.onend = () => { state.audioPlaying = false; btn.textContent = t('audioPlay'); if (icon) icon.classList.remove('playing'); };
+    u.onerror = () => { state.audioPlaying = false; btn.textContent = t('audioPlay'); if (icon) icon.classList.remove('playing'); };
     speechSynthesis.speak(u);
   };
+}
+function bindQuestionAudio(root) {
+  root.querySelectorAll('.q-audio-play').forEach(btn => {
+    btn.onclick = () => {
+      if (!window.speechSynthesis) { showToast(t('audioNotSupported')); return; }
+      if (state.audioPlaying) { speechSynthesis.cancel(); state.audioPlaying = false; return; }
+      const text = btn.dataset.text || '';
+      if (!text) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = /[\u3040-\u30ff\u3400-\u9fff]/.test(text) ? 'zh-CN' : 'en-US';
+      u.rate = 0.95;
+      state.audioPlaying = true;
+      btn.textContent = t('audioTextStop');
+      u.onend = () => { state.audioPlaying = false; btn.textContent = t('audioTextPlay'); };
+      u.onerror = () => { state.audioPlaying = false; btn.textContent = t('audioTextPlay'); };
+      speechSynthesis.speak(u);
+    };
+  });
 }
 function bindQuizEvents(root) {
   const list = root.querySelector('#quizList');
@@ -914,6 +903,14 @@ function bindQuizEvents(root) {
         state.quizAnswers[qi] = new Array(cnt).fill('');
       }
       state.quizAnswers[qi][bi] = e.target.value;
+      const header = root.querySelector('.quiz-header');
+      if (header) { const tmp = document.createElement('div'); tmp.innerHTML = renderQuizHeader(); header.replaceWith(tmp.firstElementChild); bindQuizHeaderEvents(root); }
+    };
+  });
+  list.querySelectorAll('.quiz-subjective:not([disabled])').forEach(inp => {
+    inp.oninput = (e) => {
+      const qi = parseInt(inp.dataset.qi);
+      state.quizAnswers[qi] = e.target.value;
       const header = root.querySelector('.quiz-header');
       if (header) { const tmp = document.createElement('div'); tmp.innerHTML = renderQuizHeader(); header.replaceWith(tmp.firstElementChild); bindQuizHeaderEvents(root); }
     };
@@ -973,6 +970,7 @@ function renderContent() {
   bindCopyButtons(el);
   bindPasswordHold(el);
   bindAudioPlayer();
+  bindQuestionAudio(el);
   if (state.tab === 'quiz') {
     bindQuizEvents(el);
   } else {
@@ -1024,19 +1022,35 @@ function applyTheme() {
   document.body.classList.toggle('dark', state.theme === 'dark');
   setThemeIcon();
 }
+function applyLang() {
+  document.documentElement.lang = 'zh-CN';
+  document.title = t('appTitle');
+  $('appTitle').textContent = t('appTitle');
+  $('importTitle').textContent = t('importTitle');
+  $('importDesc').textContent = t('importDesc');
+  $('browseText').textContent = t('browseText');
+  $('importHint').textContent = t('importHint');
+  $('reimportText').textContent = t('reimportText');
+  if (state.dataType) {
+    const badge = $('fileBadge');
+    badge.textContent = state.dataType === 'exam' ? t('exam') : t('student');
+    renderTabs();
+    renderContent();
+  }
+}
 function loadFile(file) {
   if (!file) return;
   const reader = new FileReader();
-  reader.onerror = () => showToast(T.importFailed);
+  reader.onerror = () => showToast(t('importFailed'));
   reader.onload = (e) => {
     try {
       const text = String(e.target.result || '');
-      if (!text.trim()) return showToast(T.emptyFile);
+      if (!text.trim()) return showToast(t('emptyFile'));
       let data = null, type = null;
       try { delete window.APP_DATA; delete window.STUDENT_RESULT; new Function(text)(); } catch (err) {}
       if (window.APP_DATA && Array.isArray(window.APP_DATA.questions)) { data = window.APP_DATA; type = 'exam'; }
       else if (window.STUDENT_RESULT && Array.isArray(window.STUDENT_RESULT.details)) { data = window.STUDENT_RESULT; type = 'student'; }
-      if (!data) return showToast(T.invalidFile);
+      if (!data) return showToast(t('invalidFile'));
       state.data = data; state.dataType = type;
       state.fileName = file.name || (type === 'exam' ? 'exam_data.js' : 'student_result.js');
       state.rawText = text;
@@ -1047,12 +1061,12 @@ function loadFile(file) {
       state.audioPlaying = false;
       $('importView').style.display = 'none';
       $('viewerView').style.display = 'flex';
-      $('fileBadge').textContent = type === 'exam' ? T.exam : T.student;
+      $('fileBadge').textContent = type === 'exam' ? t('exam') : t('student');
       $('fileBadge').className = 'file-badge ' + type;
       $('fileName').textContent = state.fileName;
       renderTabs();
       renderContent();
-    } catch (err) { showToast(T.importFailed); }
+    } catch (err) { showToast(t('importFailed')); }
   };
   reader.readAsText(file);
 }
@@ -1071,14 +1085,15 @@ $('reimportBtn').addEventListener('click', () => {
   $('viewerView').style.display = 'none';
   $('importView').style.display = 'flex';
 });
+
 $('themeBtn').addEventListener('click', () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; applyTheme(); });
-document.addEventListener('contextmenu', (e) => { e.preventDefault(); warnThrottled(T.rightDisabled); });
+document.addEventListener('contextmenu', (e) => { e.preventDefault(); warnThrottled(t('rightDisabled')); });
 document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   const k = (e.key || '').toUpperCase();
-  if (e.key === 'F12') { e.preventDefault(); warnThrottled(T.devDisabled); return; }
-  if (e.ctrlKey && e.shiftKey && (k === 'I' || k === 'J' || k === 'C')) { e.preventDefault(); warnThrottled(T.devDisabled); return; }
-  if (e.ctrlKey && k === 'U') { e.preventDefault(); warnThrottled(T.srcDisabled); return; }
+  if (e.key === 'F12') { e.preventDefault(); warnThrottled(t('devDisabled')); return; }
+  if (e.ctrlKey && e.shiftKey && (k === 'I' || k === 'J' || k === 'C')) { e.preventDefault(); warnThrottled(t('devDisabled')); return; }
+  if (e.ctrlKey && k === 'U') { e.preventDefault(); warnThrottled(t('srcDisabled')); return; }
   if (!e.ctrlKey && !e.altKey && !e.metaKey && e.key >= '1' && e.key <= '6' && state.dataType) {
     const tabs = getTabs();
     const idx = parseInt(e.key) - 1;
@@ -1086,6 +1101,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 applyTheme();
+applyLang();
 </script>
 </body>
 </html>
