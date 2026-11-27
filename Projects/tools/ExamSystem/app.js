@@ -1,7 +1,7 @@
-﻿const I18N={
+const I18N={
 en:{
 headerTitle:"Exam System",userSectionLabel:"User",userRoleStudent:"Candidate",userRoleAdmin:"Admin",adminSectionLabel:"Admin",settingsLabel:"Settings",themeLabel:"Theme",themeDark:"Dark",themeLight:"Light",languageLabel:"Language",
-importTitle:"Exam System",importDesc:"Import a data file or create a new one to get started.",importBtn:"Import",newDataBtn:"Create New",reImportBtn:"Import New File",
+importTitle:"Exam System",importDesc:"Import a data file or create a new one to get started.",importBtn:"Import",adminImportBar:"Import Exam",importChoiceTitle:"Import Exam",importChoiceDesc:"Choose local file or online URL.",importLocal:"Use Local Import",importLink:"Enter Exam URL",importLinkTitle:"Online Exam URL",importLinkDesc:"Enter a data file URL and validate it.",newDataBtn:"Create New",reImportBtn:"Import New File",
 importSuccess:"Import successful",importFail:"Import failed",exportSuccess:"Export successful",exportFail:"Export failed",imageExported:"Result image exported",imageExportFail:"Failed to export image",studentExported:"Your result has been exported",studentExportFail:"Failed to export result",
 clearDataBtn:"Clear",clearDataConfirmTitle:"Clear all data?",clearDataConfirm:"This will delete all imported questions, candidates and settings, and cannot be undone. Continue?",clearDataDone:"Data cleared",cannotClearInExam:"Cannot clear data during the exam",cannotSwitchDuringExam:"Cannot switch user during the exam",
 statQuestionsLabel:"Questions",statUsersLabel:"Candidates",statScoreLabel:"Total Score",statDurationLabel:"Duration",
@@ -12,7 +12,7 @@ setQuestions:"Question Management",setUsers:"Candidate Management",adminSettings
 noQuestions:"No questions",noUsers:"No candidates",delete:"Delete",selectAll:"Select All",deselectAll:"Deselect All",deleteSelected:"Delete Selected",selectedCount:"{0} selected",
 complete:"Complete",cancel:"Cancel",back_btn:"Back",next:"Next",confirm:"Confirm",close:"Close",
 questionDeleted:"Question deleted",userDeleted:"Candidate deleted",deleteSuccess:"Deleted successfully",deleteSelectedSuccess:"Deleted {0} item(s)",
-step1:"Step 1 · Question",step2:"Step 2 · Options",step3:"Step 3 · Correct Answer",step3Fill:"Step 3 · Blank Answers",questionText:"Question Text",questionType:"Question Type",singleChoice:"Single Choice",multipleChoice:"Multiple Choice",judgeQuestion:"True/False",fillQuestion:"Fill in the Blank",trueLabel:"✓",falseLabel:"✗",addImage:"Add Image",addAudio:"Add Audio",toggleImage:"Include Image",toggleAudio:"Include Audio",audioHint:"Paste audio URL (mp3 / wav / ogg)",questionImageHint:"Paste image URL or SVG code",optionCount:"Number of options",correctOption:"Correct Option",correctOptions:"Correct Options (multiple)",optionPlaceholder:"Option {0}",
+step1:"Step 1 · Question",step2:"Step 2 · Options",step3:"Step 3 · Correct Answer",step3Fill:"Step 3 · Blank Answers",questionText:"Question Text",questionType:"Question Type",singleChoice:"Single Choice",multipleChoice:"Multiple Choice",judgeQuestion:"True/False",fillQuestion:"Fill in the Blank",trueLabel:"✓",falseLabel:"✗",addImage:"Add Image",addAudio:"Add Audio",toggleImage:"Include Image",toggleAudio:"Include Audio",audioHint:"Paste audio URL (mp3 / wav / ogg)",questionImageHint:"Paste image URL or SVG code",optionCount:"Number of options",correctOption:"Correct Option",correctOptions:"Correct Options (multiple)",optionPlaceholder:"Option {0}",addOptionImage:"Add image to this option",imageAdded:"Image added",optionImageTitle:"Option Image",optionImageHint:"Paste an image URL or an SVG code block for this option.",optionImageLabel:"Image URL or SVG",removeOptionImage:"Remove Image",
 titleRequired:"Question text is required",optionRequired:"Option {0} is required",questionAdded:"Question added",deleteConfirm:"Are you sure you want to delete this?",deleteSelectedConfirm:"Delete {0} selected item(s)?",
 userName:"Name",gender:"Gender",male:"Male",female:"Female",other:"Other",userAdded:"Candidate added",nameRequired:"Name is required",enterName:"Enter your name",enterCred:"Enter UID or verify code",loginCredLabel:"UID / Verify Code",invalidCred:"Invalid UID or verify code",userNotRegistered:"This name is not registered",uid:"UID",verifyCode:"Verify Code",noVerifyCode:"No verify code",
 adminName:"Admin Name",oldPassword:"Old Password",newPassword:"New Password",confirmPassword:"Confirm Password",oldPasswordWrong:"Old password is incorrect",passwordMismatch:"Passwords do not match",passwordTooShort:"Password must be at least 4 characters",
@@ -39,11 +39,11 @@ examSubject:"Subject",examTime:"Exam Time",examDurationLabel:"Duration",newDataC
 guestName:"Guest",examTimeEnded:"This exam has ended. Please wait for the next session.",examNotStartedYet:"The exam has not started yet. Please wait.",timeRemaining:"Time remaining",
 dirtyBadge:"Unsaved changes",unsavedWarning:"You have unsaved changes.",unsavedConfirmTitle:"Unsaved Changes",unsavedConfirmDesc:"You have unsaved changes. Are you sure you want to continue? Your changes will be lost.",unsavedOk:"Continue Anyway",unsavedCancel:"Cancel",
 exportPrompt:"Export Data",exportPromptDesc:"Please export your data to keep it.",
-fillAnswer:"Your Answer",fillAnswerHint:"The correct answer (whitespace trimmed, case-insensitive)",fillPlaceholder:"Type your answer...",fillAnswerRequired:"Answer is required",allTypes:"All",
+fillAnswer:"Your Answer",fillAnswerHint:"The correct answer (whitespace trimmed, case-insensitive)",fillPlaceholder:"Type your answer...",fillTitlePlaceholder:"e.g. The capital of China is _____.",fillAnswerRequired:"Answer is required",allTypes:"All",
 examTitleLabel:"Exam Title",examSubtitleLabel:"Exam Subtitle",examTitlePlaceholder:"e.g., 2024 Spring Final Exam",examSubtitlePlaceholder:"e.g., Computer Science · Grade 12",
 explanationLabel:"Explanation",toggleExplanation:"Include Explanation",explanationPlaceholder:"Explain the correct answer here...",
 examInfoContinue:"Continue",showAnswerDisabled:"Answer details are hidden by the administrator",
-addBlankBtn:"Add blank",blankHint:"{0} blank(s) added. Each blank will be rendered as an input.",blankHintEmpty:"No blanks yet. Click + to add a blank.",blankAnswerLabel:"Blank {0}",blankAnswerHint:"Enter the correct answer for this blank",blankAnswerRequired:"Answer for blank {0} is required",blankRequired:"Please add at least one blank in the question text",
+addBlankBtn:"Add blank",blankHint:"{0} blank(s) added. Use _____ to mark each blank.",blankHintEmpty:"Use _____ in the question text, or click + to insert a blank.",blankAnswerLabel:"Blank {0}",blankAnswerHint:"Enter the correct answer for this blank",blankAnswerRequired:"Answer for blank {0} is required",blankRequired:"Please add at least one blank in the question text",
 dragToReorder:"Drag to reorder",
 typeTabsHint:"Drag question type tabs to change their order. Exams will present questions grouped by this order.",
 typeOrderHint:"Question order in the exam will follow the current tab order.",
@@ -54,11 +54,16 @@ step3Subjective:"Step 3 · Confirm",
 quotaReading:"Reading Count",quotaShort:"Short Answer Count",quotaEssay:"Essay Count",
 audioDictation:"Listening dictation",audioDictationHint:"Require candidates to type the audio text before continuing",audioTranscriptLabel:"Type what you heard",audioTranscriptPlaceholder:"Type the audio text here...",audioCheckBtn:"Check",audioCheckCorrect:"Correct. You can continue.",audioCheckWrong:"Not quite. Listen again and try again.",audioDictationRequired:"Please type the audio text correctly to continue.",audioPlaying:"Playing...",subjectiveAnswerLabel:"Your Answer",
 playAudioText:"Play Listening Text",audioTextLabel:"Listening Text (browser read-aloud)",audioTextHint:"Enter the listening text. It will be read aloud by browser speech synthesis; no audio link is required.",fullscreenExitLogout:"You exited fullscreen. The exam has been ended.",
-startTimeRequired:"Please set a custom start time"
+archiveBtn:"Archive",archiveTitle:"Candidate Archive",archiveDesc:"Search saved candidate records on this device.",archiveSearch:"Search name, UID or exam",archiveEmpty:"No records",archiveClear:"Clear Archive",archiveClearConfirm:"Delete all saved archive records?",archiveDetail:"Record Detail",archiveSelectedOptions:"Selected options: {0}",
+cloudBtn:"Cloud Exam",cloudTitle:"Load Cloud Exam",cloudDesc:"Enter the URL of an exam data file. The site must allow cross-origin script loading.",cloudUrl:"Exam Data URL",cloudCustomUrl:"Custom Cloud Exam URL",cloudLoad:"Load",cloudUrlRequired:"Please enter a URL",cloudLoading:"Loading cloud exam...",cloudLoaded:"Cloud exam loaded",cloudLoadFail:"Failed to load cloud exam",cloudPrivate404:"HTTP 404: file not found, or the repository is private and needs a GitHub Token with access.",cloudSample:"Sample",cloudDisabled:"Cloud exam is disabled in settings",cloudSettings:"Cloud and GitHub",
+enableCloud:"Enable cloud exam",enableGithub:"Enable GitHub storage",githubToken:"GitHub Token",githubTokenOptional:"Optional, required for private repositories",getToken:"Get Token",githubOwner:"Owner",githubRepo:"Repository",githubBranch:"Branch",githubPath:"Save Path",githubAllowRetake:"Allow candidates to retake after upload",githubCreatePages:"Create Grader and Log Pages",githubNotConfigured:"GitHub is not configured",githubDisabledHint:"Upload, grading, logs and cloud save are disabled until GitHub is configured.",clearLocalData:"Clear Local Data",clearLocalTitle:"Clear Local Data",clearLocalDesc:"Remove saved keys, archive, logs and local settings from this browser?",clearLocalDone:"Local data cleared",githubCreating:"Creating GitHub pages...",githubPagesCreated:"Grader and log pages created",githubFail:"GitHub operation failed",githubLocalFallback:"GitHub write failed; local grader and log pages were generated",githubUpload:"Upload to GitHub",githubUploading:"Uploading to GitHub...",githubUploaded:"Uploaded to GitHub",retakeNotAllowed:"Retake is not allowed for this candidate",
+logBtn:"Log",logTitle:"Candidate Log",logDesc:"Write your notes for this cloud exam. It is saved on this device and can be uploaded to GitHub.",logPlaceholder:"Write your log here...",logSave:"Save Log",logSaved:"Log saved",logUpload:"Upload Log",logUploaded:"Log uploaded",
+aiTitle:"AI Question Generator",aiDesc:"Call an OpenAI-compatible chat completions API. The key is saved only in this browser.",aiApiUrl:"API URL",aiApiKey:"API Key",aiModel:"Model",aiCount:"Question Count",aiType:"Question Type",aiDifficulty:"Difficulty",aiEasy:"Easy",aiMedium:"Medium",aiHard:"Hard",aiTopic:"Topic or Source Material",aiTopicHint:"Enter the subject, knowledge points, or source text",aiGenerate:"Generate",aiGenerating:"Generating...",aiGenerated:"Generated {0} question(s)",aiGenerateFail:"AI generation failed",aiNoContent:"AI returned empty content",aiWriting:"AI is writing...",aiAutoAdd:"Add to question bank automatically",aiNoQuestions:"AI returned no usable questions",aiRawTitle:"Raw AI Response",aiCopyRaw:"Copy Raw Response",aiSelectAll:"Select All",aiSelectNone:"Select None",aiSelectedCount:"{0} selected",aiNoneSelected:"Please select at least one question",aiQuestionPreview:"Preview ({0})",aiAddQuestions:"Add {0} Question(s)",aiAdded:"AI questions added",aiNeedConfig:"Please enter the API URL and key",aiTopicRequired:"Please enter a topic",
+openGrader:"Open Grader",gradeTitle:"Grading",gradeDesc:"Open repository grader",aiProvider:"Provider",aiCustomProvider:"Custom",aiCustomUrl:"Custom API URL",aiCustomUrlHint:"Shown for the selected provider; editable only for Custom.",aiReasoning:"Thinking mode",aiOff:"Off",aiLow:"Low",aiHigh:"High",aiMax:"Max",aiFetchModels:"Fetch Models",aiFetching:"Fetching...",aiModelsLoaded:"Loaded {0} models",aiFetchFail:"Failed to fetch models",aiFile:"Reference File",aiFileHint:"Optional: upload a .txt, .md, .csv, .json or .html file",aiCustomModel:"Custom Model",aiCustomModelHint:"Enter the exact model ID",aiChooseFile:"Choose Reference File",aiWebSearch:"Web Search",examStartHint:"If set, timing starts from this time; entry after the end time is blocked.",startTimeRequired:"Please set a custom start time"
 },
 zh:{
 headerTitle:"考试系统",userSectionLabel:"用户",userRoleStudent:"考生",userRoleAdmin:"管理员",adminSectionLabel:"管理",settingsLabel:"设置",themeLabel:"主题",themeDark:"深色",themeLight:"浅色",languageLabel:"语言",
-importTitle:"考试系统",importDesc:"导入数据文件或新建数据表开始使用。",importBtn:"导入",newDataBtn:"新建数据表",reImportBtn:"重新导入",
+importTitle:"考试系统",importDesc:"导入数据文件或新建数据表开始使用。",importBtn:"导入",adminImportBar:"导入试卷",importChoiceTitle:"导入试卷",importChoiceDesc:"选择本地文件或在线地址。",importLocal:"使用本地导入",importLink:"填写试卷链接",importLinkTitle:"在线试卷地址",importLinkDesc:"输入试卷数据文件地址并校验。",newDataBtn:"新建数据表",reImportBtn:"重新导入",
 importSuccess:"导入成功",importFail:"导入失败",exportSuccess:"导出成功",exportFail:"导出失败",imageExported:"成绩图片已导出",imageExportFail:"成绩图片导出失败",studentExported:"成绩已导出",studentExportFail:"成绩导出失败",
 clearDataBtn:"清空",clearDataConfirmTitle:"清空所有数据？",clearDataConfirm:"此操作将删除所有已导入的题目、考生和设置，且无法撤销。是否继续？",clearDataDone:"数据已清空",cannotClearInExam:"考试进行中无法清空数据",cannotSwitchDuringExam:"考试进行中无法切换用户",
 statQuestionsLabel:"题目",statUsersLabel:"考生",statScoreLabel:"总分",statDurationLabel:"时长",
@@ -69,7 +74,7 @@ setQuestions:"试卷管理",setUsers:"考生管理",adminSettings:"管理员设�
 noQuestions:"暂无题目",noUsers:"暂无考生",delete:"删除",selectAll:"全选",deselectAll:"全不选",deleteSelected:"删除选中",selectedCount:"已选 {0} 项",
 complete:"完成",cancel:"取消",back_btn:"上一步",next:"下一步",confirm:"确定",close:"关闭",
 questionDeleted:"题目已删除",userDeleted:"考生已删除",deleteSuccess:"删除成功",deleteSelectedSuccess:"已删除 {0} 项",
-step1:"第 1 步 · 题目信息",step2:"第 2 步 · 选项内容",step3:"第 3 步 · 正确答案",step3Fill:"第 3 步 · 空的答案",questionText:"题目内容",questionType:"题目类型",singleChoice:"单选题",multipleChoice:"多选题",judgeQuestion:"判断题",fillQuestion:"填空题",trueLabel:"✓",falseLabel:"✗",addImage:"添加图片",addAudio:"添加音频",toggleImage:"包含图片",toggleAudio:"包含音频",audioHint:"粘贴音频 URL（mp3 / wav / ogg）",questionImageHint:"粘贴图片 URL 或 SVG 代码",optionCount:"选项数量",correctOption:"正确选项",correctOptions:"正确选项（可多选）",optionPlaceholder:"选项 {0}",
+step1:"第 1 步 · 题目信息",step2:"第 2 步 · 选项内容",step3:"第 3 步 · 正确答案",step3Fill:"第 3 步 · 每个空的答案",questionText:"题目内容",questionType:"题目类型",singleChoice:"单选题",multipleChoice:"多选题",judgeQuestion:"判断题",fillQuestion:"填空题",trueLabel:"✓",falseLabel:"✗",addImage:"添加图片",addAudio:"添加音频",toggleImage:"包含图片",toggleAudio:"包含音频",audioHint:"粘贴音频 URL（mp3 / wav / ogg）",questionImageHint:"粘贴图片 URL 或 SVG 代码",optionCount:"选项数量",correctOption:"正确选项",correctOptions:"正确选项（可多选）",optionPlaceholder:"选项 {0}",addOptionImage:"给这个选项添加图片",imageAdded:"已添加图片",optionImageTitle:"选项图片",optionImageHint:"粘贴图片链接，或直接粘贴 SVG 代码。",optionImageLabel:"图片链接或 SVG",removeOptionImage:"移除图片",
 titleRequired:"题目内容不能为空",optionRequired:"选项 {0} 不能为空",questionAdded:"题目已添加",deleteConfirm:"确定要删除此项吗？",deleteSelectedConfirm:"确定要删除选中的 {0} 项吗？",
 userName:"姓名",gender:"性别",male:"男",female:"女",other:"其他",userAdded:"考生已添加",nameRequired:"姓名不能为空",enterName:"请输入你的姓名",enterCred:"请输入 UID 或验证码",loginCredLabel:"UID / 验证码",invalidCred:"UID 或验证码错误",userNotRegistered:"该姓名未注册",uid:"UID",verifyCode:"验证码",noVerifyCode:"无需验证码",
 adminName:"管理员名称",oldPassword:"旧密码",newPassword:"新密码",confirmPassword:"确认密码",oldPasswordWrong:"旧密码不正确",passwordMismatch:"两次密码不一致",passwordTooShort:"密码至少 4 位",
@@ -96,11 +101,11 @@ examSubject:"科目",examTime:"考试时间",examDurationLabel:"时长",newDataC
 guestName:"体验用户",examTimeEnded:"本场考试已结束，请等待下一场考试。",examNotStartedYet:"考试尚未开始，请稍候。",timeRemaining:"剩余时间",
 dirtyBadge:"未保存",unsavedWarning:"您有未保存的更改。",unsavedConfirmTitle:"未保存的更改",unsavedConfirmDesc:"您有未保存的更改，确定要继续吗？更改将丢失。",unsavedOk:"仍要继续",unsavedCancel:"取消",
 exportPrompt:"导出数据",exportPromptDesc:"请导出数据以保存。",
-fillAnswer:"你的答案",fillAnswerHint:"正确答案（忽略首尾空白和大小写）",fillPlaceholder:"请输入答案...",fillAnswerRequired:"答案不能为空",allTypes:"全部",
+fillAnswer:"你的答案",fillAnswerHint:"正确答案（忽略首尾空白和大小写）",fillPlaceholder:"请输入答案...",fillTitlePlaceholder:"例如：中国的首都是 _____。",fillAnswerRequired:"答案不能为空",allTypes:"全部",
 examTitleLabel:"试卷主标题",examSubtitleLabel:"试卷副标题",examTitlePlaceholder:"例如：2024 春季期末考试",examSubtitlePlaceholder:"例如：计算机科学 · 高三",
 explanationLabel:"题目解析",toggleExplanation:"包含解析",explanationPlaceholder:"在此处填写题目解析...",
 examInfoContinue:"开始",showAnswerDisabled:"答案详情已由管理员隐藏",
-addBlankBtn:"添加空",blankHint:"已添加 {0} 个空，每个空会渲染为一个输入框。",blankHintEmpty:"还没有空，点击 + 号添加空。",blankAnswerLabel:"空 {0}",blankAnswerHint:"请输入这个空的正确答案",blankAnswerRequired:"第 {0} 个空的答案不能为空",blankRequired:"请先在题目内容中添加至少一个空",
+addBlankBtn:"添加空",blankHint:"已添加 {0} 个空，请使用 _____ 标出每个空的位置。",blankHintEmpty:"请在题目内容中使用 _____ 标出填空位置，或点击 + 插入一个空。",blankAnswerLabel:"空 {0}",blankAnswerHint:"请输入这个空的正确答案",blankAnswerRequired:"第 {0} 个空的答案不能为空",blankRequired:"请使用 _____ 标出至少一个空",
 dragToReorder:"拖动排序",
 typeTabsHint:"拖动题型标签可调整大题出场顺序，考试将按此顺序出题。",
 typeOrderHint:"考试题目将按当前标签顺序分组呈现。",
@@ -111,7 +116,12 @@ step3Subjective:"第 3 步 · 确认",
 quotaReading:"阅读题数",quotaShort:"自答题数",quotaEssay:"作文题数",
 audioDictation:"听力听写",audioDictationHint:"要求考生在继续前输入音频文本",audioTranscriptLabel:"请输入你听到的内容",audioTranscriptPlaceholder:"在此输入音频文本...",audioCheckBtn:"核对",audioCheckCorrect:"正确，可以继续。",audioCheckWrong:"不太对，请重新播放后再试一次。",audioDictationRequired:"请输入正确的音频文本后继续。",audioPlaying:"播放中...",subjectiveAnswerLabel:"你的答案",
 playAudioText:"播放听力文本",audioTextLabel:"听力文本（浏览器朗读）",audioTextHint:"输入要朗读的听力文本，播放时由浏览器语音合成朗读，无需音频链接。",fullscreenExitLogout:"您已退出全屏，考试已结束。",
-startTimeRequired:"请设置自定义开始时间"
+archiveBtn:"档案查询",archiveTitle:"考生档案查询",archiveDesc:"查询本机保存的考生考试记录。",archiveSearch:"搜索姓名、UID 或试卷",archiveEmpty:"暂无档案",archiveClear:"清空档案",archiveClearConfirm:"确定删除全部本机档案记录吗？",archiveDetail:"档案详情",archiveSelectedOptions:"当时选项：{0}",
+cloudBtn:"在线试卷",cloudTitle:"加载在线试卷",cloudDesc:"输入考试数据文件的网址，目标站点需要允许跨域脚本加载。",cloudUrl:"试卷数据网址",cloudCustomUrl:"自定义云端试卷地址",cloudLoad:"加载",cloudUrlRequired:"请输入网址",cloudLoading:"正在加载在线试卷...",cloudLoaded:"在线试卷已加载",cloudLoadFail:"在线试卷加载失败",cloudPrivate404:"HTTP 404：文件不存在，或仓库为私有，需要配置有访问权限的 GitHub Token。",cloudSample:"示例",cloudDisabled:"设置中未启用在线试卷",cloudSettings:"云端与 GitHub",
+enableCloud:"启用在线试卷",enableGithub:"启用 GitHub 云存档",githubToken:"GitHub 令牌",githubTokenOptional:"可选，私有仓库需要填写",getToken:"获取令牌",githubOwner:"仓库所有者",githubRepo:"仓库名称",githubBranch:"分支",githubPath:"保存目录",githubAllowRetake:"允许考生上传后再次答题",githubCreatePages:"创建批改器与日志页面",githubNotConfigured:"GitHub 尚未配置",githubDisabledHint:"未配置 GitHub 时，上传、批改、日志和云保存功能将不可用。",clearLocalData:"清除本机数据",clearLocalTitle:"清除本机数据",clearLocalDesc:"确定删除本机保存的密钥、档案、日志和本地设置吗？",clearLocalDone:"本机数据已清除",githubCreating:"正在创建 GitHub 页面...",githubPagesCreated:"批改器和日志页面已创建",githubFail:"GitHub 操作失败",githubLocalFallback:"GitHub 写入失败，已生成到本地下载",githubUpload:"上传到 GitHub",githubUploading:"正在上传到 GitHub...",githubUploaded:"已上传到 GitHub",retakeNotAllowed:"该考生不允许再次答题",
+logBtn:"日志",logTitle:"考生日志",logDesc:"记录本次云试卷的笔记，会保存在本机，也可上传到 GitHub。",logPlaceholder:"在此写下你的日志...",logSave:"保存日志",logSaved:"日志已保存",logUpload:"上传日志",logUploaded:"日志已上传",
+aiTitle:"AI 出题",aiDesc:"调用兼容 OpenAI 的 chat completions 接口，密钥只保存在本浏览器。",aiApiUrl:"API 地址",aiApiKey:"API 密钥",aiModel:"模型",aiCount:"题目数量",aiType:"题目类型",aiDifficulty:"难度",aiEasy:"简单",aiMedium:"中等",aiHard:"困难",aiTopic:"主题或素材",aiTopicHint:"输入学科、知识点或原文素材",aiGenerate:"开始出题",aiGenerating:"正在生成...",aiGenerated:"已生成 {0} 道题",aiGenerateFail:"AI 出题失败",aiNoContent:"AI 返回内容为空",aiWriting:"AI 正在生成...",aiAutoAdd:"生成后自动加入题库",aiNoQuestions:"AI 没有返回可用题目",aiRawTitle:"AI 原始返回",aiCopyRaw:"复制原始返回",aiSelectAll:"全选",aiSelectNone:"全不选",aiSelectedCount:"已选 {0} 道",aiNoneSelected:"请至少选择一道题",aiQuestionPreview:"题目预览（{0}）",aiAddQuestions:"添加 {0} 道题",aiAdded:"AI 题目已添加",aiNeedConfig:"请填写 API 地址和密钥",aiTopicRequired:"请填写主题",
+openGrader:"打开批改器",gradeTitle:"批改",gradeDesc:"打开仓库批改页面",aiProvider:"服务商",aiCustomProvider:"自定义",aiCustomUrl:"自定义 API 地址",aiCustomUrlHint:"显示当前服务商地址，仅自定义时可编辑。",aiReasoning:"思考模式",aiOff:"关闭",aiLow:"低",aiHigh:"高",aiMax:"最高",aiFetchModels:"拉取模型",aiFetching:"拉取中...",aiModelsLoaded:"已加载 {0} 个模型",aiFetchFail:"拉取模型失败",aiFile:"参考文件",aiFileHint:"可选：上传 .txt、.md、.csv、.json 或 .html 文件",aiCustomModel:"自定义模型",aiCustomModelHint:"输入指定的模型 ID",aiChooseFile:"选择参考文件",aiWebSearch:"联网搜索",examStartHint:"设置后从该时间开始计时；超过结束时间将无法进入。",startTimeRequired:"请设置自定义开始时间"
 }
 };
 
@@ -120,10 +130,14 @@ const VERIFY_LENGTH=9;
 const FULLSCREEN_TIMEOUT=30;
 const SUPPORTED_LANGS=["en","zh"];
 const AUDIO_CONFIRMED_KEY="audioConfirmedUsers";
-const QUESTION_TYPES=["single","multiple","judge","fill","reading","short","essay"];
-const SUBJECTIVE_TYPES=["reading","short","essay"];
-const BLANK_PLACEHOLDER="___";
-const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",language:"en",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:true,randomQuestions:false,randomOptions:false,enableAudio:false,audioDictation:true,allowStudentExport:false,subject:"",noticeText:"",audioTestText:"",examTitle:"",examSubtitle:"",typeOrder:["single","multiple","judge","fill","reading","short","essay"],typeQuotas:{single:0,multiple:0,judge:0,fill:0,reading:0,short:0,essay:0}};
+const ARCHIVE_KEY="examArchiveRecords";
+const AI_CONFIG_KEY="examAIConfig";
+const CLOUD_URL_KEY="examCloudUrl";
+const GH_UPLOAD_KEY="examGithubUploaded";
+const QUESTION_TYPES=["single","multiple","judge","fill","short"];
+const SUBJECTIVE_TYPES=["short"];
+
+const DEFAULT_SETTINGS={allowGuest:true,disableCustom:false,theme:"dark",language:"en",examStartTime:"",examDuration:60,totalScore:100,examQuestionCount:0,uidLength:18,requireAll:false,showAnswer:false,randomQuestions:false,randomOptions:false,enableAudio:false,enableCloud:false,cloudUrl:"",enableGithub:false,githubToken:"",githubOwner:"",githubRepo:"",githubBranch:"main",githubPath:"exam-system",githubAllowRetake:true,allowStudentExport:false,subject:"",noticeText:"",audioTestText:"",examTitle:"",examSubtitle:"",typeOrder:["single","multiple","judge","fill","short"],typeQuotas:{single:0,multiple:0,judge:0,fill:0,short:0}};
 
 const state={
   currentLang:"en",
@@ -131,7 +145,7 @@ const state={
   currentUser:"user",
   modalClosable:true,
   dirty:false,
-  qFilter:"all",
+  qFilter:"all",remoteUrl:"",sessionKey:"",aiPreview:[],aiRaw:"",aiSelected:new Set(),aiFilter:"all",aiSearch:"",
   dragSrcId:null,
   dragSrcType:null,
   appData:{
@@ -152,9 +166,9 @@ const state={
     lastResult:null,
     audioConfirmedUsers:new Set()
   },
-  wizard:{step:1,type:"single",image:"",audio:"",title:"",optionCount:4,options:["","","",""],correct:[0],includeImage:false,includeAudio:false,includeExplanation:false,explanation:"",blankAnswers:[]},
+  wizard:{step:1,type:"single",image:"",audio:"",audioText:"",title:"",optionCount:4,options:["","","",""],optionImages:["","","",""],correct:[0],includeImage:false,includeAudio:false,includeExplanation:false,explanation:"",blankAnswers:[]},
   selection:{questions:new Set(),users:new Set()},
-  fullscreen:{interval:null,countdown:0,active:false,onSuccess:null},
+  fullscreen:{interval:null,countdown:0,active:false,entered:false,logoutOnExit:false,watch:null,loggingOut:false,onSuccess:null},
   lastWarn:0,
   toastTimer:null
 };
@@ -181,15 +195,19 @@ function typeLabel(type){
   if(type==="multiple")return t("multipleChoice");
   if(type==="judge")return t("judgeQuestion");
   if(type==="fill")return t("fillQuestion");
-  if(type==="reading")return t("readingQuestion");
-  if(type==="short")return t("shortAnswer");
-  if(type==="essay")return t("essayQuestion");
+  if(type==="reading"||type==="short"||type==="essay")return t("shortAnswer");
   return t("singleChoice");
 }
 
+function normalizeFillTitle(text){
+  let value=String(text||"");
+  value=value.replace(/_{3,}/g,"_____").replace(/空\s*\d+/g,"_____");
+  if(!/_{3,}/.test(value))value=value.trim()+" _____";
+  return value;
+}
 function countBlanks(text){
   if(!text)return 0;
-  const matches=String(text).match(new RegExp(BLANK_PLACEHOLDER,"g"));
+  const matches=String(text).match(/_{3,}|空\s*\d+/g);
   return matches?matches.length:0;
 }
 
@@ -212,8 +230,8 @@ function makeTransparentDragCanvas(){
 
 const TRANSPARENT_DRAG_CANVAS=makeTransparentDragCanvas();
 
-function loadAudioConfirmedUsers(){try{return new Set(JSON.parse(localStorage.getItem(AUDIO_CONFIRMED_KEY)||"[]"));}catch(e){return new Set();}}
-function saveAudioConfirmedUsers(){try{localStorage.setItem(AUDIO_CONFIRMED_KEY,JSON.stringify([...state.quiz.audioConfirmedUsers]));}catch(e){}}
+function loadAudioConfirmedUsers(){return new Set();}
+function saveAudioConfirmedUsers(){}
 function markDirty(){state.dirty=true;refreshDirtyBadge();}
 function markClean(){state.dirty=false;refreshDirtyBadge();}
 function refreshDirtyBadge(){const b=$("dirtyBadge");if(!b)return;b.style.display=state.dirty?"inline-flex":"none";const span=$("dirtyText");if(span)span.textContent=t("dirtyBadge");}
@@ -224,9 +242,49 @@ function warnThrottled(msg){const now=Date.now();if(now-state.lastWarn<1500)retu
 function applyTheme(){document.body.classList.toggle("light",state.currentTheme==="light");}
 function formatLocalDateTime(date){const pad=(n)=>String(n).padStart(2,"0");return date.getFullYear()+"-"+pad(date.getMonth()+1)+"-"+pad(date.getDate())+"T"+pad(date.getHours())+":"+pad(date.getMinutes());}
 function normalizeDateTime(s){if(!s)return "";if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(s))return s.slice(0,16);const d=new Date(s);if(isNaN(d))return "";return formatLocalDateTime(d);}
-function setCustomSelect(id,value){const el=$(id);if(!el)return;el.dataset.value=value;const label=el.querySelector(".custom-select-label");const opt=el.querySelector('.custom-select-option[data-value="'+value+'"]');if(label&&opt)label.textContent=opt.textContent;el.querySelectorAll(".custom-select-option").forEach((o)=>{o.classList.toggle("selected",o.dataset.value===value);});}
+function setCustomSelect(id,value){const el=$(id);if(!el)return;el.dataset.value=value;const label=el.querySelector(".custom-select-label");const opt=el.querySelector('.custom-select-option[data-value="'+value+'"]');if(label&&opt){if(el.classList.contains("rich-select"))label.innerHTML=opt.innerHTML;else label.textContent=opt.textContent;}el.querySelectorAll(".custom-select-option").forEach((o)=>{o.classList.toggle("selected",o.dataset.value===value);});}
 function refreshThemeLabels(){const el=$("themeSelect");if(!el)return;const opts=el.querySelectorAll(".custom-select-option");if(opts[0])opts[0].textContent=t("themeDark");if(opts[1])opts[1].textContent=t("themeLight");setCustomSelect("themeSelect",state.currentTheme);}
-function initCustomSelects(){document.querySelectorAll(".custom-select").forEach((sel)=>{const btn=sel.querySelector(".custom-select-btn");if(btn){btn.onclick=(e)=>{e.stopPropagation();document.querySelectorAll(".custom-select").forEach((s)=>{if(s!==sel)s.classList.remove("open");});sel.classList.toggle("open");};}sel.querySelectorAll(".custom-select-option").forEach((opt)=>{opt.onclick=(e)=>{e.stopPropagation();sel.classList.remove("open");const val=opt.dataset.value;setCustomSelect(sel.id,val);if(sel.id==="themeSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("themeSelect",state.currentTheme);showToast(t("disabledByAdmin"),"warn");return;}state.currentTheme=val;state.appData.settings.theme=val;applyTheme();markDirty();}else if(sel.id==="languageSelect"){if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("languageSelect",state.currentLang);showToast(t("disabledByAdmin"),"warn");return;}state.currentLang=normalizeLang(val);state.appData.settings.language=state.currentLang;applyLang();}};});});document.addEventListener("click",()=>{document.querySelectorAll(".custom-select").forEach((s)=>s.classList.remove("open"));});}
+function initCustomSelects(){
+  document.querySelectorAll(".custom-select").forEach((sel)=>{
+    const btn=sel.querySelector(".custom-select-btn");
+    if(btn){
+      btn.onclick=(e)=>{
+        e.stopPropagation();
+        document.querySelectorAll(".custom-select").forEach((s)=>{if(s!==sel)s.classList.remove("open");});
+        sel.classList.toggle("open");
+      };
+    }
+    sel.querySelectorAll(".custom-select-option").forEach((opt)=>{
+      opt.onclick=(e)=>{
+        e.stopPropagation();
+        sel.classList.remove("open");
+        const val=opt.dataset.value;
+        setCustomSelect(sel.id,val);
+        if(sel.id==="themeSelect"){
+          if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("themeSelect",state.currentTheme);showToast(t("disabledByAdmin"),"warn");return;}
+          state.currentTheme=val;state.appData.settings.theme=val;applyTheme();markDirty();
+        }else if(sel.id==="languageSelect"){
+          if(state.currentUser!=="admin"&&state.appData.settings.disableCustom){setCustomSelect("languageSelect",state.currentLang);showToast(t("disabledByAdmin"),"warn");return;}
+          state.currentLang=normalizeLang(val);state.appData.settings.language=state.currentLang;applyLang();
+        }
+        if(typeof sel.onSelect==="function")sel.onSelect(val);
+      };
+    });
+  });
+  if(!document.body.dataset.customSelectDoc){
+    document.body.dataset.customSelectDoc="1";
+    document.addEventListener("click",()=>{document.querySelectorAll(".custom-select").forEach((s)=>s.classList.remove("open"));});
+  }
+}
+function setSelectOptions(id,items,selected){
+  const el=$(id);if(!el)return;
+  const menu=el.querySelector(".custom-select-menu");if(!menu)return;
+  menu.innerHTML=items.map((item)=>'<div class="custom-select-option" data-value="'+esc(item.value)+'">'+esc(item.label)+'</div>').join("");
+  const value=selected&&items.some((item)=>item.value===selected)?selected:(items[0]?items[0].value:"");
+  setCustomSelect(id,value);
+  initCustomSelects();
+  if(typeof el.onSelect==="function"&&value)el.onSelect(value);
+}
 
 function applyLang(){
   state.currentLang=normalizeLang(state.currentLang);
@@ -234,7 +292,7 @@ function applyLang(){
   const adminNameEl=$("adminNameDisplay");
   if(adminNameEl)adminNameEl.textContent=state.appData.admin.name||"Administrator";
   document.title=t("headerTitle");
-  const map={headerTitle:"headerTitle",userSectionLabel:"userSectionLabel",userRoleDisplay:"userRoleStudent",adminRoleDisplay:"userRoleAdmin",adminSectionLabel:"adminSectionLabel",settingsLabel:"settingsLabel",themeLabel:"themeLabel",languageLabel:"languageLabel",importTitle:"importTitle",importDesc:"importDesc",importBtnLabel:"importBtn",btnNewData:"newDataBtn",btnReImport:"reImportBtn",btnAdminImport:"importBtn",btnClearData:"clearDataBtn",statQuestionsLabel:"statQuestionsLabel",statUsersLabel:"statUsersLabel",statScoreLabel:"statScoreLabel",statDurationLabel:"statDurationLabel",actQuestionsTitle:"actQuestionsTitle",actQuestionsDesc:"actQuestionsDesc",actUsersTitle:"actUsersTitle",actUsersDesc:"actUsersDesc",actSettingsTitle:"actSettingsTitle",actSettingsDesc:"actSettingsDesc",actExportTitle:"actExportTitle",actExportDesc:"actExportDesc",userWelcomeTitle:"userWelcomeTitle",userWelcomeDesc:"userWelcomeDesc",btnStartQuiz:"startQuiz",btnGuestQuiz:"guestQuiz",btnSubmit:"submit",btnExitQuiz:"exitQuiz",waitingTitle:"examReady",waitingDesc:"waitingExamDesc",btnCancelWaiting:"cancelWaiting",fullscreenTitle:"fullscreenTitle",btnEnterFullscreen:"enterFullscreen",btnCancelFullscreen:"cancelFullscreen"};
+  const map={headerTitle:"headerTitle",userSectionLabel:"userSectionLabel",userRoleDisplay:"userRoleStudent",adminRoleDisplay:"userRoleAdmin",adminSectionLabel:"adminSectionLabel",settingsLabel:"settingsLabel",themeLabel:"themeLabel",languageLabel:"languageLabel",importTitle:"importTitle",importDesc:"importDesc",importBtnLabel:"importBtn",btnNewData:"newDataBtn",btnReImport:"reImportBtn",btnAdminImport:"importBtn",btnClearData:"clearDataBtn",statQuestionsLabel:"statQuestionsLabel",statUsersLabel:"statUsersLabel",statScoreLabel:"statScoreLabel",statDurationLabel:"statDurationLabel",actQuestionsTitle:"actQuestionsTitle",actQuestionsDesc:"actQuestionsDesc",actUsersTitle:"actUsersTitle",actUsersDesc:"actUsersDesc",actSettingsTitle:"actSettingsTitle",actSettingsDesc:"actSettingsDesc",actExportTitle:"actExportTitle",actExportDesc:"actExportDesc",userWelcomeTitle:"userWelcomeTitle",userWelcomeDesc:"userWelcomeDesc",btnStartQuiz:"startQuiz",btnGuestQuiz:"guestQuiz",btnSubmit:"submit",btnExitQuiz:"exitQuiz",waitingTitle:"examReady",waitingDesc:"waitingExamDesc",btnCancelWaiting:"cancelWaiting",fullscreenTitle:"fullscreenTitle",btnEnterFullscreen:"enterFullscreen",btnCancelFullscreen:"cancelFullscreen",btnArchiveUser:"archiveBtn",actArchiveTitle:"archiveTitle",actArchiveDesc:"archiveDesc",actAITitle:"aiTitle",actAIDesc:"aiDesc",actCloudTitle:"cloudBtn",actCloudDesc:"cloudDesc",btnCloudImport:"cloudBtn",btnCloudUser:"cloudBtn",btnLog:"logBtn",actGradeTitle:"gradeTitle",actGradeDesc:"gradeDesc",adminImportBarText:"adminImportBar"};
   Object.entries(map).forEach(([id,key])=>{const el=$(id);if(el)el.textContent=t(key);});
   refreshThemeLabels();
   setCustomSelect("languageSelect",state.currentLang);
@@ -245,9 +303,9 @@ function applyLang(){
 }
 function toNum(v,def){const n=parseInt(v);return isNaN(n)?def:n;}
 function updateStats(){$("statQuestions").textContent=state.appData.questions.length;$("statUsers").textContent=state.appData.users.length;$("statScore").textContent=state.appData.settings.totalScore;const dur=state.appData.settings.examDuration;$("statDuration").textContent=dur>0?dur+" "+t("minutes"):t("examDurationUnlimited");}
-function updateRoleUI(){const isAdmin=state.currentUser==="admin";$("userCard").classList.toggle("active",!isAdmin);$("adminCard").classList.toggle("active",isAdmin);const canCustom=isAdmin||!state.appData.settings.disableCustom;$("themeSelect").classList.toggle("disabled",!canCustom);$("languageSelect").classList.toggle("disabled",!canCustom);$("adminActions").style.display=isAdmin?"flex":"none";const newBtn=$("btnNewData");if(newBtn)newBtn.style.display=isAdmin?"inline-flex":"none";const reImportBtn=$("btnReImport");if(reImportBtn)reImportBtn.style.display=isAdmin?"none":"inline-flex";if(!state.quiz.active&&!$("resultArea").classList.contains("active")){if(isAdmin){$("adminView").style.display="flex";$("userView").style.display="none";$("quizArea").classList.remove("active");}else{$("adminView").style.display="none";$("userView").style.display="flex";$("quizArea").classList.remove("active");}}const guestBtn=$("btnGuestQuiz");if(guestBtn)guestBtn.style.display=(state.appData.settings.allowGuest&&!isAdmin)?"inline-flex":"none";}
+function updateRoleUI(){const isAdmin=state.currentUser==="admin";$("userCard").classList.toggle("active",!isAdmin);$("adminCard").classList.toggle("active",isAdmin);const canCustom=isAdmin||!state.appData.settings.disableCustom;$("themeSelect").classList.toggle("disabled",!canCustom);$("languageSelect").classList.toggle("disabled",!canCustom);$("adminActions").style.display=isAdmin?"flex":"none";const newBtn=$("btnNewData");if(newBtn)newBtn.style.display=isAdmin?"inline-flex":"none";const reImportBtn=$("btnReImport");if(reImportBtn)reImportBtn.style.display=isAdmin?"none":"inline-flex";if(!state.quiz.active&&!$("resultArea").classList.contains("active")){if(isAdmin){$("adminView").style.display="flex";$("userView").style.display="none";$("quizArea").classList.remove("active");}else{$("adminView").style.display="none";$("userView").style.display="flex";$("quizArea").classList.remove("active");}}const guestBtn=$("btnGuestQuiz");if(guestBtn)guestBtn.style.display=(state.appData.settings.allowGuest&&!isAdmin)?"inline-flex":"none";refreshArchiveUI();refreshCloudUI();const logBtn=$("btnLog");if(logBtn)logBtn.style.display=(state.appData.settings.enableCloud||state.appData.settings.enableGithub)?"inline-flex":"none";const gradeBtn=$("actGrade");if(gradeBtn)gradeBtn.style.display=githubConfigured()?"":"none";}
 function openModal(html,closable){state.modalClosable=closable!==false;$("modalContent").innerHTML=html;$("modalOverlay").classList.add("open");}
-function closeModal(){stopAllMedia();state.modalClosable=true;$("modalOverlay").classList.remove("open");$("modalContent").innerHTML="";}
+function closeModal(){stopAllMedia();state.modalClosable=true;$("modalOverlay").classList.remove("open");$("modalContent").classList.remove("settings-modal");$("modalContent").innerHTML="";}
 function confirmDialog(title,message,okText,cancelText,onOk){
   const overlay=$("confirmOverlay");
   const content=$("confirmContent");
@@ -265,6 +323,7 @@ function newId(){return Date.now().toString(36)+Math.random().toString(36).slice
 
 function normalizeQuestion(q){
   let type=q.type;
+  if(type==="reading"||type==="essay")type="short";
   if(QUESTION_TYPES.indexOf(type)<0){
     type=Array.isArray(q.correct)?"multiple":"single";
   }
@@ -286,7 +345,13 @@ function normalizeQuestion(q){
     const n=Number(q.correct);
     correct=isNaN(n)?0:n;
   }
-  return {_id:q._id||newId(),title:q.title||"",image:q.image||"",audio:q.audio||"",audioText:q.audioText||"",options:Array.isArray(q.options)?q.options.slice():[],type,correct,explanation:q.explanation||""};
+  let title=type==="fill"?normalizeFillTitle(q.title):(q.title||"");
+  if(type==="fill"){
+    const blanks=countBlanks(title);
+    while(correct.length<blanks)correct.push("");
+    if(correct.length>blanks)correct=correct.slice(0,blanks);
+  }
+  return {_id:q._id||newId(),title:title,image:q.image||"",audio:q.audio||"",audioText:q.audioText||"",options:Array.isArray(q.options)?q.options.slice():[],optionImages:Array.isArray(q.optionImages)?q.optionImages.map((x)=>String(x||"")):[],type,correct,explanation:q.explanation||""};
 }
 
 function getQuestions(){return state.appData.questions;}
@@ -343,21 +408,7 @@ function exportStudentResult(){
   try{
     const user=state.quiz.currentUserInfo;
     if(!user){showToast(t("studentExportFail"),"warn");return;}
-    const qs=state.quiz.questions;
-    const answers=state.quiz.answers;
-    const showDetail=state.appData.settings.showAnswer;
-    const details=qs.map((q,i)=>{
-      const subjective=isSubjectiveType(q.type);
-      const base={type:q.type,title:q.title,isCorrect:subjective?null:isAnswerCorrect(answers[i],q.correct,q.type)};
-      if(subjective||showDetail){
-        base.userAnswer=answers[i];
-        if(!subjective&&showDetail)base.correct=q.correct;
-        if(showDetail&&q.explanation)base.explanation=q.explanation;
-      }
-      if(subjective)base.subjective=true;
-      return base;
-    });
-    const data={name:user.name,uid:user.uid,verifyCode:user.verifyCode||"",gender:user.gender,subject:state.appData.settings.subject,examTitle:state.appData.settings.examTitle,examSubtitle:state.appData.settings.examSubtitle,details:details};
+    const data=buildStudentResultData();
     const content="window.STUDENT_RESULT="+JSON.stringify(data,null,2)+";";
     const blob=new Blob([content],{type:"text/javascript"});
     const url=URL.createObjectURL(blob);
@@ -385,9 +436,20 @@ function loadData(data){
   state.appData.settings.examTitle=String(merged.examTitle||"");
   state.appData.settings.examSubtitle=String(merged.examSubtitle||"");
   state.appData.settings.typeOrder=normalizeTypeOrder(merged.typeOrder);
-  state.appData.settings.typeQuotas={single:Math.max(0,toNum((merged.typeQuotas||{}).single,0)),multiple:Math.max(0,toNum((merged.typeQuotas||{}).multiple,0)),judge:Math.max(0,toNum((merged.typeQuotas||{}).judge,0)),fill:Math.max(0,toNum((merged.typeQuotas||{}).fill,0)),reading:Math.max(0,toNum((merged.typeQuotas||{}).reading,0)),short:Math.max(0,toNum((merged.typeQuotas||{}).short,0)),essay:Math.max(0,toNum((merged.typeQuotas||{}).essay,0))};
-  state.appData.settings.audioDictation=merged.audioDictation!==false;
-  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&(q.type==="fill"||q.type==="judge"||isSubjectiveType(q.type)||(Array.isArray(q.options)&&q.options.length>0))).map(normalizeQuestion):[];
+  state.appData.settings.typeQuotas={single:Math.max(0,toNum((merged.typeQuotas||{}).single,0)),multiple:Math.max(0,toNum((merged.typeQuotas||{}).multiple,0)),judge:Math.max(0,toNum((merged.typeQuotas||{}).judge,0)),fill:Math.max(0,toNum((merged.typeQuotas||{}).fill,0)),short:Math.max(0,toNum((merged.typeQuotas||{}).short,0))};
+
+  state.appData.settings.enableAudio=merged.enableAudio===true;
+  state.appData.settings.audioTestText=String(merged.audioTestText||"");
+  state.appData.settings.enableCloud=merged.enableCloud===true;
+  state.appData.settings.cloudUrl=String(merged.cloudUrl||"");
+  state.appData.settings.enableGithub=merged.enableGithub===true;
+  state.appData.settings.githubToken=String(merged.githubToken||"");
+  state.appData.settings.githubOwner=String(merged.githubOwner||"");
+  state.appData.settings.githubRepo=String(merged.githubRepo||"");
+  state.appData.settings.githubBranch=String(merged.githubBranch||"main");
+  state.appData.settings.githubPath=String(merged.githubPath||"exam-system");
+  state.appData.settings.githubAllowRetake=merged.githubAllowRetake!==false;
+  state.appData.questions=Array.isArray(data.questions)?data.questions.filter((q)=>q&&(q.type==="fill"||q.type==="judge"||q.type==="reading"||q.type==="essay"||isSubjectiveType(q.type)||(Array.isArray(q.options)&&q.options.length>0))).map(normalizeQuestion):[];
   state.appData.users=Array.isArray(data.users)?data.users.filter((u)=>u&&u.uid).map((u)=>({_id:newId(),name:u.name||"",gender:u.gender||"other",uid:u.uid,verifyCode:u.verifyCode||""})):[];
   const regenCount=verifyImportedUsers(state.appData.users);
   state.currentTheme=state.appData.settings.theme||"dark";
@@ -413,9 +475,34 @@ function loadData(data){
 }
 
 function showExpiredExamModal(){openModal('<h2>'+t("examEndedTitle")+'</h2><p style="font-size:14px;color:var(--text-2);line-height:1.6">'+t("examEndedDesc")+'</p><div class="modal-actions"><button class="btn btn-secondary" id="expClose">'+t("close")+'</button><button class="btn btn-primary" id="expImport">'+t("importNewExam")+'</button></div>',false);$("expClose").onclick=()=>closeModal();$("expImport").onclick=()=>{closeModal();$("fileInput").click();};}
-function importDataFromFile(file){if(!file)return;const reader=new FileReader();reader.onerror=()=>showToast(t("importFail"),"warn");reader.onload=(e)=>{try{const fn=new Function(e.target.result+"\nreturn (typeof window!=='undefined'&&window.APP_DATA)?window.APP_DATA:null;");const data=fn();if(!data||!Array.isArray(data.questions))throw new Error("invalid");loadData(data);showToast(t("importSuccess"),"success");}catch(err){showToast(t("importFail"),"warn");}};reader.readAsText(file);}
+function isValidExamData(data){
+  if(!data||!Array.isArray(data.questions)||!data.questions.length)return false;
+  return data.questions.every((q)=>{
+    if(!q||!q.type||!q.title)return false;
+    const type=q.type==="reading"||q.type==="essay"?"short":q.type;
+    if(type==="single"||type==="multiple")return Array.isArray(q.options)&&q.options.length>0;
+    return true;
+  });
+}
+function openImportChoice(){
+  openModal('<h2>'+t("importChoiceTitle")+'</h2><p class="modal-tip">'+t("importChoiceDesc")+'</p><div class="import-choice"><button class="btn btn-primary btn-lg" id="importLocal">'+t("importLocal")+'</button><button class="btn btn-secondary btn-lg" id="importLink">'+t("importLink")+'</button></div><div class="modal-actions"><button class="btn btn-secondary" id="importCancel">'+t("cancel")+'</button></div>',false);
+  $("importLocal").onclick=()=>{closeModal();$("fileInput").click();};
+  $("importLink").onclick=openImportLinkForm;
+  $("importCancel").onclick=closeModal;
+}
+function openImportLinkForm(){
+  const last=state.appData.settings.cloudUrl||memoryGet("examCloudUrl")||"";
+  openModal('<h2>'+t("importLinkTitle")+'</h2><p class="modal-tip">'+t("importLinkDesc")+'</p><div class="form-group"><label>'+t("cloudUrl")+'</label><input id="importUrlInput" type="url" value="'+esc(last)+'" placeholder="https://example.com/data.js"></div><div class="modal-actions"><button class="btn btn-secondary" id="importBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="importConfirm">'+t("confirm")+'</button></div>',false);
+  $("importBack").onclick=openImportChoice;
+  $("importConfirm").onclick=()=>{
+    const url=String($("importUrlInput").value||"").trim();
+    if(!url){showToast(t("cloudUrlRequired"),"warn");return;}
+    loadCloudExam(url);
+  };
+}
+function importDataFromFile(file){if(!file)return;const reader=new FileReader();reader.onerror=()=>showToast(t("importFail"),"warn");reader.onload=(e)=>{try{const fn=new Function(e.target.result+"\nreturn (typeof window!=='undefined'&&window.APP_DATA)?window.APP_DATA:null;");const data=fn();if(!isValidExamData(data))throw new Error("invalid");loadData(data);state.remoteUrl="";state.sessionKey="file:"+(file.name||"data");showToast(t("importSuccess"),"success");}catch(err){showToast(t("importFail"),"warn");}};reader.readAsText(file);}
 function createNewData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}const doCreate=()=>{loadData({admin:state.appData.admin,settings:state.appData.settings,questions:[],users:[]});showToast(t("newDataCreated"),"success");};if(state.dirty){confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),doCreate);}else{doCreate();}}
-function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"Administrator",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentLang="en";state.currentUser="user";state.qFilter="all";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
+function clearAllData(){if(state.currentUser!=="admin"){showToast(t("noPermission"),"warn");return;}if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}confirmDialog(t("clearDataConfirmTitle"),t("clearDataConfirm"),t("confirm"),t("cancel"),()=>{state.appData={admin:{name:"Administrator",password:"password"},settings:Object.assign({},DEFAULT_SETTINGS),questions:[],users:[]};state.currentTheme="dark";state.currentLang="en";state.currentUser="user";state.qFilter="all";state.remoteUrl="";state.sessionKey="";state.quiz.active=false;state.quiz.answers=[];state.quiz.questions=[];state.quiz.currentUserInfo=null;state.quiz.pendingAdvance=null;state.quiz.lastResult=null;state.quiz.audioConfirmedUsers.clear();saveAudioConfirmedUsers();state.selection.questions.clear();state.selection.users.clear();$("importCard").style.display="block";$("workspace").classList.remove("active");$("quizArea").classList.remove("active");$("resultArea").classList.remove("active");applyTheme();applyLang();markClean();showToast(t("clearDataDone"),"success");});}
 
 function sampleByGroup(groups,typeOrder,limit){
   const total=typeOrder.reduce((s,tp)=>s+(groups[tp]?groups[tp].length:0),0);
@@ -452,7 +539,7 @@ function buildSessionQuestions(){
   const base=state.appData.questions.map((q)=>{
     const norm=normalizeQuestion(q);
     const correct=norm.type==="multiple"?[...norm.correct]:norm.type==="fill"?[...norm.correct]:norm.correct;
-    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,audioText:norm.audioText,options:norm.options.slice(),type:norm.type,correct,explanation:norm.explanation||""};
+    return {_id:norm._id,title:norm.title,image:norm.image,audio:norm.audio,audioText:norm.audioText,options:norm.options.slice(),optionImages:(norm.optionImages||[]).slice(),optionOrder:norm.options.map((_,idx)=>idx),type:norm.type,correct,explanation:norm.explanation||""};
   });
   const groups={};
   typeOrder.forEach((tp)=>{groups[tp]=[];});
@@ -481,7 +568,7 @@ function buildSessionQuestions(){
       if(q.type!=="single"&&q.type!=="multiple")return q;
       const opts=q.options.map((text,i)=>{
         const isCorrect=q.type==="multiple"?q.correct.indexOf(i)>=0:i===q.correct;
-        return {text,isCorrect};
+        return {text,isCorrect,originalIndex:i};
       });
       shuffle(opts);
       let newCorrect;
@@ -490,7 +577,7 @@ function buildSessionQuestions(){
       }else{
         newCorrect=opts.findIndex((o)=>o.isCorrect);
       }
-      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,audioText:q.audioText,type:q.type,options:opts.map((o)=>o.text),correct:newCorrect,explanation:q.explanation||""};
+      return {_id:q._id,title:q.title,image:q.image,audio:q.audio,audioText:q.audioText,type:q.type,options:opts.map((o)=>o.text),optionImages:opts.map((o)=>(q.optionImages||[])[o.originalIndex]||""),optionOrder:opts.map((o)=>o.originalIndex),correct:newCorrect,explanation:q.explanation||""};
     });
   }
   return qs;
@@ -556,12 +643,15 @@ function renderQuizCards(){
       const title=String(q.title);
       const hasPlaceholder=countBlanks(title)>0;
       if(hasPlaceholder&&countBlanks(title)===blankCount){
-        const parts=title.split(new RegExp(BLANK_PLACEHOLDER));
+        const parts=title.split(/(_{3,}|空\s*\d+)/g);
         let inl='<div class="fill-inline-text">';
-        for(let b=0;b<parts.length;b++){
-          inl+='<span>'+esc(parts[b])+'</span>';
-          if(b<parts.length-1){
-            inl+='<input class="fill-inline-input" type="text" data-q="'+i+'" data-blank="'+b+'" value="'+esc(vals[b]||"")+'" placeholder="'+esc(t("blankAnswerLabel",b+1))+' " autocomplete="off">';
+        let blankIndex=0;
+        for(let p=0;p<parts.length;p++){
+          if(p%2===0){
+            inl+='<span>'+esc(parts[p])+'</span>';
+          }else{
+            const b=blankIndex++;
+            inl+='<span class="fill-blank"><span class="fill-blank-no">空'+(b+1)+'</span><input class="fill-inline-input" type="text" data-q="'+i+'" data-blank="'+b+'" value="'+esc(vals[b]||"")+'" placeholder="'+esc(t("fillAnswer"))+'" autocomplete="off"></span>';
           }
         }
         inl+='</div>';
@@ -602,7 +692,7 @@ function renderQuizCards(){
             selected=state.quiz.answers[i]===j;
           }
           const cls="option"+(selected?" selected":"");
-          optParts.push('<div class="'+cls+'" data-q="'+i+'" data-opt="'+j+'"><div class="option-letter">'+letter+'</div><div class="option-text">'+esc(opt)+'</div></div>');
+          optParts.push('<div class="'+cls+'" data-q="'+i+'" data-opt="'+j+'"><div class="option-letter">'+letter+'</div>'+optionContentHtml(opt,(q.optionImages||[])[j]||"")+'</div>');
         });
         optParts.push('</div>');
         htmlParts.push(optParts.join(""));
@@ -753,15 +843,32 @@ function showWaitingOverlay(startTime){
 }
 function hideWaitingOverlay(){$("waitingOverlay").classList.remove("open");if(state.quiz.waitInterval){clearInterval(state.quiz.waitInterval);state.quiz.waitInterval=null;}}
 function isFullscreen(){return!!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement);}
-function requestFullscreenFlow(onSuccess){state.fullscreen.onSuccess=onSuccess;state.fullscreen.countdown=FULLSCREEN_TIMEOUT;state.fullscreen.active=true;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);$("fullscreenOverlay").classList.add("open");clearInterval(state.fullscreen.interval);state.fullscreen.interval=setInterval(()=>{if(isFullscreen()){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;$("fullscreenOverlay").classList.remove("open");if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}return;}state.fullscreen.countdown--;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);if(state.fullscreen.countdown<=0){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");showToast(t("fullscreenTimeout"),"warn");restartFlow();}},1000);}
-function cancelFullscreenFlow(){if(state.fullscreen.interval)clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");}
+function stopFullscreenWatch(){
+  if(state.fullscreen.watch){clearInterval(state.fullscreen.watch);state.fullscreen.watch=null;}
+}
+function startFullscreenWatch(){
+  stopFullscreenWatch();
+  state.fullscreen.watch=setInterval(()=>{
+    if(state.fullscreen.loggingOut||!state.fullscreen.logoutOnExit||!state.fullscreen.entered)return;
+    if(!isFullscreen()){
+      showToast(t("fullscreenExitLogout"),"warn");
+      logoutExam();
+    }
+  },500);
+}
+function requestFullscreenFlow(onSuccess){state.fullscreen.onSuccess=onSuccess;state.fullscreen.countdown=FULLSCREEN_TIMEOUT;state.fullscreen.active=true;state.fullscreen.logoutOnExit=true;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);$("fullscreenOverlay").classList.add("open");clearInterval(state.fullscreen.interval);state.fullscreen.interval=setInterval(()=>{if(isFullscreen()){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.entered=true;startFullscreenWatch();$("fullscreenOverlay").classList.remove("open");if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}return;}state.fullscreen.countdown--;$("fullscreenCountdown").textContent=state.fullscreen.countdown;$("fullscreenDesc").textContent=t("fullscreenDesc",state.fullscreen.countdown);if(state.fullscreen.countdown<=0){clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");showToast(t("fullscreenTimeout"),"warn");restartFlow();}},1000);}
+function cancelFullscreenFlow(){if(state.fullscreen.interval)clearInterval(state.fullscreen.interval);state.fullscreen.interval=null;state.fullscreen.active=false;state.fullscreen.logoutOnExit=false;stopFullscreenWatch();state.fullscreen.onSuccess=null;$("fullscreenOverlay").classList.remove("open");}
 function restartFlow(){
   stopAllMedia();
+  stopFullscreenWatch();
+  state.fullscreen.onSuccess=null;
   if(state.quiz.pendingAdvance){clearTimeout(state.quiz.pendingAdvance);state.quiz.pendingAdvance=null;}
   if(state.quiz.timerInterval){clearInterval(state.quiz.timerInterval);state.quiz.timerInterval=null;}
   if(state.quiz.waitInterval){clearInterval(state.quiz.waitInterval);state.quiz.waitInterval=null;}
-  if(isFullscreen()&&document.exitFullscreen){document.exitFullscreen().catch(()=>{});}
   state.quiz.active=false;
+  state.fullscreen.entered=false;
+  state.fullscreen.logoutOnExit=false;
+  if(isFullscreen()&&document.exitFullscreen){document.exitFullscreen().catch(()=>{});}
   state.quiz.answers=[];
   state.quiz.currentIndex=0;
   state.quiz.questions=[];
@@ -844,48 +951,24 @@ function showPreExamFlow(userInfo){
     $("preCancel").onclick=()=>{closeModal();restartFlow();};
   }
   function renderAudioStep(){
-    const dictation=!!s.audioDictation;
-    const dictationHtml=dictation?'<div class="audio-dictation" id="audioDictation" style="display:none"><label>'+t("audioTranscriptLabel")+'</label><textarea id="audioTranscript" rows="3" placeholder="'+t("audioTranscriptPlaceholder")+'"></textarea><div class="audio-dictation-row"><button class="btn btn-secondary btn-sm" id="checkAudioBtn">'+t("audioCheckBtn")+'</button><span class="audio-check-status" id="audioCheckStatus"></span></div></div>':'';
-    openModal('<h2>'+t("audioTestTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("audioTestDesc")+'</p><div class="audio-test-box"><button class="btn btn-secondary" id="playAudioBtn">'+t("audioTestPlay")+'</button><div class="audio-test-status" id="audioStatus"></div>'+dictationHtml+'<button class="btn btn-primary" id="confirmAudioBtn" style="display:none">'+t("audioTestConfirm")+'</button></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button></div>',false);
-    const playBtn=$("playAudioBtn");
-    const statusEl=$("audioStatus");
-    const confirmBtn=$("confirmAudioBtn");
-    playBtn.onclick=()=>{
-      playBtn.disabled=true;
-      statusEl.textContent=t("audioPlaying");
-      confirmBtn.style.display="none";
-      if(dictation){$("audioDictation").style.display="none";$("audioCheckStatus").textContent="";}
-      playSpeech(getAudioTestText(),()=>{
-        playBtn.disabled=false;
-        statusEl.textContent="";
-        if(dictation){$("audioDictation").style.display="flex";$("audioTranscript").focus();}
-        else{confirmBtn.style.display="inline-flex";}
-      });
-    };
-    if(dictation){
-      const input=$("audioTranscript");
-      const checkStatus=$("audioCheckStatus");
-      const check=()=>{
-        const expected=normalizeAudioText(getAudioTestText());
-        const actual=normalizeAudioText(input.value);
-        if(!actual){showToast(t("audioDictationRequired"),"warn");input.focus();return;}
-        if(expected&&actual===expected){
-          checkStatus.textContent=t("audioCheckCorrect");
-          checkStatus.className="audio-check-status ok";
-          confirmBtn.style.display="inline-flex";
-        }else{
-          checkStatus.textContent=t("audioCheckWrong");
-          checkStatus.className="audio-check-status bad";
-          confirmBtn.style.display="none";
-        }
-      };
-      $("checkAudioBtn").onclick=check;
-      input.addEventListener("keydown",(e)=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();check();}});
-    }
-    confirmBtn.onclick=()=>{if(userInfo){state.quiz.audioConfirmedUsers.add(userKey);saveAudioConfirmedUsers();}goNext();};
-    $("preCancel").onclick=()=>{stopAllMedia();closeModal();restartFlow();};
-  }
-  function renderInfoStep(){
+  openModal('<h2>'+t("audioTestTitle")+'</h2><p style="font-size:13px;color:var(--text-3);line-height:1.6">'+t("audioTestDesc")+'</p><div class="audio-test-box"><button class="btn btn-secondary" id="playAudioBtn">'+t("audioTestPlay")+'</button><div class="audio-test-status" id="audioStatus"></div><button class="btn btn-primary" id="confirmAudioBtn" style="display:none">'+t("audioTestConfirm")+'</button></div><div class="modal-actions"><button class="btn btn-secondary" id="preCancel">'+t("cancel")+'</button></div>',false);
+  const playBtn=$("playAudioBtn");
+  const statusEl=$("audioStatus");
+  const confirmBtn=$("confirmAudioBtn");
+  playBtn.onclick=()=>{
+    playBtn.disabled=true;
+    statusEl.textContent=t("audioPlaying");
+    confirmBtn.style.display="none";
+    playSpeech(getAudioTestText(),()=>{
+      playBtn.disabled=false;
+      statusEl.textContent="";
+      confirmBtn.style.display="inline-flex";
+    });
+  };
+  confirmBtn.onclick=()=>{if(userInfo){state.quiz.audioConfirmedUsers.add(userKey);saveAudioConfirmedUsers();}goNext();};
+  $("preCancel").onclick=()=>{stopAllMedia();closeModal();restartFlow();};
+}
+function renderInfoStep(){
     const avatarText=(userInfo.name||"?").charAt(0).toUpperCase();
     const genderKey=userInfo.gender==="male"?"male":userInfo.gender==="female"?"female":"other";
     const examTime=s.examStartTime?new Date(s.examStartTime).toLocaleString():t("startModeUnlimited");
@@ -900,9 +983,18 @@ function showPreExamFlow(userInfo){
 
 function beginExamAfterLogin(userInfo){
   if(state.appData.questions.length===0){showToast(t("noQuestionsWarning"),"warn");return;}
+  const win=checkExamTimeWindow();
+  if(!win.ok){
+    closeModal();
+    if(win.reason==="ended"){showExpiredExamModal();return;}
+    showWaitingOverlay(win.startTime);
+    return;
+  }
   closeModal();
   state.quiz.questions=buildSessionQuestions();
   state.quiz.active=true;
+  state.fullscreen.entered=true;
+  startFullscreenWatch();
   state.quiz.currentIndex=0;
   state.quiz.answers=state.quiz.questions.map((q)=>initQuizAnswer(q));
   state.quiz.currentUserInfo=userInfo||null;
@@ -926,6 +1018,9 @@ function beginExamAfterLogin(userInfo){
   const dur=state.appData.settings.examDuration;
   if(dur&&dur>0){
     let remaining=dur*60;
+    const endTime=getExamEndTime();
+    if(endTime!==null)remaining=Math.max(0,Math.floor((endTime-Date.now())/1000));
+    if(remaining<=0){restartFlow();showExpiredExamModal();return;}
     timerEl.style.display="inline";
     timerEl.textContent=formatTime(remaining);
     timerEl.classList.toggle("warning",remaining<300);
@@ -950,6 +1045,7 @@ function beginExamAfterLogin(userInfo){
 function startQuiz(userInfo){
   const win=checkExamTimeWindow();
   state.quiz.currentUserInfo=userInfo||null;
+  if(userInfo&&!state.appData.settings.githubAllowRetake&&hasUploadedExam(userInfo.uid)){showToast(t("retakeNotAllowed"),"warn");return;}
   if(!win.ok){
     if(win.reason==="ended"){showExpiredExamModal();return;}
     if(win.reason==="notStarted"){showWaitingOverlay(win.startTime);return;}
@@ -995,10 +1091,12 @@ function submitQuiz(timeUp){
     score:finalScore,
     totalScore:totalScore,
     timeUp:timeUp,
-    questions:state.quiz.questions.map((q)=>({title:q.title,correct:q.correct,type:q.type,options:q.options.slice(),explanation:q.explanation||""})),
+    questions:state.quiz.questions.map((q)=>({title:q.title,correct:q.correct,type:q.type,options:q.options.slice(),optionOrder:(q.optionOrder||[]).slice(),explanation:q.explanation||""})),
     answers:state.quiz.answers.map((a)=>Array.isArray(a)?[...a]:a)
   };
+  const archiveRecord=saveArchiveRecord();
   const user=state.quiz.currentUserInfo;
+  if(githubConfigured()&&user)setTimeout(()=>uploadSubmissionToGithub(archiveRecord),0);
   let summaryHtml='<div class="result-summary">';
   if(user)summaryHtml+='<div class="result-user">'+esc(user.name)+'</div>';
   summaryHtml+='<div class="result-label">'+(timeUp?t("timeUp")+" · ":"")+t("scoreLabel")+'</div>';
@@ -1065,6 +1163,13 @@ function renderResultActions(){
   btnHome.textContent=t("backToHome");
   btnHome.onclick=()=>{restartFlow();};
   container.appendChild(btnHome);
+  if(githubConfigured()&&user){
+    const btnUpload=document.createElement("button");
+    btnUpload.className="btn btn-secondary";
+    btnUpload.textContent=t("githubUpload");
+    btnUpload.onclick=uploadStudentResultToGithub;
+    container.appendChild(btnUpload);
+  }
   if(state.appData.settings.allowStudentExport&&user){
     const btnExp=document.createElement("button");
     btnExp.className="btn btn-secondary";
@@ -1220,7 +1325,11 @@ function exportResultImage(){
 }
 
 function openLoginModal(onSuccess){
-  if(state.appData.users.length===0){showToast(t("noUsers"),"warn");return;}
+  if(state.appData.users.length===0){
+    if(state.appData.settings.allowGuest){startQuiz({name:t("guestName"),gender:"other",uid:"GUEST-"+Date.now(),verifyCode:""});return;}
+    showToast(t("noUsers"),"warn");
+    return;
+  }
   openModal('<h2>'+t("startExam")+'</h2><div class="form-group"><label>'+t("loginName")+'</label><input id="loginName" type="text" autocomplete="off" placeholder="'+t("enterName")+'"></div><div class="form-group"><label>'+t("loginCredLabel")+'</label><input id="loginCred" type="text" autocomplete="off" placeholder="'+t("enterCred")+'"></div><div class="modal-actions"><button class="btn btn-secondary" id="loginCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="loginOk">'+t("confirm")+'</button></div>',false);
   const nameInput=$("loginName");const credInput=$("loginCred");
   setTimeout(()=>nameInput.focus(),50);
@@ -1559,6 +1668,7 @@ function openQuestionWizard(){
     title:"",
     optionCount:4,
     options:["","","",""],
+    optionImages:["","","",""],
     correct: defaultType==="fill" ? [""] : (isSubjectiveType(defaultType) ? null : [0]),
     includeImage:false,
     includeAudio:false,
@@ -1583,22 +1693,26 @@ function updateWizardBlankHint(){
   }
 }
 
+function openOptionImageEditor(index){
+  const w=state.wizard;
+  const current=(w.optionImages||[])[index]||"";
+  openModal('<h2>'+t("optionImageTitle")+'</h2><p class="modal-tip">'+t("optionImageHint")+'</p><div class="form-group"><label>'+t("optionImageLabel")+'</label><textarea id="optImgInput" rows="6" placeholder="https://example.com/image.png">'+esc(current)+'</textarea></div><div class="modal-actions"><button class="btn btn-danger" id="optImgRemove">'+t("removeOptionImage")+'</button><button class="btn btn-secondary" id="optImgCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="optImgSave">'+t("confirm")+'</button></div>',false);
+  $("optImgRemove").onclick=()=>{(w.optionImages||[])[index]="";closeModal();renderWizard();};
+  $("optImgCancel").onclick=()=>{closeModal();renderWizard();};
+  $("optImgSave").onclick=()=>{w.optionImages=w.optionImages||[];w.optionImages[index]=$("optImgInput").value.trim();closeModal();renderWizard();};
+}
 function renderWizard(){
   const w=state.wizard;
   let html='<h2>'+t("addQuestion")+'</h2>'+renderStepIndicator();
   if(w.step===1){
     html+='<h3>'+t("step1")+'</h3>';
-    let typeRadios="";
-    QUESTION_TYPES.forEach((tp)=>{
-      const checked=w.type===tp?" checked":"";
-      typeRadios+='<label class="radio-option"><input type="radio" name="wType" value="'+tp+'"'+checked+'><span>'+typeLabel(tp)+'</span></label>';
-    });
-    html+='<div class="form-group"><label>'+t("questionType")+'</label><div class="radio-row" id="wTypeGroup">'+typeRadios+'</div></div>';
+    const typeOptions=QUESTION_TYPES.map((tp)=>'<div class="custom-select-option" data-value="'+tp+'">'+typeLabel(tp)+'</div>').join("");
+    html+='<div class="form-group"><label>'+t("questionType")+'</label><div class="custom-select" id="wTypeSelect" data-value="'+w.type+'"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+typeLabel(w.type)+'</span></button><div class="custom-select-menu">'+typeOptions+'</div></div></div>';
     if(w.type==="fill"){
       const blankCount=countBlanks(w.title);
       const hintText=blankCount===0?t("blankHintEmpty"):t("blankHint",blankCount);
       const hintCls=blankCount===0?"":" has-blanks";
-      html+='<div class="form-group"><label>'+t("questionText")+'</label><div class="title-input-wrap"><textarea id="wTitle" rows="3" placeholder="'+t("fillPlaceholder")+'">'+esc(w.title||"")+'</textarea><button type="button" class="add-blank-btn" id="wAddBlank" title="'+t("addBlankBtn")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div><div class="blank-hint'+hintCls+'" id="wBlankHint">'+hintText+'</div></div>';
+      html+='<div class="form-group"><label>'+t("questionText")+'</label><div class="title-input-wrap"><textarea id="wTitle" rows="3" placeholder="'+t("fillTitlePlaceholder")+'">'+esc(w.title||"")+'</textarea><button type="button" class="add-blank-btn" id="wAddBlank" title="'+t("addBlankBtn")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div><div class="blank-hint'+hintCls+'" id="wBlankHint">'+hintText+'</div></div>';
     }else if(isSubjectiveType(w.type)){
       html+='<div class="form-group"><label>'+t("questionText")+'</label><textarea id="wTitle" rows="6" placeholder="'+t("subjectiveTitleHint")+'">'+esc(w.title||"")+'</textarea></div>';
     }else{
@@ -1617,7 +1731,8 @@ function renderWizard(){
     html+='<div id="wOptionsBox">';
     for(let i=0;i<w.optionCount;i++){
       const letter=String.fromCharCode(65+i);
-      html+='<div class="option-input-row"><div class="letter">'+letter+'</div><input type="text" id="wOpt_'+i+'" value="'+esc(w.options[i]||"")+'" placeholder="'+t("optionPlaceholder",letter)+'"></div>';
+      const img=w.optionImages&&w.optionImages[i];
+      html+='<div class="option-input-row"><div class="letter">'+letter+'</div><input type="text" id="wOpt_'+i+'" value="'+esc(w.options[i]||"")+'" placeholder="'+t("optionPlaceholder",letter)+'"><button type="button" class="opt-img-btn" data-opt="'+i+'" title="'+t("addOptionImage")+'">+</button>'+(img?'<img class="opt-img-thumb" src="'+esc(optionImageSrc(img)||img)+'" alt="">':'')+(img?'<span class="opt-img-mark">'+t("imageAdded")+'</span>':'')+'</div>';
     }
     html+='</div>';
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="wNext">'+t("next")+'</button></div>';
@@ -1669,14 +1784,26 @@ function renderWizard(){
     html+='<div class="modal-actions"><button class="btn btn-secondary" id="wCancel">'+t("cancel")+'</button><button class="btn btn-secondary" id="wBack">'+t("back_btn")+'</button><button class="btn btn-primary" id="wSave">'+t("complete")+'</button></div>';
   }
   openModal(html,false);
+  initCustomSelects();
+  if($("wTypeSelect"))$("wTypeSelect").onSelect=(val)=>{
+    if($("wTitle"))w.title=$("wTitle").value;
+    if($("wImage"))w.image=$("wImage").value;
+    
+    
+    if($("wExplanation"))w.explanation=$("wExplanation").value;
+    const oldType=w.type;
+    w.type=val;
+    if(w.type==="fill"&&oldType!=="fill"){w.correct=[""];w.blankAnswers=[];}
+    else if(isSubjectiveType(w.type)){w.correct=null;w.blankAnswers=[];}
+    else if(w.type==="single"||w.type==="multiple"||w.type==="judge"){w.correct=[0];}
+    renderWizard();
+  };
   $("wCancel").onclick=()=>{renderQuestionEditorModal();};
   if(w.step===1){
     document.querySelectorAll('input[name="wType"]').forEach((radio)=>{
       radio.onchange=()=>{
         if($("wTitle"))w.title=$("wTitle").value;
         if($("wImage"))w.image=$("wImage").value;
-        if($("wAudio"))w.audio=$("wAudio").value;
-        if($("wAudioText"))w.audioText=$("wAudioText").value;
         if($("wExplanation"))w.explanation=$("wExplanation").value;
         const oldType=w.type;
         w.type=radio.value;
@@ -1693,9 +1820,10 @@ function renderWizard(){
         const start=input.selectionStart==null?input.value.length:input.selectionStart;
         const end=input.selectionEnd==null?input.value.length:input.selectionEnd;
         const val=input.value;
-        const newVal=val.slice(0,start)+BLANK_PLACEHOLDER+val.slice(end);
+        const label="_____";
+        const newVal=val.slice(0,start)+label+val.slice(end);
         input.value=newVal;
-        const newPos=start+BLANK_PLACEHOLDER.length;
+        const newPos=start+label.length;
         input.selectionStart=newPos;
         input.selectionEnd=newPos;
         input.focus();
@@ -1716,6 +1844,7 @@ function renderWizard(){
       w.image=w.includeImage?$("wImage").value.trim():"";
       w.audio=w.includeAudio?$("wAudio").value.trim():"";
       w.audioText=w.includeAudio?$("wAudioText").value.trim():"";
+
       w.explanation=w.includeExplanation?$("wExplanation").value.trim():"";
       if(w.type==="single"||w.type==="multiple"){
         if(w.options.length<w.optionCount)w.options=Array.from({length:w.optionCount},(_,i)=>w.options[i]||"");
@@ -1739,6 +1868,9 @@ function renderWizard(){
       const newOptions=[];
       for(let i=0;i<count;i++){const prev=$("wOpt_"+i);newOptions.push(prev?prev.value:(w.options[i]||""));}
       w.options=newOptions;
+      w.optionImages=w.optionImages||[];
+      w.optionImages=w.optionImages.slice(0,count);
+      while(w.optionImages.length<count)w.optionImages.push("");
       if(Array.isArray(w.correct)){
         w.correct=w.correct.filter((i)=>i<count);
         if(w.correct.length===0)w.correct=[0];
@@ -1746,6 +1878,7 @@ function renderWizard(){
       renderWizard();
     };
     $("wBack").onclick=()=>{collectOptions();w.step=1;renderWizard();};
+    document.querySelectorAll(".opt-img-btn").forEach((btn)=>btn.onclick=()=>{collectOptions();openOptionImageEditor(Number(btn.dataset.opt));});
     $("wNext").onclick=()=>{
       collectOptions();
       for(let i=0;i<w.optionCount;i++){
@@ -1815,11 +1948,12 @@ function renderWizard(){
       state.appData.questions.push({
         _id:newId(),
         type:w.type,
-        title:w.title,
+        title:w.type==="fill"?normalizeFillTitle(w.title):w.title,
         image:w.image||"",
         audio:w.audio||"",
         audioText:w.audioText||"",
         options:optionsToSave,
+        optionImages:(w.type==="single"||w.type==="multiple")?(w.optionImages||[]).slice(0,optionsToSave.length):[],
         correct:finalCorrect,
         explanation:w.includeExplanation?(w.explanation||""):""
       });
@@ -1887,9 +2021,8 @@ function openUserForm(){
 
 function openAdminSettings(){
   const s=state.appData.settings;
-  let startMode="";
-  let startCustom="";
-  if(s.examStartTime){startMode="custom";startCustom=normalizeDateTime(s.examStartTime);}
+  let startMode=s.examStartTime?"custom":"";
+  let startCustom=s.examStartTime?normalizeDateTime(s.examStartTime):"";
   let uidRadios="";
   UID_LENGTH_OPTIONS.forEach((n)=>{
     let label;
@@ -1907,33 +2040,70 @@ function openAdminSettings(){
     presets+='<button type="button" class="duration-preset'+active+'" data-val="'+v+'">'+label+'</button>';
   });
   let startModeRadios="";
-  const startModeOpts=[
-    {v:"",l:t("startModeUnlimited")},
-    {v:"now",l:t("startModeNow")},
-    {v:"custom",l:t("startModeCustom")}
-  ];
-  startModeOpts.forEach((m)=>{
+  [{v:"",l:t("startModeUnlimited")},{v:"custom",l:t("startModeCustom")}].forEach((m)=>{
     const checked=startMode===m.v?" checked":"";
     startModeRadios+='<label class="radio-option"><input type="radio" name="asStartMode" value="'+m.v+'"'+checked+'><span>'+m.l+'</span></label>';
   });
   const durVal=s.examDuration>0?s.examDuration:"";
   const noticeText=s.noticeText||"";
   const audioTestText=s.audioTestText||"";
+
   const qCountVal=s.examQuestionCount||0;
   const _q=s.typeQuotas||{};
   const quotaSingleVal=Math.max(0,toNum(_q.single,0));
   const quotaMultipleVal=Math.max(0,toNum(_q.multiple,0));
   const quotaJudgeVal=Math.max(0,toNum(_q.judge,0));
   const quotaFillVal=Math.max(0,toNum(_q.fill,0));
-  const quotaReadingVal=Math.max(0,toNum(_q.reading,0));
   const quotaShortVal=Math.max(0,toNum(_q.short,0));
-  const quotaEssayVal=Math.max(0,toNum(_q.essay,0));
   const examTitle=s.examTitle||"";
   const examSubtitle=s.examSubtitle||"";
-  const customGroupDisplay=(startMode==="custom"||startMode==="now")?"flex":"none";
-  openModal('<h2>'+t("adminSettings")+'</h2><h3>'+t("basicSettings")+'</h3><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><div class="form-group"><label>'+t("examTitleLabel")+'</label><input id="asExamTitle" value="'+esc(examTitle)+'" placeholder="'+t("examTitlePlaceholder")+'"></div><div class="form-group"><label>'+t("examSubtitleLabel")+'</label><input id="asExamSubtitle" value="'+esc(examSubtitle)+'" placeholder="'+t("examSubtitlePlaceholder")+'"></div><button class="btn btn-secondary btn-sm" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><h3>'+t("examSettings")+'</h3><div class="form-group"><label>'+t("examStartMode")+'</label><div class="radio-row" id="asStartModeGroup">'+startModeRadios+'</div></div><div class="form-group" id="asStartCustomGroup" style="display:'+customGroupDisplay+'"><label>'+t("examStartMode")+'</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"></div><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div><h3>'+t("typeQuotasSection")+'</h3><div class="form-row"><div class="form-group"><label>'+t("quotaSingle")+'</label><input id="asQuotaSingle" type="number" min="0" value="'+quotaSingleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaMultiple")+'</label><input id="asQuotaMultiple" type="number" min="0" value="'+quotaMultipleVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaJudge")+'</label><input id="asQuotaJudge" type="number" min="0" value="'+quotaJudgeVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaFill")+'</label><input id="asQuotaFill" type="number" min="0" value="'+quotaFillVal+'" placeholder="0"></div></div><div class="form-row"><div class="form-group"><label>'+t("quotaReading")+'</label><input id="asQuotaReading" type="number" min="0" value="'+quotaReadingVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaShort")+'</label><input id="asQuotaShort" type="number" min="0" value="'+quotaShortVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaEssay")+'</label><input id="asQuotaEssay" type="number" min="0" value="'+quotaEssayVal+'" placeholder="0"></div></div><p style="font-size:11px;color:var(--text-3);margin-top:-6px">'+t("quotaHint")+'</p><h3>'+t("uidSettings")+'</h3><div class="radio-row">'+uidRadios+'</div><h3>'+t("noticeSettings")+'</h3><div class="form-group"><textarea id="asNotice" rows="5" placeholder="'+t("noticePlaceholder")+'">'+esc(noticeText)+'</textarea><button class="btn btn-secondary btn-sm" id="asNoticePreset" style="align-self:flex-start;margin-top:6px">'+t("noticePreset")+'</button></div><h3>'+t("audioSettings")+'</h3><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="3" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><h3>'+t("featureSettings")+'</h3><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asDisableCustom"'+(s.disableCustom?" checked":"")+'><span>'+t("disableCustom")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRequireAll"'+(s.requireAll?" checked":"")+'><span>'+t("requireAll")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asShowAnswer"'+(s.showAnswer?" checked":"")+'><span>'+t("showAnswer")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomQ"'+(s.randomQuestions?" checked":"")+'><span>'+t("randomQuestions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asRandomO"'+(s.randomOptions?" checked":"")+'><span>'+t("randomOptions")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAudioDictation"'+(s.audioDictation?" checked":"")+'><span>'+t("audioDictation")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asAllowStudentExport"'+(s.allowStudentExport?" checked":"")+'><span>'+t("allowStudentExport")+'</span></div><div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
+  const customGroupDisplay=startMode==="custom"?"flex":"none";
+  const tabs=[["basic",t("basicSettings")],["exam",t("examSettings")],["types",t("typeQuotasSection")],["cloud",t("cloudSettings")],["features",t("featureSettings")]];
+  const tabHtml=tabs.map((item,idx)=>'<button type="button" class="settings-tab'+(idx===0?" active":"")+'" data-pane="'+item[0]+'">'+esc(item[1])+'</button>').join("");
+  let panes="";
+  panes+='<div class="settings-pane active" data-pane="basic"><div class="settings-grid"><div class="form-group"><label>'+t("adminName")+'</label><input id="asName" value="'+esc(state.appData.admin.name)+'" placeholder="'+t("adminNameHint")+'"></div><div class="form-group"><label>'+t("subject")+'</label><input id="asSubject" value="'+esc(s.subject||"")+'" placeholder="'+t("subjectPlaceholder")+'"></div><div class="form-group"><label>'+t("examTitleLabel")+'</label><input id="asExamTitle" value="'+esc(examTitle)+'" placeholder="'+t("examTitlePlaceholder")+'"></div><div class="form-group"><label>'+t("examSubtitleLabel")+'</label><input id="asExamSubtitle" value="'+esc(examSubtitle)+'" placeholder="'+t("examSubtitlePlaceholder")+'"></div></div><button class="btn btn-secondary btn-lg" id="asChangePwd" style="align-self:flex-start">'+t("changePassword")+'</button><button class="btn btn-danger btn-lg" id="asClearLocal" style="align-self:flex-start">'+t("clearLocalData")+'</button></div>';
+  panes+='<div class="settings-pane" data-pane="exam"><div class="form-group"><label>'+t("examStartMode")+'</label><div class="radio-row" id="asStartModeGroup">'+startModeRadios+'</div></div><div class="form-group" id="asStartCustomGroup" style="display:'+customGroupDisplay+'"><label>'+t("examStartMode")+'</label><input id="asStartCustom" type="datetime-local" value="'+(startCustom||"")+'"><div class="form-hint">'+t("examStartHint")+'</div></div><div class="settings-grid"><div class="form-group"><label>'+t("examDuration")+'</label><input id="asDuration" type="number" min="0" value="'+durVal+'" placeholder="'+t("examDurationUnlimited")+'"><div class="duration-preset-row">'+presets+'</div></div><div class="form-group"><label>'+t("totalScore")+'</label><input id="asTotalScore" type="number" min="1" value="'+s.totalScore+'"></div><div class="form-group"><label>'+t("examQuestionCount")+'</label><input id="asQCount" type="number" min="0" value="'+qCountVal+'" placeholder="'+t("examQuestionCountHint")+'"></div></div><div class="form-group"><label>'+t("uidSettings")+'</label><div class="radio-row">'+uidRadios+'</div></div><div class="settings-grid"><div class="form-group"><label>'+t("audioTestText")+'</label><textarea id="asAudioTest" rows="4" placeholder="'+t("audioTestTextHint")+'">'+esc(audioTestText)+'</textarea></div><div class="form-group"><label>'+t("enableAudio")+'</label><div class="checkbox-row"><input type="checkbox" id="asEnableAudio"'+(s.enableAudio?" checked":"")+'><span>'+t("enableAudio")+'</span></div></div></div></div>';
+  panes+='<div class="settings-pane" data-pane="types"><div class="settings-grid"><div class="form-group"><label>'+t("quotaSingle")+'</label><input id="asQuotaSingle" type="number" min="0" value="'+quotaSingleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaMultiple")+'</label><input id="asQuotaMultiple" type="number" min="0" value="'+quotaMultipleVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaJudge")+'</label><input id="asQuotaJudge" type="number" min="0" value="'+quotaJudgeVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaFill")+'</label><input id="asQuotaFill" type="number" min="0" value="'+quotaFillVal+'" placeholder="0"></div><div class="form-group"><label>'+t("quotaShort")+'</label><input id="asQuotaShort" type="number" min="0" value="'+quotaShortVal+'" placeholder="0"></div></div><p class="form-hint">'+t("quotaHint")+'</p></div>';
+  panes+='<div class="settings-pane" data-pane="cloud"><div class="checkbox-row"><input type="checkbox" id="asEnableCloud"'+(s.enableCloud?" checked":"")+'><span>'+t("enableCloud")+'</span></div><div class="checkbox-row"><input type="checkbox" id="asEnableGithub"'+(s.enableGithub?" checked":"")+'><span>'+t("enableGithub")+'</span></div><div class="form-group"><label>'+t("cloudCustomUrl")+'</label><input id="asCloudUrl" value="'+esc(s.cloudUrl||"")+'" placeholder="https://example.com/data.js"></div><div class="form-hint">'+t("githubDisabledHint")+'</div><div class="settings-grid"><div class="form-group"><label>'+t("githubToken")+'</label><div class="settings-inline"><input id="asGithubToken" type="password" value="'+esc(s.githubToken||"")+'"><button type="button" class="btn btn-secondary btn-sm" id="asGetToken">'+t("getToken")+'</button></div></div><div class="form-group"><label>'+t("githubBranch")+'</label><input id="asGithubBranch" value="'+esc(s.githubBranch||"main")+'"></div><div class="form-group"><label>'+t("githubOwner")+'</label><input id="asGithubOwner" value="'+esc(s.githubOwner||"")+'"></div><div class="form-group"><label>'+t("githubRepo")+'</label><input id="asGithubRepo" value="'+esc(s.githubRepo||"")+'"></div><div class="form-group"><label>'+t("githubPath")+'</label><input id="asGithubPath" value="'+esc(s.githubPath||"exam-system")+'"></div></div><div class="checkbox-row"><input type="checkbox" id="asGithubRetake"'+(s.githubAllowRetake!==false?" checked":"")+'><span>'+t("githubAllowRetake")+'</span></div><div class="settings-actions"><button class="btn btn-primary btn-lg" id="asGithubPages">'+t("githubCreatePages")+'</button><button class="btn btn-secondary btn-lg" id="asGithubGrade">'+t("openGrader")+'</button></div></div>';
+  panes+='<div class="settings-pane" data-pane="features"><div class="settings-grid"><div class="checkbox-row"><input type="checkbox" id="asAllowGuest"'+(s.allowGuest?" checked":"")+'><span>'+t("allowGuest")+'</span></div></div></div>';
+  openModal('<h2>'+t("adminSettings")+'</h2><div class="settings-tabs" id="settingsTabs">'+tabHtml+'</div>'+panes+'<div class="modal-actions"><button class="btn btn-secondary" id="asCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="asSave">'+t("complete")+'</button></div>',false);
+  $("modalContent").classList.add("settings-modal");
+  document.querySelectorAll(".settings-tab").forEach((tab)=>{
+    tab.onclick=()=>{
+      document.querySelectorAll(".settings-tab").forEach((b)=>b.classList.toggle("active",b===tab));
+      document.querySelectorAll(".settings-pane").forEach((p)=>p.classList.toggle("active",p.dataset.pane===tab.dataset.pane));
+    };
+  });
   $("asChangePwd").onclick=()=>openChangePassword();
-  $("asNoticePreset").onclick=()=>{$("asNotice").value=t("noticePresetDefault");};
+  const syncGithubButtons=()=>{
+    const enabled=!!($("asEnableGithub").checked&&$("asGithubToken").value.trim()&&$("asGithubOwner").value.trim()&&$("asGithubRepo").value.trim());
+    $("asGithubPages").disabled=!enabled;
+    $("asGithubGrade").disabled=!enabled;
+  };
+  ["asEnableGithub","asGithubToken","asGithubOwner","asGithubRepo"].forEach((id)=>{const el=$(id);if(el){el.oninput=syncGithubButtons;el.onchange=syncGithubButtons;}});
+  syncGithubButtons();
+  $("asGithubPages").onclick=()=>{
+    state.appData.settings.enableGithub=$("asEnableGithub").checked;
+    state.appData.settings.githubToken=$("asGithubToken").value.trim();
+    
+    state.appData.settings.githubOwner=$("asGithubOwner").value.trim();
+    state.appData.settings.githubRepo=$("asGithubRepo").value.trim();
+    state.appData.settings.githubBranch=$("asGithubBranch").value.trim()||"main";
+    state.appData.settings.githubPath=$("asGithubPath").value.trim()||"exam-system";
+    state.appData.settings.githubAllowRetake=$("asGithubRetake").checked;
+    ensureGithubPages();
+  };
+  $("asGithubGrade").onclick=()=>{
+    state.appData.settings.enableGithub=$("asEnableGithub").checked;
+    state.appData.settings.githubToken=$("asGithubToken").value.trim();
+    state.appData.settings.githubOwner=$("asGithubOwner").value.trim();
+    state.appData.settings.githubRepo=$("asGithubRepo").value.trim();
+    state.appData.settings.githubBranch=$("asGithubBranch").value.trim()||"main";
+    state.appData.settings.githubPath=$("asGithubPath").value.trim()||"exam-system";
+    openGithubPage("grader.html");
+  };
+  $("asClearLocal").onclick=clearLocalData;
+  $("asGetToken").onclick=()=>window.open("https://github.com/settings/tokens?type=beta","_blank");
   document.querySelectorAll(".duration-preset").forEach((btn)=>{
     btn.onclick=()=>{
       document.querySelectorAll(".duration-preset").forEach((b)=>b.classList.remove("active"));
@@ -1945,9 +2115,7 @@ function openAdminSettings(){
   document.querySelectorAll('input[name="asStartMode"]').forEach((radio)=>{
     radio.onchange=()=>{
       const group=$("asStartCustomGroup");
-      const v=radio.value;
-      if(v==="custom"){group.style.display="flex";setTimeout(()=>$("asStartCustom").focus(),50);}
-      else if(v==="now"){group.style.display="flex";$("asStartCustom").value=formatLocalDateTime(new Date());}
+      if(radio.value==="custom"){group.style.display="flex";setTimeout(()=>$("asStartCustom").focus(),50);}
       else{group.style.display="none";}
     };
   });
@@ -1963,9 +2131,7 @@ function openAdminSettings(){
     const modeEl=document.querySelector('input[name="asStartMode"]:checked');
     const mode=modeEl?modeEl.value:"";
     let startTime="";
-    if(mode==="now"){
-      startTime=formatLocalDateTime(new Date());
-    }else if(mode==="custom"){
+    if(mode==="custom"){
       startTime=$("asStartCustom").value||"";
       if(!startTime){showToast(t("startTimeRequired"),"warn");return;}
     }
@@ -1974,36 +2140,41 @@ function openAdminSettings(){
     const oldUidLen=state.appData.settings.uidLength;
     const durValInput=$("asDuration").value;
     const dur=durValInput?toNum(durValInput,0):0;
-    const noticeTextVal=$("asNotice").value;
     const audioTestTextVal=$("asAudioTest").value;
+  
     const applySettings=()=>{
       state.appData.admin.name=name;
       state.appData.settings.examStartTime=startTime;
       state.appData.settings.examDuration=dur;
       state.appData.settings.totalScore=totalScore;
       state.appData.settings.examQuestionCount=qCount;
-      state.appData.settings.typeQuotas={single:Math.max(0,toNum($("asQuotaSingle").value,0)),multiple:Math.max(0,toNum($("asQuotaMultiple").value,0)),judge:Math.max(0,toNum($("asQuotaJudge").value,0)),fill:Math.max(0,toNum($("asQuotaFill").value,0)),reading:Math.max(0,toNum($("asQuotaReading").value,0)),short:Math.max(0,toNum($("asQuotaShort").value,0)),essay:Math.max(0,toNum($("asQuotaEssay").value,0))};
+      state.appData.settings.typeQuotas={single:Math.max(0,toNum($("asQuotaSingle").value,0)),multiple:Math.max(0,toNum($("asQuotaMultiple").value,0)),judge:Math.max(0,toNum($("asQuotaJudge").value,0)),fill:Math.max(0,toNum($("asQuotaFill").value,0)),short:Math.max(0,toNum($("asQuotaShort").value,0))};
       state.appData.settings.uidLength=uidLen;
       state.appData.settings.subject=subject;
       state.appData.settings.examTitle=title;
       state.appData.settings.examSubtitle=subtitle;
-      state.appData.settings.noticeText=noticeTextVal;
       state.appData.settings.audioTestText=audioTestTextVal;
-      state.appData.settings.allowGuest=$("asAllowGuest").checked;
-      state.appData.settings.disableCustom=$("asDisableCustom").checked;
-      state.appData.settings.requireAll=$("asRequireAll").checked;
-      state.appData.settings.showAnswer=$("asShowAnswer").checked;
-      state.appData.settings.randomQuestions=$("asRandomQ").checked;
-      state.appData.settings.randomOptions=$("asRandomO").checked;
       state.appData.settings.enableAudio=$("asEnableAudio").checked;
-      state.appData.settings.audioDictation=$("asAudioDictation").checked;
-      state.appData.settings.allowStudentExport=$("asAllowStudentExport").checked;
+
+      state.appData.settings.allowGuest=$("asAllowGuest").checked;
+
+      state.appData.settings.enableCloud=$("asEnableCloud").checked;
+      state.appData.settings.cloudUrl=$("asCloudUrl").value.trim();
+      state.appData.settings.enableGithub=$("asEnableGithub").checked;
+      state.appData.settings.githubToken=$("asGithubToken").value.trim();
+      
+      state.appData.settings.githubOwner=$("asGithubOwner").value.trim();
+      state.appData.settings.githubRepo=$("asGithubRepo").value.trim();
+      state.appData.settings.githubBranch=$("asGithubBranch").value.trim()||"main";
+      state.appData.settings.githubPath=$("asGithubPath").value.trim()||"exam-system";
+      state.appData.settings.githubAllowRetake=$("asGithubRetake").checked;
       markDirty();
       showToast(t("adminSettingsSaved"),"success");
       closeModal();
       updateRoleUI();
       updateStats();
       applyLang();
+      if(state.appData.settings.enableGithub&&githubConfigured())setTimeout(()=>ensureGithubPages(),100);
     };
     if(uidLen!==oldUidLen&&state.appData.users.length>0){
       confirmDialog(t("uidSettings"),t("uidChangedConfirm"),t("confirm"),t("cancel"),()=>{
@@ -2020,7 +2191,6 @@ function openAdminSettings(){
     }
   };
 }
-
 function openChangePassword(){
   openModal('<h2>'+t("changePassword")+'</h2><div class="form-group"><label>'+t("oldPassword")+'</label><input id="cpOld" type="password" autocomplete="current-password"></div><div class="form-group"><label>'+t("newPassword")+'</label><input id="cpNew" type="password" autocomplete="new-password" placeholder="'+t("passwordHint")+'"></div><div class="form-group"><label>'+t("confirmPassword")+'</label><input id="cpConfirm" type="password" autocomplete="new-password"></div><div class="modal-actions"><button class="btn btn-secondary" id="cpCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="cpSave">'+t("complete")+'</button></div>',false);
   setTimeout(()=>$("cpOld").focus(),50);
@@ -2039,7 +2209,947 @@ function openChangePassword(){
   };
 }
 
+function optionImageSrc(text){
+  const s=String(text==null?"":text).trim();
+  if(/^data:image\//i.test(s))return s;
+  if(/^<svg[\s\S]*<\/svg>$/i.test(s))return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s);
+  const m=s.match(/(?:^|\s)((?:https?:\/\/|data:image\/)?[^\s<>"']+\.(png|jpe?g|gif|webp|svg)(\?[^\s]*)?)$/i);
+  if(m)return m[1];
+  return "";
+}
+function optionContentHtml(text,image){
+  const src=optionImageSrc(image||"")||optionImageSrc(text);
+  let html="";
+  if(text&&!optionImageSrc(text))html+='<div class="option-text">'+esc(text)+'</div>';
+  if(src)html+='<img class="option-image" src="'+esc(src)+'" alt="">';
+  return html||'<div class="option-text">'+esc(text)+'</div>';
+}
+const memoryStore=new Map();
+function memoryGet(key){return memoryStore.has(key)?memoryStore.get(key):null;}
+function memorySet(key,value){memoryStore.set(key,String(value));}
+function memoryRemove(key){memoryStore.delete(key);}
+function getStoredJson(key,fallback){
+  try{const value=memoryGet(key);return value==null?fallback:JSON.parse(value);}catch(e){return fallback;}
+}
+function setStoredJson(key,value){
+  try{memorySet(key,JSON.stringify(value));}catch(e){}
+}
+function clearLocalData(){
+  confirmDialog(t("clearLocalTitle"),t("clearLocalDesc"),t("confirm"),t("cancel"),()=>{
+    memoryStore.clear();
+    state.cloudToken="";
+    ["examAIConfig","examGithubToken","examCloudUrl","examArchiveRecords","audioConfirmedUsers"].forEach((key)=>{localStorage.removeItem(key);sessionStorage.removeItem(key);});
+    Object.keys(localStorage).forEach((key)=>{if(key.indexOf("examLog:")===0||key.indexOf("examGithubUploaded:")===0)localStorage.removeItem(key);});
+    Object.keys(sessionStorage).forEach((key)=>{if(key.indexOf("examLog:")===0||key.indexOf("examGithubUploaded:")===0)sessionStorage.removeItem(key);});
+    sessionStorage.clear();
+    showToast(t("clearLocalDone"),"success");
+    setTimeout(()=>location.reload(),400);
+  });
+}
+function clearLegacyStorage(){
+  ["examAIConfig","examGithubToken","examCloudUrl","examArchiveRecords","audioConfirmedUsers"].forEach((key)=>localStorage.removeItem(key));
+  Object.keys(localStorage).forEach((key)=>{if(key.indexOf("examLog:")===0||key.indexOf("examGithubUploaded:")===0)localStorage.removeItem(key);});
+}
+function safeSegment(value,fallback){
+  const s=String(value==null?"":value).trim().replace(/[^a-zA-Z0-9._\u4e00-\u9fff-]+/g,"_").replace(/^_+|_+$/g,"");
+  return s||fallback||"item";
+}
+function currentSessionKey(){
+  return state.sessionKey||state.remoteUrl||state.appData.settings.examTitle||"exam";
+}
+function currentUserId(){
+  return state.quiz.currentUserInfo?String(state.quiz.currentUserInfo.uid||state.quiz.currentUserInfo.name):"guest";
+}
+function buildStudentResultData(){
+  const user=state.quiz.currentUserInfo;
+  const qs=state.quiz.questions;
+  const answers=state.quiz.answers;
+  const showDetail=state.appData.settings.showAnswer;
+  const details=qs.map((q,i)=>{
+    const subjective=isSubjectiveType(q.type);
+    const answer=answers[i];
+    const options=Array.isArray(q.options)?q.options.slice():[];
+    const selected=(q.type==="single"||q.type==="multiple")?(Array.isArray(answer)?answer:[answer]):[];
+    const base={
+      type:q.type,
+      title:q.title,
+      options:options,
+      optionImages:(q.optionImages||[]).slice(),
+      optionOrder:Array.isArray(q.optionOrder)?q.optionOrder.slice():[],
+      userAnswer:answer,
+      userAnswerText:formatAnswer(answer,q.type),
+      selectedOptions:selected.filter((n)=>n!==null&&n!==undefined&&Number.isInteger(Number(n))&&options[Number(n)]!=null).map((n)=>options[Number(n)]),
+      isCorrect:subjective?null:isAnswerCorrect(answer,q.correct,q.type)
+    };
+    if(subjective)base.subjective=true;
+    if(!subjective&&showDetail){base.correct=q.correct;if(q.explanation)base.explanation=q.explanation;}
+    return base;
+  });
+  return {name:user.name,uid:user.uid,verifyCode:user.verifyCode||"",gender:user.gender,subject:state.appData.settings.subject,examTitle:state.appData.settings.examTitle,examSubtitle:state.appData.settings.examSubtitle,score:(state.quiz.lastResult||{}).score,totalScore:(state.quiz.lastResult||{}).totalScore,submittedAt:new Date().toISOString(),details:details};
+}
+function loadArchiveRecords(){
+  return getStoredJson("examArchiveRecords",[]);
+}
+function saveArchiveRecord(){
+  const r=state.quiz.lastResult;
+  const user=state.quiz.currentUserInfo;
+  if(!r)return null;
+  const records=loadArchiveRecords();
+  const record={
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    time:Date.now(),
+    name:user?user.name:t("guestName"),
+    uid:user?user.uid:"",
+    examTitle:state.appData.settings.examTitle||"",
+    subject:state.appData.settings.subject||"",
+    score:r.score,
+    totalScore:r.totalScore,
+    correctCount:r.correctCount,
+    gradedTotal:r.gradedTotal,
+    subjectiveTotal:r.subjectiveTotal,
+    timeUp:r.timeUp,
+    sessionKey:currentSessionKey(),
+    details:state.quiz.questions.map((q,i)=>{
+      const answer=state.quiz.answers[i];
+      const selected=(q.type==="single"||q.type==="multiple")?(Array.isArray(answer)?answer:[answer]):[];
+      return {
+        type:q.type,
+        title:q.title,
+        userAnswer:answer,
+        userAnswerText:formatAnswer(answer,q.type),
+        isCorrect:isSubjectiveType(q.type)?null:isAnswerCorrect(answer,q.correct,q.type),
+        subjective:isSubjectiveType(q.type),
+        options:(q.options||[]).slice(),
+        optionImages:(q.optionImages||[]).slice(),
+        optionOrder:(q.optionOrder||[]).slice(),
+        selectedOptions:selected.filter((n)=>n!==null&&n!==undefined&&Number.isInteger(Number(n))&&q.options&&q.options[Number(n)]!=null).map((n)=>q.options[Number(n)])
+      };
+    })
+  };
+  records.unshift(record);
+  if(records.length>200)records.length=200;
+  setStoredJson("examArchiveRecords",records);
+  return record;
+}
+function openArchive(){
+  openModal('<h2>'+t("archiveTitle")+'</h2><p class="modal-tip">'+t("archiveDesc")+'</p><div class="form-group"><input id="archiveSearch" placeholder="'+t("archiveSearch")+'"></div><div class="archive-list" id="archiveList"></div><div class="modal-actions"><button class="btn btn-danger" id="archiveClear">'+t("archiveClear")+'</button><button class="btn btn-secondary" id="archiveClose">'+t("close")+'</button></div>',false);
+  const render=(query)=>{
+    const q=String(query||"").trim().toLowerCase();
+    const records=loadArchiveRecords().filter((r)=>!q||((r.name||"")+" "+(r.uid||"")+" "+(r.examTitle||"")).toLowerCase().indexOf(q)>=0);
+    const list=$("archiveList");
+    if(!records.length){list.innerHTML='<div class="empty-state">'+t("archiveEmpty")+'</div>';return;}
+    list.innerHTML=records.map((r)=>'<div class="archive-item" data-id="'+esc(r.id)+'"><div class="archive-main"><b>'+esc(r.name||"")+'</b><span>'+esc(r.uid||"")+'</span></div><div class="archive-meta">'+esc(r.examTitle||"")+' · '+r.score+' / '+r.totalScore+' · '+esc(new Date(r.time).toLocaleString())+'</div></div>').join("");
+    list.querySelectorAll(".archive-item").forEach((el)=>{el.onclick=()=>openArchiveDetail(el.dataset.id);});
+  };
+  render("");
+  $("archiveSearch").oninput=(e)=>render(e.target.value);
+  $("archiveClose").onclick=closeModal;
+  $("archiveClear").onclick=()=>confirmDialog(t("archiveClear"),t("archiveClearConfirm"),t("confirm"),t("cancel"),()=>{memoryRemove("examArchiveRecords");render("");});
+}
+function openArchiveDetail(id){
+  const r=loadArchiveRecords().find((x)=>x.id===id);
+  if(!r)return;
+  let html='<h2>'+t("archiveDetail")+'</h2><div class="result-summary" style="padding:22px"><div class="result-user">'+esc(r.name||"")+'</div><div class="result-label">'+esc(r.examTitle||"")+'</div><div class="result-score">'+r.score+' / '+r.totalScore+'</div><div class="result-sub">'+t("progressCorrect",r.correctCount,r.gradedTotal||0)+'</div></div><div class="archive-detail-list">';
+  (r.details||[]).forEach((d,i)=>{
+    html+='<div class="archive-detail-item"><div class="archive-detail-title">'+(i+1)+'. '+esc(d.title||"")+'</div>';
+    html+='<div class="result-line '+(d.subjective?"neutral":(d.isCorrect?"correct":"wrong"))+'">'+t("yourAnswer",esc(d.userAnswerText||""))+'</div>';
+    if(d.selectedOptions&&d.selectedOptions.length)html+='<div class="result-line neutral">'+t("archiveSelectedOptions",esc(d.selectedOptions.join(" | ")))+'</div>';
+    if(d.subjective)html+='<div class="result-line neutral">'+t("subjectiveNotGraded")+'</div>';
+    html+='</div>';
+  });
+  html+='</div><div class="modal-actions"><button class="btn btn-secondary" id="archiveBack">'+t("back_btn")+'</button></div>';
+  openModal(html,false);
+  $("archiveBack").onclick=openArchive;
+}
+function refreshArchiveUI(){
+  const show=state.appData.users.length>0||state.appData.questions.length>0;
+  ["btnArchiveUser","actArchive"].forEach((id)=>{const el=$(id);if(el)el.style.display=show?"":"none";});
+}
+function openCloudModal(){
+  if(!state.appData.settings.enableCloud){showToast(t("cloudDisabled"),"warn");return;}
+  const last=state.appData.settings.cloudUrl||memoryGet("examCloudUrl")||"";
+  openModal('<h2>'+t("cloudTitle")+'</h2><p class="modal-tip">'+t("cloudDesc")+'</p><div class="form-group"><label>'+t("cloudUrl")+'</label><input id="cloudUrlInput" type="url" value="'+esc(last)+'" placeholder="https://example.com/data.js"></div><div class="form-group"><label>'+t("githubToken")+'</label><div class="settings-inline"><input id="cloudToken" type="password" value="'+esc(state.cloudToken||state.appData.settings.githubToken||"")+'" placeholder="'+t("githubTokenOptional")+'"><button type="button" class="btn btn-secondary btn-sm" id="cloudGetToken">'+t("getToken")+'</button></div></div><div class="modal-actions"><button class="btn btn-secondary" id="cloudSample">'+t("cloudSample")+'</button><button class="btn btn-secondary" id="cloudCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="cloudLoad">'+t("cloudLoad")+'</button></div>',false);
+  $("cloudCancel").onclick=closeModal;
+  $("cloudSample").onclick=()=>{$("cloudUrlInput").value="https://raw.githubusercontent.com/FueySeek/Fuey-Exam-System/main/Test_Paper/Display_Template.js";};
+  $("cloudLoad").onclick=()=>{const token=$("cloudToken").value.trim();if(token)state.cloudToken=token;loadCloudExam($("cloudUrlInput").value,token);};
+  $("cloudGetToken").onclick=()=>window.open("https://github.com/settings/tokens?type=beta","_blank");
+}
+function normalizeCloudUrl(url){
+  let u=String(url||"").trim();
+  if(!u)return "";
+  if(!/^(https?:|data:|blob:|file:)/i.test(u)){
+    if(/^[./]/.test(u))u=new URL(u,location.href).href;
+    else if(u.split("/")[0].indexOf(".")>=0)u="https://"+u;
+    else u=new URL(u,location.href).href;
+  }
+  const blob=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/i);
+  if(blob)return "https://raw.githubusercontent.com/"+blob[1]+"/"+blob[2]+"/"+blob[3]+"/"+blob[4];
+  const raw=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/raw\/([^/]+)\/(.+)$/i);
+  if(raw)return "https://raw.githubusercontent.com/"+raw[1]+"/"+raw[2]+"/"+raw[3]+"/"+raw[4];
+  const plain=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/(.+)$/i);
+  if(plain&&!/^(blob|raw|tree|issues|pull|actions|releases|settings|graphs)\//i.test(plain[3])){
+    const parts=plain[3].split("/");
+    const branch=(parts[0]==="main"||parts[0]==="master")?parts[0]:"main";
+    const file=branch==="main"&&parts[0]!=="main"?plain[3]:parts.slice(1).join("/");
+    return "https://raw.githubusercontent.com/"+plain[1]+"/"+plain[2]+"/"+branch+"/"+file;
+  }
+  return u;
+}
+function cloudCandidates(url){
+  const list=[url];
+  const raw=url.match(/^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
+  if(raw){
+    list.push("https://cdn.jsdelivr.net/gh/"+raw[1]+"/"+raw[2]+"@"+raw[3]+"/"+raw[4]);
+    if(raw[3]==="main")list.push("https://raw.githubusercontent.com/"+raw[1]+"/"+raw[2]+"/master/"+raw[4]);
+    if(raw[3]==="master")list.push("https://raw.githubusercontent.com/"+raw[1]+"/"+raw[2]+"/main/"+raw[4]);
+  }
+  if(/^https?:\/\//i.test(url)){
+    list.push("https://api.allorigins.win/raw?url="+encodeURIComponent(url));
+    list.push("https://corsproxy.io/?"+encodeURIComponent(url));
+  }
+  return list;
+}
+function parseExamText(text){
+  const raw=String(text||"").replace(/^\uFEFF/,"").trim();
+  if(!raw)return null;
+  let data=null;
+  try{data=JSON.parse(raw);}catch(e){}
+  if(!data){try{const w={};new Function("window",raw)(w);data=w.APP_DATA;}catch(e){}}
+  if(!data){try{data=new Function(raw+"\n;return (typeof APP_DATA!=='undefined')?APP_DATA:(typeof window!=='undefined'?window.APP_DATA:null);")();}catch(e){}}
+  if(!data)return null;
+  if(Array.isArray(data))data={questions:data};
+  return data;
+}
+function githubFileInfo(url){
+  const m=String(url||"").match(/^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
+  return m?{owner:m[1],repo:m[2],branch:m[3],path:m[4]}:null;
+}
+async function fetchGithubApiText(info,token){
+  const url="https://api.github.com/repos/"+encodeURIComponent(info.owner)+"/"+encodeURIComponent(info.repo)+"/contents/"+info.path.split("/").map(encodeURIComponent).join("/")+"?ref="+encodeURIComponent(info.branch);
+  const res=await fetch(url,{headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const data=await res.json();
+  if(data.content)return b64DecodeUnicode(data.content);
+  if(data.download_url){const raw=await fetch(data.download_url);if(!raw.ok)throw new Error("HTTP "+raw.status);return raw.text();}
+  throw new Error("empty content");
+}
+async function loadCloudExam(url,tokenOverride){
+  const target=normalizeCloudUrl(url);
+  if(!target){showToast(t("cloudUrlRequired"),"warn");return;}
+  closeModal();
+  showToast(t("cloudLoading"),"success");
+  const useData=(data,source)=>{
+    if(!isValidExamData(data))return false;
+    loadData(data);
+    state.remoteUrl=source;
+    state.sessionKey=source;
+    state.appData.settings.cloudUrl=source;
+    memorySet("examCloudUrl",source);
+    refreshCloudUI();
+    showToast(t("cloudLoaded"),"success");
+    return true;
+  };
+  let apiError="";
+  const token=tokenOverride||state.cloudToken||state.appData.settings.githubToken||"";
+  const githubInfo=githubFileInfo(target);
+  if(githubInfo&&token){
+    try{
+      const text=await fetchGithubApiText(githubInfo,token);
+      const data=parseExamText(text);
+      if(useData(data,target))return;
+      apiError=t("invalidFile");
+    }catch(e){apiError=e.message||String(e);}
+  }
+  let lastError="";
+  for(const candidate of cloudCandidates(target)){
+    try{
+      const res=await fetch(candidate,{cache:"no-store"});
+      if(!res.ok){lastError="HTTP "+res.status;continue;}
+      const text=await res.text();
+      const data=parseExamText(text);
+      if(useData(data,candidate))return;
+      lastError=t("invalidFile");
+    }catch(e){lastError=e.message||String(e);}
+  }
+  const detail=(/404/.test(apiError||lastError))?t("cloudPrivate404"):(apiError||lastError);
+  try{delete window.APP_DATA;}catch(e){}
+  const script=document.createElement("script");
+  let finished=false;
+  const finish=()=>{if(finished)return;finished=true;script.remove();};
+  script.src=target+(target.indexOf("?")>=0?"&":"?")+"_cloud="+Date.now();
+  script.onload=()=>{
+    const data=window.APP_DATA;
+    finish();
+    if(!useData(data,target))showToast(t("cloudLoadFail")+(detail?" · "+detail:""),"warn");
+  };
+  script.onerror=()=>{
+    finish();
+    showToast(t("cloudLoadFail")+(detail?" · "+detail:""),"warn");
+  };
+  document.head.appendChild(script);
+}
+function refreshCloudUI(){
+  const enabled=!!state.appData.settings.enableCloud;
+  ["btnCloudImport","btnCloudUser","actCloud"].forEach((id)=>{const el=$(id);if(el)el.style.display=enabled?"":"none";});
+}
+function githubConfigured(){
+  const s=state.appData.settings;
+  return !!(s.enableGithub&&s.githubToken&&s.githubOwner&&s.githubRepo);
+}
+function githubBasePath(){
+  return String(state.appData.settings.githubPath||"exam-system").replace(/^\/+|\/+$/g,"");
+}
+function githubPagesUrl(file){
+  const s=state.appData.settings;
+  if(!s.githubOwner||!s.githubRepo)return "";
+  const owner=s.githubOwner;
+  const repo=s.githubRepo;
+  const base=repo.toLowerCase()===owner.toLowerCase()+".github.io"?"https://"+owner+".github.io":"https://"+owner+".github.io/"+repo;
+  const p=githubBasePath();
+  return base+"/"+(p?p+"/":"")+file;
+}
+function b64DecodeUnicode(str){
+  const bin=atob(String(str||"").replace(/\s/g,""));
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function downloadHtml(html,filename){
+  const blob=new Blob([html],{type:"text/html"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=filename;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+async function openGithubPage(file){
+  const localHtml=file==="grader.html"?githubGraderHtml():githubLogsHtml();
+  if(!githubConfigured()){
+    const win=window.open("","_blank");
+    const blob=new Blob([localHtml],{type:"text/html"});
+    const url=URL.createObjectURL(blob);
+    if(win)win.location.href=url;
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    return;
+  }
+  const win=window.open("","_blank");
+  const ref=encodeURIComponent(state.appData.settings.githubBranch||"main");
+  try{
+    const res=await fetch(githubApiUrl(githubBasePath()+"/"+file)+"?ref="+ref,{headers:githubHeaders()});
+    if(res.ok){
+      const info=await res.json();
+      const blob=new Blob([b64DecodeUnicode(info.content)],{type:"text/html"});
+      const url=URL.createObjectURL(blob);
+      if(win)win.location.href=url;
+      setTimeout(()=>URL.revokeObjectURL(url),60000);
+      return;
+    }
+  }catch(e){}
+  const html=file==="grader.html"?githubGraderHtml():githubLogsHtml();
+  const blob=new Blob([html],{type:"text/html"});
+  const url=URL.createObjectURL(blob);
+  if(win)win.location.href=url;
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function githubHeaders(){
+  const s=state.appData.settings;
+  return {Authorization:"Bearer "+s.githubToken,Accept:"application/vnd.github+json","Content-Type":"application/json","X-GitHub-Api-Version":"2022-11-28"};
+}
+function githubApiUrl(path){
+  const s=state.appData.settings;
+  return "https://api.github.com/repos/"+encodeURIComponent(s.githubOwner)+"/"+encodeURIComponent(s.githubRepo)+"/contents/"+path.split("/").map(encodeURIComponent).join("/");
+}
+function b64EncodeUnicode(str){
+  const bytes=new TextEncoder().encode(String(str));
+  let bin="";
+  bytes.forEach((b)=>{bin+=String.fromCharCode(b);});
+  return btoa(bin);
+}
+async function githubPutFile(filePath,content,message){
+  const s=state.appData.settings;
+  const ref=encodeURIComponent(s.githubBranch||"main");
+  let sha="";
+  const get=await fetch(githubApiUrl(filePath)+"?ref="+ref,{headers:githubHeaders()});
+  if(get.ok){const info=await get.json();sha=info.sha||"";}
+  else if(get.status!==404){throw new Error("GitHub "+get.status);}
+  const body={message:message||("update "+filePath),content:b64EncodeUnicode(content),branch:s.githubBranch||"main"};
+  if(sha)body.sha=sha;
+  const put=await fetch(githubApiUrl(filePath),{method:"PUT",headers:githubHeaders(),body:JSON.stringify(body)});
+  if(!put.ok){let msg="GitHub "+put.status;try{const info=await put.json();if(info.message)msg+=": "+info.message;}catch(e){}throw new Error(msg);}
+  return put.json();
+}
+async function githubGetText(filePath){
+  const ref=encodeURIComponent(state.appData.settings.githubBranch||"main");
+  const res=await fetch(githubApiUrl(filePath)+"?ref="+ref,{headers:githubHeaders()});
+  if(res.status===404)return null;
+  if(!res.ok)throw new Error("GitHub "+res.status);
+  const info=await res.json();
+  if(info.content)return b64DecodeUnicode(info.content);
+  if(info.download_url){const raw=await fetch(info.download_url);if(!raw.ok)throw new Error("GitHub "+raw.status);return raw.text();}
+  return "";
+}
+function studentFileStem(user){
+  const name=safeSegment(user&&user.name||"student","student");
+  const uid=String(user&&user.uid||"").replace(/[^A-Za-z0-9]/g,"").slice(0,5)||"00000";
+  return name+"_"+uid;
+}
+function studentArchivePath(user){
+  return githubBasePath()+"/students/"+studentFileStem(user)+".json";
+}
+function rosterPath(){
+  return githubBasePath()+"/roster.json";
+}
+async function loadRoster(){
+  const text=await githubGetText(rosterPath());
+  let roster={updatedAt:"",students:[]};
+  if(text){
+    try{
+      const parsed=JSON.parse(text);
+      if(Array.isArray(parsed))roster.students=parsed;
+      else if(parsed&&Array.isArray(parsed.students)){roster=Object.assign({},parsed);roster.students=parsed.students.slice();}
+    }catch(e){}
+  }
+  if(!Array.isArray(roster.students))roster.students=[];
+  const map=new Map(roster.students.map((item)=>[String(item.uid||""),item]));
+  (state.appData.users||[]).forEach((user)=>{
+    const uid=String(user.uid||"");
+    if(!map.has(uid))map.set(uid,{name:user.name||"",uid:uid,submitted:false,file:studentArchivePath(user),submittedAt:"",score:null,totalScore:null});
+  });
+  const current=state.quiz.currentUserInfo;
+  if(current&&!map.has(String(current.uid||"")))map.set(String(current.uid||""),{name:current.name||"",uid:String(current.uid||""),submitted:false,file:studentArchivePath(current),submittedAt:"",score:null,totalScore:null});
+  roster.students=Array.from(map.values());
+  return roster;
+}
+async function updateRosterAndStudentFile(record){
+  if(!githubConfigured())return false;
+  const user=state.quiz.currentUserInfo;
+  if(!user)return false;
+  const result=buildStudentResultData();
+  const last=state.quiz.lastResult||{};
+  const data=Object.assign({},record||{},{name:user.name||"",uid:user.uid||"",submittedAt:new Date().toISOString(),score:record&&record.score!=null?record.score:last.score,totalScore:record&&record.totalScore!=null?record.totalScore:last.totalScore,result:result});
+  if(!data.details)data.details=result.details||[];
+  const filePath=studentArchivePath(user);
+  await githubPutFile(filePath,JSON.stringify(data,null,2),"student archive "+studentFileStem(user));
+  const roster=await loadRoster();
+  let entry=roster.students.find((item)=>String(item.uid||"")===String(user.uid||""));
+  if(!entry){entry={name:user.name||"",uid:user.uid||"",submitted:false,file:filePath,submittedAt:"",score:null,totalScore:null};roster.students.push(entry);}
+  entry.name=user.name||entry.name||"";
+  entry.submitted=true;
+  entry.submittedAt=new Date().toISOString();
+  entry.file=filePath;
+  entry.score=data.score;
+  entry.totalScore=data.totalScore;
+  roster.updatedAt=new Date().toISOString();
+  await githubPutFile(rosterPath(),JSON.stringify(roster,null,2),"update roster");
+  return true;
+}
+function githubGraderHtml(){
+  return [
+    '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>答案批改器</title><style>',
+    ':root{--bg:#0b0b0d;--panel:#141417;--panel2:#1b1b20;--line:#2a2a31;--text:#f4f4f5;--muted:#8b8b95;--accent:#f4f4f5;--ok:#34d399;--bad:#f87171;--warn:#fbbf24}',
+    '*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 500px at 15% -10%,#23232b 0,transparent 60%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;min-height:100vh}',
+    '.top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;max-width:1180px;margin:0 auto;padding:42px 24px 18px}.brand h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}.brand p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}.counter{border:1px solid var(--line);background:var(--panel);padding:8px 12px;border-radius:999px;font-size:12px;color:var(--muted);white-space:nowrap}',
+    'main{max-width:1180px;margin:0 auto;padding:0 24px 60px}.drop{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:160px;border:1px dashed #3a3a44;border-radius:18px;background:linear-gradient(180deg,#17171b,#121215);cursor:pointer;transition:.2s;margin-bottom:18px}.drop:hover,.drop.over{border-color:#777;background:#1b1b20}.drop b{font-size:15px}.drop span{font-size:12px;color:var(--muted)}.drop input{display:none}.pick{margin-top:6px;border:0;border-radius:10px;background:var(--accent);color:#111;padding:10px 16px;font-weight:700;cursor:pointer}',
+    '.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.stat span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.stat b{font-size:22px;letter-spacing:-.02em}',
+    '.student{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:14px}.student-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#18181d,#141417)}.student-head h2{margin:0;font-size:16px}.student-head h2 em{font-style:normal;color:var(--muted);font-weight:500;font-size:12px;margin-left:8px}.student-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.pill{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);white-space:nowrap}',
+    '.questions{padding:6px 20px 12px}.q{padding:16px 0;border-top:1px solid #202026}.q:first-child{border-top:0}.q-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}.q-index{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;background:var(--panel2);border:1px solid var(--line);font-size:11px;color:var(--muted)}.q-type{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:3px 7px;border-radius:6px}.q-status{margin-left:auto;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}.q-status.ok{color:var(--ok);background:rgba(52,211,153,.1)}.q-status.bad{color:var(--bad);background:rgba(248,113,113,.1)}.q-status.pending{color:var(--warn);background:rgba(251,191,36,.1)}.q-title{font-size:14px;line-height:1.6;margin:2px 0 8px}.answer{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);line-height:1.6}.answer b{color:var(--text);font-weight:500;word-break:break-word}',
+    '.q.sub{background:rgba(251,191,36,.035);margin:0 -20px;padding:16px 20px;border-left:2px solid rgba(251,191,36,.5)}.grade{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-top:10px}.grade input,.grade textarea{width:100%;background:#101013;border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 10px;font:inherit;font-size:12px;outline:none}.grade textarea{min-height:54px;resize:vertical}.grade input:focus,.grade textarea:focus{border-color:#555}',
+    '.toolbar{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:16px}.export{border:0;border-radius:11px;background:var(--accent);color:#111;padding:11px 18px;font-weight:800;cursor:pointer}.export:disabled{opacity:.4;cursor:not-allowed}.status{font-size:12px;color:var(--muted)}.empty{padding:56px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}',
+    '@media(max-width:760px){.top{padding-top:26px;align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.grade{grid-template-columns:1fr}.student-head{align-items:flex-start;flex-direction:column}.questions{padding:4px 14px 10px}.q.sub{margin:0 -14px;padding:16px 14px}}',
+    '</style></head><body>',
+    '<div class="top"><div class="brand"><h1>答案批改器</h1><p>导入考生成绩 .js 文件，查看作答并录入主观题得分。</p></div><div class="counter" id="counter">0 份成绩</div></div>',
+    '<main><div class="drop" id="drop"><b>拖拽成绩文件到这里</b><span>支持多个 .js 文件，来自考试系统导出</span><button class="pick" id="pick" type="button">选择成绩文件</button><input id="file" type="file" accept=".js" multiple></div>',
+    '<div class="stats"><div class="stat"><span>考生</span><b id="statStudents">0</b></div><div class="stat"><span>客观题正确</span><b id="statCorrect">0</b></div><div class="stat"><span>客观题总数</span><b id="statObjective">0</b></div><div class="stat"><span>主观题</span><b id="statSubjective">0</b></div></div>',
+    '<div id="list"><div class="empty">还没有导入成绩文件</div></div><div class="toolbar"><span class="status" id="status"></span><button class="export" id="export" type="button">导出批改结果</button></div></main>',
+    '<script>',
+    'var results=[];',
+    'function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;"}[c];});}',
+    'function typeName(t){return {single:"单选题",multiple:"多选题",judge:"判断题",fill:"填空题",short:"自答题"}[t]||t;}',
+    'function answerText(v,t){if(t==="fill")return (Array.isArray(v)?v:[v]).map(function(x){return String(x==null?"":x);}).join(" / ");if(t==="judge")return Number(v)===0?"正确":"错误";if(t==="short")return String(v==null?"":v);if(Array.isArray(v))return v.map(function(i){return String.fromCharCode(65+Number(i));}).join(", ");return String.fromCharCode(65+Number(v));}',
+    'function render(){var list=document.getElementById("list");var students=results.length;var correct=0,objective=0,subjective=0;results.forEach(function(r){(r.details||[]).forEach(function(d){var sub=d.subjective||d.type==="short";if(sub)subjective++;else{objective++;if(d.isCorrect)correct++;}});});document.getElementById("statStudents").textContent=students;document.getElementById("statCorrect").textContent=correct;document.getElementById("statObjective").textContent=objective;document.getElementById("statSubjective").textContent=subjective;document.getElementById("counter").textContent=students+" 份成绩";document.getElementById("export").disabled=!students;if(!students){list.innerHTML=\'<div class="empty">还没有导入成绩文件</div>\';return;}list.innerHTML=results.map(function(r,ri){var rows=(r.details||[]).map(function(d,di){var sub=d.subjective||d.type==="short";var status=sub?\'<span class="q-status pending">待批改</span>\':\'<span class="q-status \'+(d.isCorrect?"ok":"bad")+\'">\'+(d.isCorrect?"正确":"错误")+\'</span>\';var grade=sub?\'<div class="grade"><input class="score" data-r="\'+ri+\'" data-d="\'+di+\'" placeholder="得分"><textarea class="comment" data-r="\'+ri+\'" data-d="\'+di+\'" placeholder="评语"></textarea></div>\':"";return \'<div class="q \'+(sub?"sub":"")+\'"><div class="q-head"><span class="q-index">\'+(di+1)+\'</span><span class="q-type">\'+esc(typeName(d.type))+\'</span>\'+status+\'</div><div class="q-title">\'+esc(d.title)+\'</div><div class="answer"><span>考生答案</span><b>\'+esc(answerText(d.userAnswer,d.type))+\'</b></div>\'+grade+\'</div>\';}).join("");return \'<div class="student"><div class="student-head"><div><h2>\'+esc(r.name||"未命名")+\'<em>\'+esc(r.uid||"")+\'</em></h2><p>\'+esc(r.examTitle||"")+\'</p></div><span class="pill">客观题 \'+((r.details||[]).filter(function(d){return !(d.subjective||d.type==="short");}).filter(function(d){return d.isCorrect;}).length)+\' / \'+((r.details||[]).filter(function(d){return !(d.subjective||d.type==="short");}).length)+\'</span></div><div class="questions">\'+rows+\'</div></div>\';}).join("");}',
+    'function readFiles(files){var arr=Array.prototype.slice.call(files||[]);if(!arr.length)return;var status=document.getElementById("status");status.textContent="正在读取 "+arr.length+" 个文件...";var pending=arr.length;arr.forEach(function(f){var reader=new FileReader();reader.onload=function(){try{var w={};new Function("window",reader.result)(w);if(w.STUDENT_RESULT)results.push(w.STUDENT_RESULT);}catch(err){}pending--;if(!pending){status.textContent="已导入 "+results.length+" 份成绩";render();}};reader.onerror=function(){pending--;if(!pending){status.textContent="部分文件读取失败";render();}};reader.readAsText(f);});}',
+    'document.getElementById("pick").onclick=function(e){e.stopPropagation();document.getElementById("file").click();};document.getElementById("file").onchange=function(e){readFiles(e.target.files);};var drop=document.getElementById("drop");drop.onclick=function(){document.getElementById("file").click();};drop.ondragover=function(e){e.preventDefault();drop.classList.add("over");};drop.ondragleave=function(){drop.classList.remove("over");};drop.ondrop=function(e){e.preventDefault();drop.classList.remove("over");readFiles(e.dataTransfer.files);};',
+    'document.getElementById("export").onclick=function(){var out=results.map(function(r,ri){return {name:r.name,uid:r.uid,examTitle:r.examTitle,items:(r.details||[]).map(function(d,di){var score=document.querySelector(\'.score[data-r="\'+ri+\'"][data-d="\'+di+\'"]\');var comment=document.querySelector(\'.comment[data-r="\'+ri+\'"][data-d="\'+di+\'"]\');return {title:d.title,type:d.type,userAnswer:d.userAnswer,score:score?score.value:"",comment:comment?comment.value:""};})};});var blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="grades.json";a.click();};',
+    '<\/script></body></html>'
+  ].join("");
+}
+function githubLogsHtml(){
+  const s=state.appData.settings;
+  const cfg=JSON.stringify({owner:s.githubOwner,repo:s.githubRepo,branch:s.githubBranch||"main",path:githubBasePath()});
+  return '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>考生日志</title><style>body{margin:0;font-family:system-ui,"Microsoft YaHei",sans-serif;background:#f5f5f7;color:#111}header{padding:18px 24px;background:#111;color:#fff}h1{margin:0;font-size:20px}main{max-width:1100px;margin:0 auto;padding:24px}.card{background:#fff;border:1px solid #e2e2e8;border-radius:10px;padding:16px;margin-bottom:14px}.row{display:flex;gap:8px;flex-wrap:wrap}input{padding:8px;min-width:220px}button{padding:8px 14px}.list{display:flex;flex-direction:column;gap:6px;margin-top:12px}.item{padding:10px;border:1px solid #eee;border-radius:8px;background:#fafafa}.muted{color:#777}</style></head><body><header><h1>考生日志</h1><div>从管理员 GitHub 仓库读取考生上传记录</div></header><main><div class="card"><div class="row"><input id="token" type="password" placeholder="私有仓库读取令牌（公开仓库可留空）"><button id="refresh">刷新</button></div><div id="status" class="muted"></div><div class="list" id="list"></div></div></main><script>var cfg='+cfg+';function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;"}[c];});}async function load(){var token=document.getElementById("token").value.trim();var headers={Accept:"application/vnd.github+json"};if(token)headers.Authorization="Bearer "+token;var base="https://api.github.com/repos/"+encodeURIComponent(cfg.owner)+"/"+encodeURIComponent(cfg.repo)+"/contents/"+cfg.path.split("/").map(encodeURIComponent).join("/")+"/results?ref="+encodeURIComponent(cfg.branch);var st=document.getElementById("status");var list=document.getElementById("list");st.textContent="读取中...";try{var res=await fetch(base,{headers:headers});if(!res.ok){st.textContent="读取失败：GitHub "+res.status;return;}var items=await res.json();if(!Array.isArray(items)||!items.length){st.textContent="暂无记录";list.innerHTML="";return;}st.textContent="共 "+items.length+" 条";list.innerHTML=items.map(function(it){return "<div class=\\"item\\"><a href=\\""+esc(it.html_url)+"\\" target=\\"_blank\\">"+esc(it.name)+"</a><div class=\\"muted\\">"+esc(it.size)+" B</div></div>";}).join("");}catch(e){st.textContent="读取失败："+e.message;}}var ghLogsToken="";document.getElementById("refresh").onclick=load;document.getElementById("token").value=ghLogsToken||"";document.getElementById("token").onchange=function(e){ghLogsToken=e.target.value;};load();<\/script></body></html>';
+}
+async function ensureGithubPages(){
+  if(!githubConfigured()){showToast(t("githubNotConfigured"),"warn");return;}
+  showToast(t("githubCreating"),"success");
+  try{
+    const base=githubBasePath();
+    await githubPutFile(base+"/grader.html",githubGraderHtml(),"create grader page");
+    await githubPutFile(base+"/logs.html",githubLogsHtml(),"create logs page");
+    showToast(t("githubPagesCreated"),"success");
+  }catch(e){
+    downloadHtml(githubGraderHtml(),"grader.html");
+    downloadHtml(githubLogsHtml(),"logs.html");
+    showToast(t("githubLocalFallback")+": "+e.message,"warn");
+  }
+}
+async function uploadStudentResultToGithub(){
+  if(!githubConfigured()){showToast(t("githubNotConfigured"),"warn");return;}
+  const user=state.quiz.currentUserInfo;
+  if(!user){showToast(t("studentExportFail"),"warn");return;}
+  try{
+    showToast(t("githubUploading"),"success");
+    const data=buildStudentResultData();
+    const content="window.STUDENT_RESULT="+JSON.stringify(data,null,2)+";";
+    const name=safeSegment(user.name,"student")+"_"+safeSegment(user.uid,"uid")+"_"+Date.now()+".js";
+    await githubPutFile(githubBasePath()+"/results/"+name,content,"upload result "+name);
+    await updateRosterAndStudentFile(null);
+    memorySet("examGithubUploaded:"+currentSessionKey()+":"+user.uid,"1");
+    showToast(t("githubUploaded"),"success");
+  }catch(e){showToast(t("githubFail")+": "+e.message,"warn");}
+}
+async function uploadSubmissionToGithub(record){
+  if(!githubConfigured())return;
+  const user=state.quiz.currentUserInfo;
+  if(!user)return;
+  const stamp=Date.now();
+  const baseName=safeSegment(user.name,"student")+"_"+safeSegment(user.uid,"uid")+"_"+stamp;
+  try{
+    const data=buildStudentResultData();
+    const tasks=[
+      githubPutFile(githubBasePath()+"/results/"+baseName+".js","window.STUDENT_RESULT="+JSON.stringify(data,null,2)+";","upload result "+baseName)
+    ];
+    if(record)tasks.push(githubPutFile(githubBasePath()+"/archives/"+baseName+".json",JSON.stringify(record,null,2),"upload archive "+baseName));
+    const log=memoryGet(logStorageKey())||"";
+    const logText=log.trim()?log:["考生："+(user.name||""),"UID："+(user.uid||""),"提交时间："+new Date().toLocaleString(),"得分："+state.quiz.lastResult.score+"/"+state.quiz.lastResult.totalScore].join("\n");
+    if(logText.trim())tasks.push(githubPutFile(githubBasePath()+"/logs/"+baseName+".txt",logText,"upload log "+baseName));
+    let rosterError="";
+    try{await updateRosterAndStudentFile(record);}catch(e){rosterError=e.message||String(e);}
+    await Promise.all(tasks);
+    if(rosterError)throw new Error("花名册: "+rosterError);
+    memorySet("examGithubUploaded:"+currentSessionKey()+":"+user.uid,"1");
+    memoryRemove("examArchiveRecords");
+    memoryRemove(logStorageKey());
+    showToast(t("githubUploaded"),"success");
+  }catch(e){showToast(t("githubFail")+": "+e.message,"warn");}
+}
+function hasUploadedExam(uid){
+  return memoryGet("examGithubUploaded:"+currentSessionKey()+":"+uid)==="1";
+}
+function logStorageKey(){
+  return "examLog:"+currentSessionKey()+":"+currentUserId();
+}
+function openLogModal(){
+  const key=logStorageKey();
+  const text=memoryGet(key)||"";
+  const canUpload=githubConfigured();
+  openModal('<h2>'+t("logTitle")+'</h2><p class="modal-tip">'+t("logDesc")+'</p><div class="form-group"><textarea id="examLogText" rows="9" placeholder="'+t("logPlaceholder")+'">'+esc(text)+'</textarea></div><div class="modal-actions"><button class="btn btn-secondary" id="logCancel">'+t("close")+'</button>'+(canUpload?'<button class="btn btn-secondary" id="logUpload">'+t("logUpload")+'</button>':'')+'<button class="btn btn-primary" id="logSave">'+t("logSave")+'</button></div>',false);
+  $("logCancel").onclick=closeModal;
+  $("logSave").onclick=()=>{memorySet(key,$("examLogText").value);showToast(t("logSaved"),"success");};
+  if(canUpload)$("logUpload").onclick=async()=>{
+    try{
+      const user=state.quiz.currentUserInfo;
+      const name=safeSegment(user?user.name:"guest","guest")+"_"+safeSegment(currentUserId(),"uid")+"_"+Date.now()+".txt";
+      await githubPutFile(githubBasePath()+"/logs/"+name,$("examLogText").value,"upload log "+name);
+      memorySet(key,$("examLogText").value);
+      showToast(t("logUploaded"),"success");
+    }catch(e){showToast(t("githubFail")+": "+e.message,"warn");}
+  };
+}
+const AI_PROVIDERS=[
+  {id:"openai",nameEn:"OpenAI",nameZh:"OpenAI",base:"https://api.openai.com/v1",model:"gpt-4o-mini",logo:"O",color:"#10a37f"},
+  {id:"deepseek",nameEn:"DeepSeek",nameZh:"DeepSeek",base:"https://api.deepseek.com/v1",model:"deepseek-chat",logo:"D",color:"#4d6bfe"},
+  {id:"moonshot",nameEn:"Moonshot / Kimi",nameZh:"Moonshot / Kimi",base:"https://api.moonshot.cn/v1",model:"moonshot-v1-8k",logo:"K",color:"#111827"},
+  {id:"qwen",nameEn:"Qwen",nameZh:"通义千问",base:"https://dashscope.aliyuncs.com/compatible-mode/v1",model:"qwen-plus",logo:"Q",color:"#615ced"},
+  {id:"zhipu",nameEn:"Zhipu GLM",nameZh:"智谱 GLM",base:"https://open.bigmodel.cn/api/paas/v4",model:"glm-4-flash",logo:"Z",color:"#3859ff"},
+  {id:"groq",nameEn:"Groq",nameZh:"Groq",base:"https://api.groq.com/openai/v1",model:"llama-3.3-70b-versatile",logo:"G",color:"#f55036"},
+  {id:"openrouter",nameEn:"OpenRouter",nameZh:"OpenRouter",base:"https://openrouter.ai/api/v1",model:"openai/gpt-4o-mini",logo:"R",color:"#111827"},
+  {id:"siliconflow",nameEn:"SiliconFlow",nameZh:"硅基流动",base:"https://api.siliconflow.cn/v1",model:"Qwen/Qwen2.5-7B-Instruct",logo:"S",color:"#111827"},
+  {id:"ollama",nameEn:"Ollama",nameZh:"Ollama",base:"http://localhost:11434/v1",model:"llama3.1",logo:"L",color:"#111827"},
+  {id:"custom",nameEn:"Custom",nameZh:"自定义",base:"",model:"",logo:"+",color:"#6b7280"}
+];
+function providerName(p){return state.currentLang==="zh"?p.nameZh:p.nameEn;}
+function aiProviderById(id){
+  return AI_PROVIDERS.find((p)=>p.id===id)||AI_PROVIDERS[0];
+}
+function providerLogo(p){
+  return '<span class="provider-logo" style="--brand:'+p.color+'">'+esc(p.logo)+'</span>';
+}
+function getAIConfig(){
+  return getStoredJson("examAIConfig",{provider:"openai",url:"",key:"",model:"gpt-4o-mini",reasoning:"off"});
+}
+function aiEndpoint(url){
+  let u=String(url||"").trim().replace(/\/+$/,"");
+  if(!u)u="https://api.openai.com/v1";
+  if(!/\/chat\/completions$/.test(u))u+="/chat/completions";
+  return u;
+}
+function aiBaseUrl(providerId,custom){
+  if(providerId==="custom")return String(custom||"").trim();
+  return aiProviderById(providerId).base;
+}
+function openAIModal(){
+  const c=getAIConfig();
+  const provider=aiProviderById(c.provider);
+  const currentBase=c.url||provider.base;
+  const currentProvider=c.provider||"openai";
+  state.aiPreview=[];
+  state.aiRaw="";
+  state.aiSelected=new Set();
+  state.aiFilter="all";
+  state.aiSearch="";
+  state.aiSourceText="";
+  const providerOptions=AI_PROVIDERS.map((p)=>'<div class="custom-select-option rich-option" data-value="'+p.id+'">'+providerLogo(p)+'<span>'+esc(providerName(p))+'</span></div>').join("");
+  const typeOptions=["single","multiple","judge","fill","short"].map((tp)=>'<div class="custom-select-option" data-value="'+tp+'">'+typeLabel(tp)+'</div>').join("");
+  const difficultyOptions=[["easy",t("aiEasy")],["medium",t("aiMedium")],["hard",t("aiHard")]].map((item)=>'<div class="custom-select-option" data-value="'+item[0]+'">'+esc(item[1])+'</div>').join("");
+  const reasoningOptions=[["off",t("aiOff")],["low",t("aiLow")],["high",t("aiHigh")],["max",t("aiMax")]].map((item)=>'<div class="custom-select-option" data-value="'+item[0]+'">'+esc(item[1])+'</div>').join("");
+  const modelOptions='<div class="custom-select-option" data-value="'+esc(c.model||provider.model)+'">'+esc(c.model||provider.model)+'</div><div class="custom-select-option" data-value="__custom__">'+t("aiCustomModel")+'</div>';
+  openModal('<h2>'+t("aiTitle")+'</h2><p class="modal-tip">'+t("aiDesc")+'</p><div class="settings-grid"><div class="form-group"><label>'+t("aiProvider")+'</label><div class="custom-select rich-select" id="aiProviderSelect" data-value="'+esc(currentProvider)+'"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+providerLogo(provider)+'<span>'+esc(providerName(provider))+'</span></span></button><div class="custom-select-menu">'+providerOptions+'</div></div></div><div class="form-group"><label>'+t("aiApiKey")+'</label><input id="aiKey" type="password" value="'+esc(c.key)+'"></div></div><div class="form-group" id="aiCustomUrlGroup" style="display:flex"><label>'+t("aiCustomUrl")+'</label><input id="aiCustomUrl" type="url" value="'+esc(currentBase)+'" placeholder="https://api.example.com/v1"'+(currentProvider==="custom"?"":" disabled")+'><div class="form-hint">'+t("aiCustomUrlHint")+'</div></div><div class="settings-grid"><div class="form-group"><label>'+t("aiModel")+'</label><div class="settings-inline"><div class="custom-select" id="aiModelSelect" data-value="'+esc(c.model||provider.model)+'"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+esc(c.model||provider.model)+'</span></button><div class="custom-select-menu">'+modelOptions+'</div></div><button type="button" class="btn btn-secondary" id="aiFetchModels">'+t("aiFetchModels")+'</button></div></div><div class="form-group"><label>'+t("aiReasoning")+'</label><div class="custom-select" id="aiReasoningSelect" data-value="'+esc(c.reasoning||"off")+'"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+t("aiOff")+'</span></button><div class="custom-select-menu">'+reasoningOptions+'</div></div></div></div><div class="settings-grid"><div class="form-group"><label>'+t("aiType")+'</label><div class="custom-select" id="aiTypeSelect" data-value="single"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+t("singleChoice")+'</span></button><div class="custom-select-menu">'+typeOptions+'</div></div></div><div class="form-group"><label>'+t("aiDifficulty")+'</label><div class="custom-select" id="aiDifficultySelect" data-value="medium"><button type="button" class="custom-select-btn"><span class="custom-select-label">'+t("aiMedium")+'</span></button><div class="custom-select-menu">'+difficultyOptions+'</div></div></div><div class="form-group"><label>'+t("aiCount")+'</label><input id="aiCount" type="number" min="1" max="30" value="5"></div></div><div class="form-group"><label>'+t("aiTopic")+'</label><textarea id="aiTopic" rows="3" placeholder="'+t("aiTopicHint")+'"></textarea></div><div class="form-group" id="aiCustomModelGroup" style="display:none"><label>'+t("aiCustomModel")+'</label><input id="aiCustomModel" placeholder="'+t("aiCustomModelHint")+'"></div><label class="file-drop" for="aiFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div><b>'+t("aiChooseFile")+'</b><span>'+t("aiFileHint")+'</span></div></label><input id="aiFile" type="file" accept=".txt,.md,.csv,.json,.html" style="display:none"><div class="form-hint" id="aiFileInfo"></div><div class="checkbox-row"><input type="checkbox" id="aiWebSearch"><span>'+t("aiWebSearch")+'</span></div><div class="checkbox-row"><input type="checkbox" id="aiAutoAdd" checked><span>'+t("aiAutoAdd")+'</span></div><div id="aiPreview" class="ai-preview"></div><div class="modal-actions"><button class="btn btn-secondary" id="aiCancel">'+t("cancel")+'</button><button class="btn btn-primary" id="aiGenerate">'+t("aiGenerate")+'</button></div>',false);
+  initCustomSelects();
+  setCustomSelect("aiProviderSelect",currentProvider);
+  setCustomSelect("aiTypeSelect","single");
+  setCustomSelect("aiDifficultySelect","medium");
+  setCustomSelect("aiReasoningSelect",c.reasoning||"off");
+  const modelEl=$("aiModelSelect");
+  modelEl.onSelect=(val)=>{
+    $("aiCustomModelGroup").style.display=val==="__custom__"?"flex":"none";
+    if(val==="__custom__")setTimeout(()=>{const el=$("aiCustomModel");if(el)el.focus();},50);
+  };
+  const providerEl=$("aiProviderSelect");
+  providerEl.onSelect=(val)=>{
+    const p=aiProviderById(val);
+    $("aiCustomUrlGroup").style.display="flex";
+    $("aiCustomUrl").disabled=val!=="custom";
+    if(val!=="custom"){
+      setSelectOptions("aiModelSelect",[{value:p.model,label:p.model},{value:"__custom__",label:t("aiCustomModel")}],p.model);
+      $("aiCustomUrl").value=p.base;
+    }
+  };
+  $("aiFetchModels").onclick=fetchAIModels;
+  $("aiFile").onchange=(e)=>{
+    const f=e.target.files[0];
+    if(!f)return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      state.aiSourceText=String(reader.result||"").slice(0,30000);
+      $("aiFileInfo").textContent=f.name+" · "+state.aiSourceText.length+" characters";
+    };
+    reader.readAsText(f);
+  };
+  $("aiCancel").onclick=closeModal;
+  $("aiGenerate").onclick=generateAIQuestions;
+  renderAIPreview();
+}
+async function fetchAIModels(){
+  const provider=$("aiProviderSelect").dataset.value;
+  const base=aiBaseUrl(provider,$("aiCustomUrl").value);
+  const key=$("aiKey").value.trim();
+  if(!base||!key){showToast(t("aiNeedConfig"),"warn");return;}
+  const btn=$("aiFetchModels");
+  btn.disabled=true;
+  btn.textContent=t("aiFetching");
+  try{
+    const res=await fetch(base.replace(/\/+$/,"")+"/models",{headers:{Authorization:"Bearer "+key}});
+    if(!res.ok)throw new Error("API "+res.status);
+    const data=await res.json();
+    const ids=(Array.isArray(data.data)?data.data:[]).map((m)=>m.id||m.name).filter(Boolean);
+    if(!ids.length)throw new Error(t("aiFetchFail"));
+    setSelectOptions("aiModelSelect",ids.map((id)=>({value:id,label:id})).concat([{value:"__custom__",label:t("aiCustomModel")}]),$("aiModelSelect").dataset.value);
+    showToast(t("aiModelsLoaded",ids.length),"success");
+  }catch(e){showToast(t("aiFetchFail")+": "+e.message,"warn");}
+  btn.disabled=false;
+  btn.textContent=t("aiFetchModels");
+}
+function aiTextFromResponse(data){
+  const msg=data&&data.choices&&data.choices[0]&&data.choices[0].message;
+  if(!msg){
+    if(data&&typeof data.output_text==="string")return data.output_text;
+    if(data&&data.choices&&data.choices[0]&&typeof data.choices[0].text==="string")return data.choices[0].text;
+    if(data&&Array.isArray(data.output)){
+      const out=data.output.map((item)=>{
+        if(item&&Array.isArray(item.content))return item.content.map((part)=>part.text||part.content||"").join("");
+        return item&&(item.text||item.content)||"";
+      }).join("");
+      if(out)return out;
+    }
+    if(data&&Array.isArray(data.content))return data.content.map((part)=>typeof part==="string"?part:(part.text||part.content||"")).join("");
+    if(data&&typeof data.response==="string")return data.response;
+    return "";
+  }
+  if(typeof msg.content==="string"&&msg.content)return msg.content;
+  if(Array.isArray(msg.content))return msg.content.map((part)=>typeof part==="string"?part:(part.text||part.content||"")).join("");
+  if(msg.content&&typeof msg.content==="object")return msg.content.text||msg.content.content||"";
+  if(typeof msg.reasoning_content==="string")return msg.reasoning_content;
+  return "";
+}
+function aiExtractJson(text){
+  const raw=String(text||"").trim();
+  const fence=String.fromCharCode(96,96,96);
+  let clean=raw.replace(new RegExp("^"+fence+"(?:json)?\\s*","i"),"").replace(new RegExp(fence+"\\s*$"),"").trim();
+  const repair=(value)=>String(value).replace(/[“”]/g,'"').replace(/,\s*([}\]])/g,"$1");
+  try{return JSON.parse(clean);}catch(e){}
+  try{return JSON.parse(repair(clean));}catch(e){}
+  const firstObj=clean.indexOf("{");
+  const firstArr=clean.indexOf("[");
+  const from=firstObj<0?firstArr:(firstArr<0?firstObj:Math.min(firstObj,firstArr));
+  if(from<0)return null;
+  const to=Math.max(clean.lastIndexOf("}"),clean.lastIndexOf("]"));
+  if(to<=from)return null;
+  const sliced=clean.slice(from,to+1);
+  try{return JSON.parse(sliced);}catch(e){}
+  try{return JSON.parse(repair(sliced));}catch(e){return null;}
+}
+function aiQuestionList(parsed){
+  if(Array.isArray(parsed))return parsed;
+  if(!parsed||typeof parsed!=="object")return [];
+  for(const key of ["questions","items","data","result","results","exam"]){
+    const value=parsed[key];
+    if(Array.isArray(value))return value;
+    if(value&&typeof value==="object"){
+      const values=Object.values(value);
+      if(values.some((v)=>v&&typeof v==="object"&&(v.title||v.question||v.stem)))return values;
+      const nested=aiQuestionList(value);
+      if(nested.length)return nested;
+    }
+  }
+  if(parsed.question||parsed.title||parsed.stem)return [parsed];
+  return [];
+}
+function normalizeAIQuestion(item){
+  if(!item||typeof item!=="object")return null;
+  let title=String(item.title||item.question||item.stem||item.text||item.content||"").trim();
+  if(!title)return null;
+  let type=String(item.type||item.questionType||item.question_type||"single").toLowerCase();
+  const typeMap={single:"single",choice:"single","选择":"single","选择题":"single","单项选择":"single","单选题":"single",multiple:"multiple","多选":"multiple","多项选择":"multiple","多选题":"multiple",judge:"judge","判断":"judge","判断题":"judge","truefalse":"judge",tf:"judge",fill:"fill","填空":"fill","填空题":"fill",short:"short","问答":"short","简答":"short","自答":"short","作文":"short","阅读":"short",reading:"short",essay:"short"};
+  type=typeMap[type]||type;
+  if(["single","multiple","judge","fill","short"].indexOf(type)<0)type="single";
+  let options=item.options||item.choices||[];
+  if(!Array.isArray(options)&&options&&typeof options==="object")options=Object.values(options);
+  options=options.map((opt)=>opt&&typeof opt==="object"?String(opt.text||opt.label||opt.content||opt.value||""):String(opt)).filter((opt)=>opt!=="");
+  let correct=item.correct!==undefined?item.correct:(item.answer!==undefined?item.answer:(item.correctAnswer!==undefined?item.correctAnswer:(item.correct_answer!==undefined?item.correct_answer:(item.correctOption!==undefined?item.correctOption:(item.correct_option!==undefined?item.correct_option:item.answerKey)))));
+  if(correct&&typeof correct==="object"&&!Array.isArray(correct))correct=correct.answer!==undefined?correct.answer:(correct.index!==undefined?correct.index:(correct.value!==undefined?correct.value:correct.text));
+  if(type==="single"&&Array.isArray(correct))correct=correct[0];
+  const letterToIndex=(val)=>{
+    if(typeof val==="string"){
+      const t=val.trim();
+      const letter=t.match(/^([A-Za-z])(?:[.、,:：)）\]\s]|$)/);
+      if(letter)return letter[1].toUpperCase().charCodeAt(0)-65;
+      const cn=t.match(/(?:选项|答案|answer|correct)\s*[:：]?\s*([A-Za-z])/i);
+      if(cn)return cn[1].toUpperCase().charCodeAt(0)-65;
+      const clean=(x)=>String(x).replace(/^[A-Za-z][.、,:：)）\]\s]*/,"").trim();
+      const idx=options.findIndex((opt)=>opt===t||clean(opt)===clean(t));
+      if(idx>=0)return idx;
+    }
+    return Number(val);
+  };
+  if(type==="short")correct=null;
+  if(type==="judge"){
+    if(typeof correct==="boolean")correct=correct?0:1;
+    else if(typeof correct==="string"){const c=correct.trim().toLowerCase();correct=(["true","t","yes","y","a","正确","对","是"].indexOf(c)>=0)?0:1;}
+    else correct=Number(correct)===0?0:1;
+  }
+  if(type==="fill"){
+    if(Array.isArray(correct))correct=correct.map((x)=>String(x&&typeof x==="object"?(x.answer||x.text||x.value||""):x));
+    else correct=correct==null?[""]:[String(correct)];
+    if(!correct.length)correct=[""];
+    title=normalizeFillTitle(title);
+  }
+  if(type==="multiple"){
+    if(typeof correct==="string")correct=correct.split(/[,\s，、/|]+/).filter(Boolean);
+    if(!Array.isArray(correct))correct=[correct];
+    correct=correct.map(letterToIndex).filter((n)=>!isNaN(n)&&n>=0&&n<options.length);
+    if(!correct.length)return null;
+  }
+  if(type==="single"){
+    correct=letterToIndex(correct);
+    if(isNaN(correct)||correct<0||correct>=options.length)return null;
+  }
+  if((type==="single"||type==="multiple")&&options.length<2)return null;
+  const explanation=item.explanation||item.analysis||item.reason||"";
+  return normalizeQuestion({type:type,title:title,options:options,correct:correct,explanation:String(explanation)});
+}
+function commitAIQuestions(items){
+  if(!items||!items.length){showToast(t("aiNoneSelected"),"warn");return;}
+  state.appData.questions=state.appData.questions.concat(items);
+  state.qFilter="all";
+  state.aiPreview=[];
+  state.aiSelected=new Set();
+  state.aiRaw="";
+  markDirty();
+  updateStats();
+  closeModal();
+  renderQuestionEditorModal();
+  showToast(t("aiAdded"),"success");
+}
+function renderAIPreview(){
+  const box=$("aiPreview");
+  if(!box)return;
+  if(!state.aiPreview||!state.aiPreview.length){
+    if(state.aiRaw){
+      box.innerHTML='<div class="ai-raw-title">'+t("aiRawTitle")+'</div><pre class="ai-raw">'+esc(state.aiRaw)+'</pre><button class="btn btn-secondary" id="aiCopyRaw">'+t("aiCopyRaw")+'</button>';
+      $("aiCopyRaw").onclick=()=>copyText(state.aiRaw);
+    }else box.innerHTML="";
+    return;
+  }
+  const filtered=state.aiPreview.map((q,i)=>({q:q,i:i})).filter((item)=>{
+    if(state.aiFilter!=="all"&&item.q.type!==state.aiFilter)return false;
+    if(state.aiSearch&&((item.q.title||"")+" "+(item.q.options||[]).join(" ")).toLowerCase().indexOf(state.aiSearch.toLowerCase())<0)return false;
+    return true;
+  });
+  const chips=["all","single","multiple","judge","fill","short"].map((tp)=>'<button class="chip'+(state.aiFilter===tp?" active":"")+'" data-ai-filter="'+tp+'">'+esc(tp==="all"?t("filterAll"):typeLabel(tp))+'</button>').join("");
+  box.innerHTML='<div class="ai-preview-toolbar"><div class="search"><input id="aiFilterSearch" placeholder="'+t("searchPlaceholder")+'" value="'+esc(state.aiSearch)+'"></div><div class="filters" id="aiFilters">'+chips+'</div></div><div class="ai-preview-actions"><button class="btn btn-secondary btn-sm" id="aiSelectAll">'+t("aiSelectAll")+'</button><button class="btn btn-secondary btn-sm" id="aiSelectNone">'+t("aiSelectNone")+'</button><span class="form-hint">'+t("aiSelectedCount",state.aiSelected.size)+'</span></div><div class="ai-preview-list">'+filtered.map((item)=>'<label class="ai-preview-item"><input type="checkbox" data-ai-check="'+item.i+'"'+(state.aiSelected.has(item.i)?" checked":"")+'><span><b>'+esc(typeLabel(item.q.type))+'</b> '+esc(item.q.title)+'</span></label>').join("")+'</div><div class="ai-preview-footer"><button class="btn btn-primary" id="aiAdd">'+t("aiAddQuestions",state.aiSelected.size)+'</button></div>';
+  $("aiFilterSearch").oninput=(e)=>{
+    state.aiSearch=e.target.value;
+    renderAIPreview();
+    const el=$("aiFilterSearch");
+    if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}
+  };
+  box.querySelectorAll("[data-ai-filter]").forEach((btn)=>btn.onclick=()=>{state.aiFilter=btn.dataset.aiFilter;renderAIPreview();});
+  box.querySelectorAll("[data-ai-check]").forEach((cb)=>cb.onchange=()=>{const i=Number(cb.dataset.aiCheck);if(cb.checked)state.aiSelected.add(i);else state.aiSelected.delete(i);renderAIPreview();});
+  $("aiSelectAll").onclick=()=>{filtered.forEach((item)=>state.aiSelected.add(item.i));renderAIPreview();};
+  $("aiSelectNone").onclick=()=>{filtered.forEach((item)=>state.aiSelected.delete(item.i));renderAIPreview();};
+  $("aiAdd").onclick=()=>{
+    const items=state.aiPreview.filter((q,i)=>state.aiSelected.has(i));
+    commitAIQuestions(items);
+  };
+}
+async function readAIStream(res,onDelta){
+  const reader=res.body.getReader();
+  const decoder=new TextDecoder();
+  let buffer="";
+  const handle=(line)=>{
+    const text=line.trim();
+    if(!text||text.indexOf("data:")!==0)return;
+    const payload=text.slice(5).trim();
+    if(!payload||payload==="[DONE]")return;
+    try{
+      const data=JSON.parse(payload);
+      const choice=data.choices&&data.choices[0];
+      const delta=choice&&(choice.delta||choice.message);
+      let part="";
+      let isReasoning=false;
+      if(delta){
+        if(typeof delta.content==="string")part=delta.content;
+        else if(Array.isArray(delta.content))part=delta.content.map((item)=>typeof item==="string"?item:(item.text||item.content||"")).join("");
+        else if(delta.content&&typeof delta.content==="object")part=delta.content.text||delta.content.content||"";
+        if(!part&&typeof delta.reasoning_content==="string"){part=delta.reasoning_content;isReasoning=true;}
+      }
+      if(!part&&choice&&typeof choice.text==="string")part=choice.text;
+      if(part)onDelta(part,isReasoning);
+    }catch(e){}
+  };
+  while(true){
+    const chunk=await reader.read();
+    if(chunk.done)break;
+    buffer+=decoder.decode(chunk.value,{stream:true});
+    const lines=buffer.split(/\r?\n/);
+    buffer=lines.pop()||"";
+    lines.forEach(handle);
+  }
+  buffer+=decoder.decode();
+  if(buffer)handle(buffer);
+}
+async function generateAIQuestions(){
+  const provider=$("aiProviderSelect").dataset.value;
+  const base=aiBaseUrl(provider,$("aiCustomUrl").value);
+  const key=$("aiKey").value.trim();
+  const model=$("aiModelSelect").dataset.value==="__custom__"?$("aiCustomModel").value.trim():$("aiModelSelect").dataset.value;
+  const reasoning=$("aiReasoningSelect").dataset.value;
+  const web=$("aiWebSearch").checked;
+  const topic=$("aiTopic").value.trim();
+  const count=Math.max(1,Math.min(30,toNum($("aiCount").value,5)));
+  const type=$("aiTypeSelect").dataset.value;
+  const difficulty=$("aiDifficultySelect").dataset.value;
+  if(!base||!key){showToast(t("aiNeedConfig"),"warn");return;}
+  if(!model){showToast(t("aiNeedConfig"),"warn");return;}
+  if(!topic&&!state.aiSourceText){showToast(t("aiTopicRequired"),"warn");return;}
+  memorySet("examAIConfig",JSON.stringify({provider:provider,url:$("aiCustomUrl").value.trim(),key:key,model:model,reasoning:reasoning}));
+  const btn=$("aiGenerate");
+  btn.disabled=true;
+  btn.textContent=t("aiGenerating");
+  let prompt="请生成 "+count+" 道"+typeLabel(type)+"练习题，难度为"+difficulty+"。";
+  if(topic)prompt+="主题："+topic+"。";
+  if(state.aiSourceText)prompt+="请严格参考以下素材：\n"+state.aiSourceText;
+  if(web)prompt+="请优先使用联网搜索获取最新资料并核对事实。\n";
+  prompt+='只返回 JSON，格式为 {"questions":[{...}]}。每道题包含 type、title、options、correct、explanation。type 为 single 时 correct 为正确选项下标数字；multiple 时 correct 为下标数组；judge 时 correct 为 0 或 1；fill 时 title 用 _____ 标出填空位置，correct 为按空顺序排列的答案数组；short 时 correct 为 null 且 options 为空数组。不要输出 Markdown。';
+  const body={model:model,messages:[{role:"system",content:"You generate exam questions and output only JSON."},{role:"user",content:prompt}],temperature:0.7,stream:true};
+  if(reasoning&&reasoning!=="off")body.reasoning_effort=reasoning==="max"?"high":reasoning;
+  if(web)body.web_search_options={search_context_size:"medium"};
+  try{
+    const res=await fetch(aiEndpoint(base),{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},body:JSON.stringify(body)});
+    if(!res.ok){let msg="API "+res.status;try{const j=await res.json();if(j.error&&j.error.message)msg+=": "+j.error.message;}catch(e){}throw new Error(msg);}
+    let content="";
+    let reasoningText="";
+    const contentType=res.headers.get("content-type")||"";
+    if(res.body&&contentType.indexOf("text/event-stream")>=0){
+      const box=$("aiPreview");
+      if(box){box.innerHTML='<div class="ai-live-title">'+t("aiWriting")+'</div><pre class="ai-raw" id="aiLive"></pre>';box.scrollIntoView({behavior:"smooth",block:"nearest"});}
+      await readAIStream(res,(part,isReasoning)=>{
+        if(isReasoning)reasoningText+=part;
+        else content+=part;
+        const live=$("aiLive");
+        if(live){live.textContent+=part;live.scrollTop=live.scrollHeight;}
+      });
+      if(!content)content=reasoningText;
+    }else{
+      const data=await res.json();
+      content=aiTextFromResponse(data);
+    }
+    if(!content)throw new Error(t("aiNoContent"));
+    state.aiRaw=content;
+    const parsed=aiExtractJson(content);
+    const list=aiQuestionList(parsed);
+    state.aiPreview=list.map(normalizeAIQuestion).filter(Boolean);
+    if(!state.aiPreview.length){renderAIPreview();const box=$("aiPreview");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"});showToast(t("aiNoQuestions"),"warn");return;}
+    state.aiSelected=new Set(state.aiPreview.map((_,i)=>i));
+    state.aiFilter="all";
+    state.aiSearch="";
+    state.aiRaw="";
+    if($("aiAutoAdd")&&$("aiAutoAdd").checked){commitAIQuestions(state.aiPreview);return;}
+    renderAIPreview();
+    const resultBox=$("aiPreview");
+    if(resultBox)resultBox.scrollIntoView({behavior:"smooth",block:"nearest"});
+    showToast(t("aiGenerated",state.aiPreview.length),"success");
+  }catch(e){showToast(t("aiGenerateFail")+": "+e.message,"warn");}
+  btn.disabled=false;
+  btn.textContent=t("aiGenerate");
+}
+function logoutExam(){
+  if(state.fullscreen.loggingOut)return;
+  state.fullscreen.loggingOut=true;
+  state.fullscreen.logoutOnExit=false;
+  stopFullscreenWatch();
+  closeModal();
+  state.fullscreen.entered=false;
+  state.quiz.active=false;
+  restartFlow();
+  state.currentUser="user";
+  updateRoleUI();
+  applyLang();
+  state.fullscreen.loggingOut=false;
+}
+function bindFullscreenEvents(){
+  const handler=()=>{
+    if(state.fullscreen.active&&isFullscreen()){
+      if(state.fullscreen.interval)clearInterval(state.fullscreen.interval);
+      state.fullscreen.interval=null;
+      state.fullscreen.active=false;
+      state.fullscreen.entered=true;
+      startFullscreenWatch();
+      $("fullscreenOverlay").classList.remove("open");
+      if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}
+    }else if(!isFullscreen()&&state.fullscreen.logoutOnExit){
+      showToast(t("fullscreenExitLogout"),"warn");
+      logoutExam();
+    }
+  };
+  document.addEventListener("fullscreenchange",handler);
+  document.addEventListener("webkitfullscreenchange",handler);
+  document.addEventListener("mozfullscreenchange",handler);
+  document.addEventListener("MSFullscreenChange",handler);
+}
 function bindEvents(){
+  bindFullscreenEvents();
+  $("importBtnLabel").onclick=openImportChoice;
+  $("adminImportBar").onclick=openImportChoice;
   $("settingsBtn").onclick=(e)=>{e.stopPropagation();$("dropdown").classList.toggle("open");};
   document.addEventListener("click",(e)=>{const dd=$("dropdown");const btn=$("settingsBtn");if(!dd.contains(e.target)&&!btn.contains(e.target))dd.classList.remove("open");});
   $("userCard").onclick=()=>{
@@ -2066,17 +3176,17 @@ function bindEvents(){
     $("dropdown").classList.remove("open");
     if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}
     if(state.dirty){
-      confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),()=>{$("fileInput").click();});
+      confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),()=>{openImportChoice();});
     }else{
-      $("fileInput").click();
+      openImportChoice();
     }
   };
   $("btnReImport").onclick=()=>{
     if(state.quiz.active){showToast(t("cannotClearInExam"),"warn");return;}
     if(state.dirty){
-      confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),()=>{$("fileInput").click();});
+      confirmDialog(t("unsavedConfirmTitle"),t("unsavedConfirmDesc"),t("unsavedOk"),t("unsavedCancel"),()=>{openImportChoice();});
     }else{
-      $("fileInput").click();
+      openImportChoice();
     }
   };
   $("actQuestions").onclick=()=>openQuestionEditor();
@@ -2128,23 +3238,20 @@ function bindEvents(){
       }
     }
   });
-  document.addEventListener("fullscreenchange",()=>{
-    if(state.fullscreen.active&&isFullscreen()){
-      if(state.fullscreen.interval)clearInterval(state.fullscreen.interval);
-      state.fullscreen.interval=null;
-      state.fullscreen.active=false;
-      $("fullscreenOverlay").classList.remove("open");
-      if(state.fullscreen.onSuccess){const cb=state.fullscreen.onSuccess;state.fullscreen.onSuccess=null;cb();}
-    }else if(!isFullscreen()&&state.quiz.active){
-      showToast(t("fullscreenExitLogout"),"warn");
-      restartFlow();
-    }
-  });
   window.addEventListener("beforeunload",(e)=>{
     if(state.dirty||state.quiz.active){e.preventDefault();e.returnValue="";}
   });
+  $("btnArchiveUser").onclick=openArchive;
+  $("actArchive").onclick=openArchive;
+  $("actAI").onclick=openAIModal;
+  $("actCloud").onclick=openCloudModal;
+  $("actGrade").onclick=()=>openGithubPage("grader.html");
+  $("btnCloudImport").onclick=openCloudModal;
+  $("btnCloudUser").onclick=openCloudModal;
+  $("btnLog").onclick=openLogModal;
 }
 
+clearLegacyStorage();
 state.quiz.audioConfirmedUsers=loadAudioConfirmedUsers();
 applyTheme();
 applyLang();
