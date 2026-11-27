@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Exam System</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1a1d'/%3E%3Crect x='7' y='5' width='18' height='22' rx='3' fill='none' stroke='%23f0f0f0' stroke-width='1.8'/%3E%3Cpath d='M11 12h10M11 16h10M11 20h6' stroke='%23f0f0f0' stroke-width='1.8' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='23' r='5' fill='%2322c55e'/%3E%3Cpath d='M19.8 23l1.6 1.6 2.8-3' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="header">
+    <div class="header-title" id="headerTitle">Exam System</div>
+    <div style="display:flex;align-items:center;gap:10px">
+        <div class="dirty-badge" id="dirtyBadge" style="display:none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="dirtyText">Unsaved</span>
+        </div>
+        <div class="settings-btn" id="settingsBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+<div class="dropdown" id="dropdown">
+    <div class="dd-section">
+        <div class="dd-label" id="userSectionLabel">User</div>
+        <div class="user-card active" id="userCard">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>
+            </div>
+            <div>
+                <div class="user-name">User</div>
+                <div class="user-role" id="userRoleDisplay">Candidate</div>
+            </div>
+        </div>
+        <div class="user-card" id="adminCard">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/><circle cx="19" cy="5" r="1.5" fill="currentColor" stroke="none"/></svg>
+            </div>
+            <div>
+                <div class="user-name" id="adminNameDisplay">Administrator</div>
+                <div class="user-role" id="adminRoleDisplay">Admin</div>
+            </div>
+        </div>
+    </div>
+    <div class="dd-section" id="adminActions" style="display:none">
+        <div class="dd-label" id="adminSectionLabel">Admin</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button class="btn btn-secondary btn-sm" id="btnAdminImport">Import</button>
+            <button class="btn btn-danger btn-sm" id="btnClearData">Clear</button>
+        </div>
+    </div>
+    <div class="dd-section">
+        <div class="dd-label" id="settingsLabel">Settings</div>
+        <div class="settings-item">
+            <label id="themeLabel">Theme</label>
+            <div class="custom-select" id="themeSelect" data-value="dark">
+                <button class="custom-select-btn" type="button"><span class="custom-select-label">Dark</span></button>
+                <div class="custom-select-menu">
+                    <div class="custom-select-option" data-value="dark">Dark</div>
+                    <div class="custom-select-option" data-value="light">Light</div>
+                </div>
+            </div>
+        </div>
+        <div class="settings-item">
+            <label id="languageLabel">Language</label>
+            <div class="custom-select" id="languageSelect" data-value="en">
+                <button class="custom-select-btn" type="button"><span class="custom-select-label">English</span></button>
+                <div class="custom-select-menu">
+                    <div class="custom-select-option" data-value="en">English</div>
+                    <div class="custom-select-option" data-value="zh">中文</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main" id="mainArea">
+    <div class="import-card" id="importCard">
+        <h2 id="importTitle">Exam System</h2>
+        <p id="importDesc">Import a data file or create a new one to get started.</p>
+        <div class="import-actions">
+            <label class="import-btn" for="fileInput" id="importBtnLabel">Import Data</label>
+            <button class="new-btn" id="btnNewData" style="display:none">Create New</button>
+        </div>
+        <input type="file" id="fileInput" class="file-input" accept=".js">
+    </div>
+    <div class="workspace" id="workspace">
+        <div id="adminView" style="display:none;flex-direction:column;gap:24px">
+            <div class="overview-grid">
+                <div class="stat-card"><div class="stat-label" id="statQuestionsLabel">Questions</div><div class="stat-value" id="statQuestions">0</div></div>
+                <div class="stat-card"><div class="stat-label" id="statUsersLabel">Candidates</div><div class="stat-value" id="statUsers">0</div></div>
+                <div class="stat-card"><div class="stat-label" id="statScoreLabel">Total Score</div><div class="stat-value" id="statScore">100</div></div>
+                <div class="stat-card"><div class="stat-label" id="statDurationLabel">Duration</div><div class="stat-value" id="statDuration">60</div></div>
+            </div>
+            <div class="action-grid">
+                <div class="action-card" id="actQuestions"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="action-title" id="actQuestionsTitle">Questions</div><div class="action-desc" id="actQuestionsDesc">Manage question bank</div></div>
+                <div class="action-card" id="actUsers"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="action-title" id="actUsersTitle">Candidates</div><div class="action-desc" id="actUsersDesc">Manage candidate accounts</div></div>
+                <div class="action-card" id="actSettings"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div class="action-title" id="actSettingsTitle">Settings</div><div class="action-desc" id="actSettingsDesc">Exam configuration</div></div>
+                <div class="action-card" id="actExport"><div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="action-title" id="actExportTitle">Export</div><div class="action-desc" id="actExportDesc">Save configuration file</div></div>
+            </div>
+        </div>
+        <div id="userView" style="display:none;flex-direction:column;gap:24px">
+            <div class="user-welcome">
+                <div class="user-welcome-title" id="userWelcomeTitle">Ready for the exam?</div>
+                <div class="user-welcome-desc" id="userWelcomeDesc">Enter your name and UID / verify code to begin.</div>
+                <div class="user-welcome-actions">
+                    <button class="btn btn-primary btn-lg" id="btnStartQuiz">Start Exam</button>
+                    <button class="btn btn-secondary btn-lg" id="btnGuestQuiz" style="display:none">Try Without Login</button>
+                    <button class="btn btn-secondary btn-lg" id="btnReImport">Import New File</button>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-area" id="quizArea">
+            <div class="user-banner" id="userBanner" style="display:none">
+                <div class="user-banner-info">
+                    <div class="user-banner-name" id="userBannerName"></div>
+                    <div class="user-banner-uid" id="userBannerUid"></div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <span class="progress-text" id="progressText">0 / 0</span>
+                <div class="progress-actions">
+                    <span class="timer" id="timerDisplay" style="display:none"></span>
+                    <button class="btn btn-secondary btn-sm" id="btnExitQuiz">Exit</button>
+                </div>
+            </div>
+            <div id="cardsContainer"></div>
+            <div class="nav-buttons">
+                <div class="nav-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+                <div class="nav-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+            <div class="submit-wrap"><button class="btn btn-primary" id="btnSubmit">Submit</button></div>
+        </div>
+        <div class="result-area" id="resultArea">
+            <div id="resultSummary"></div>
+            <div class="result-list" id="resultList"></div>
+            <div class="result-actions" id="resultActions"></div>
+        </div>
+    </div>
+</div>
+<div class="footer">© 2020-2026 fuey All Rights Reserved</div>
+<div class="toast" id="toast"></div>
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+<div class="modal-overlay" id="confirmOverlay"><div class="modal" id="confirmContent"></div></div>
+<div class="waiting-overlay" id="waitingOverlay">
+    <div class="waiting-card">
+        <div class="waiting-spinner"></div>
+        <div class="waiting-title" id="waitingTitle">Exam Ready</div>
+        <div class="waiting-desc" id="waitingDesc">Waiting for the exam start time</div>
+        <div class="waiting-countdown" id="waitingCountdown">--:--:--</div>
+        <button class="btn btn-secondary" id="btnCancelWaiting">Cancel</button>
+    </div>
+</div>
+<div class="fullscreen-overlay" id="fullscreenOverlay">
+    <div class="fullscreen-card">
+        <div class="fullscreen-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></div>
+        <div class="fullscreen-title" id="fullscreenTitle">Fullscreen Required</div>
+        <div class="fullscreen-desc" id="fullscreenDesc">Press F11 to enter fullscreen, or click the button below.</div>
+        <div class="fullscreen-countdown" id="fullscreenCountdown">30</div>
+        <button class="btn btn-primary" id="btnEnterFullscreen">Enter Fullscreen</button>
+        <button class="btn btn-secondary" id="btnCancelFullscreen">Cancel</button>
+    </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
