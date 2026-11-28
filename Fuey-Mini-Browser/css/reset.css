@@ -1,0 +1,12 @@
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+html,body,h1,h2,h3,p,ul,ol,li,figure,dl,dd{margin:0;padding:0}
+ul,ol{list-style:none}
+button,input,textarea,select{font:inherit;color:inherit;background:none;border:none}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+input,textarea,select{outline:none}
+input,textarea,[contenteditable],code,.selectable{user-select:text;-webkit-user-select:text}
+::selection{background:var(--accent-soft);color:var(--text)}
+button:focus,input:focus,textarea:focus,a:focus{outline:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
