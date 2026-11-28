@@ -175,7 +175,7 @@
     picker.innerHTML=Object.keys(C.PROVIDERS).map(function(k){
     var p=C.PROVIDERS[k];
     var on=k===providerValue?' is-active':'';
-    return'<button class="provider-item'+on+'" type="button" data-provider="'+k+'"><span class="provider-badge" style="--pc:'+p.color+'" data-badge="'+C.escapeHtml(p.badge)+'"><img src="./images/Artificial_Intelligence/'+k+'.png" alt="" loading="lazy"></span><span class="provider-name">'+C.escapeHtml(p.labelKey?T(p.labelKey):p.label)+'</span></button>';
+    return'<button class="provider-item'+on+'" type="button" data-provider="'+k+'"><span class="provider-badge" style="--pc:'+p.color+'" data-badge="'+C.escapeHtml(p.badge)+'"><img src="./images/artificial_intelligence/'+k+'.png" alt="" loading="lazy"></span><span class="provider-name">'+C.escapeHtml(p.labelKey?T(p.labelKey):p.label)+'</span></button>';
     }).join('');
     picker.querySelectorAll('.provider-badge img').forEach(function(img){
     img.addEventListener('error',function(){
