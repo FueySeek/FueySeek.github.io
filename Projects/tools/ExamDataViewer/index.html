@@ -323,6 +323,14 @@ body.dark .q-type.essay{background:#052e16;color:#4ade80}
 .quiz-subjective:focus{border-color:var(--fg);box-shadow:0 0 0 3px var(--surface-3)}
 .quiz-subjective:disabled{opacity:.7;background:var(--surface-3)}
 .quiz-item.subjective.revealed{border-color:var(--border-2)}
+.option-image{max-width:100%;max-height:150px;border-radius:8px;display:block;margin:4px 0;object-fit:contain}
+.q-image{max-width:100%;max-height:280px;border-radius:8px;display:block;margin:8px 0;object-fit:contain}
+.q-image-wrap{margin:8px 0}
+.q-image-wrap img,.q-image-wrap svg{max-width:100%;height:auto;border-radius:8px;display:block}
+.q-audio{margin:6px 0 10px}
+.q-audio audio{width:100%;height:38px;border-radius:8px}
+.fill-blank-no{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:22px;padding:0 7px;margin:0 3px;border-radius:6px;background:var(--surface-3);border:1px solid var(--border-2);font-size:11px;font-weight:700;color:var(--muted);vertical-align:middle}
+.q-opt.picked{border-color:var(--accent)}
 </style>
 </head>
 <body class="dark">
@@ -354,7 +362,7 @@ body.dark .q-type.essay{background:#052e16;color:#4ade80}
           <span id="browseText">Select File</span>
         </button>
         <div class="import-hint" id="importHint">Only .js files are supported</div>
-        <input type="file" id="fileInput" accept=".js" style="display:none">
+        <input type="file" id="fileInput" accept=".js,.json" style="display:none">
       </div>
     </div>
     <div class="viewer-view" id="viewerView" style="display:none">
@@ -383,10 +391,10 @@ body.dark .q-type.essay{background:#052e16;color:#4ade80}
 <script>
 const I18N = {
   en: {
-    appTitle: 'Exam Data Viewer', importTitle: 'Load a data file', importDesc: 'Drop or select a .js file exported from the exam system.', browseText: 'Select File', importHint: 'Only .js files are supported', reimportText: 'Re-import', downloadText: 'Download', copyAllText: 'Copy All',
+    appTitle: 'Exam Data Viewer', importTitle: 'Load a data file', importDesc: 'Drop or select an .js or .json file exported from the exam system.', browseText: 'Select File', importHint: 'Supports .js and .json', reimportText: 'Re-import', downloadText: 'Download', copyAllText: 'Copy All',
     tabOverview: 'Overview', tabQuestions: 'Questions', tabUsers: 'Candidates', tabDetails: 'Details', tabQuiz: 'Quiz', tabRaw: 'Raw',
     sectionAdmin: 'Administrator', sectionExam: 'Exam Info', sectionStudent: 'Candidate', sectionAudio: 'Audio Test', sectionScore: 'Score',
-    fieldName: 'Name', fieldPassword: 'Password', fieldSubject: 'Subject', fieldTitle: 'Title', fieldSubtitle: 'Subtitle', fieldDuration: 'Duration', fieldTotalScore: 'Total Score', fieldStartTime: 'Start Time', fieldQuestionCount: 'Question Limit', fieldQuota: 'Type Quota', fieldOrder: 'Type Order', fieldUid: 'UID', fieldVerifyCode: 'Verify Code', fieldGender: 'Gender', fieldScore: 'Score', fieldCorrect: 'Correct', fieldAccuracy: 'Accuracy', fieldUserAnswer: 'Answer', fieldCorrectAnswer: 'Correct', fieldAudioText: 'Listening Text', fieldAudioDictation: 'Audio Dictation', subjectiveNotGraded: 'Not auto-graded', noCorrectAnswer: 'No correct answer', enabled: 'On', disabled: 'Off',
+    fieldName: 'Name', fieldPassword: 'Password', fieldSubject: 'Subject', fieldTitle: 'Title', fieldSubtitle: 'Subtitle', fieldDuration: 'Duration', fieldTotalScore: 'Total Score', fieldStartTime: 'Start Time', fieldQuestionCount: 'Question Limit', fieldQuota: 'Type Quota', fieldUidLength: 'UID Length', fieldAudioTest: 'Audio Test Text', fieldOrder: 'Type Order', fieldUid: 'UID', fieldVerifyCode: 'Verify Code', fieldGender: 'Gender', fieldScore: 'Score', fieldCorrect: 'Correct', fieldAccuracy: 'Accuracy', fieldUserAnswer: 'Answer', fieldCorrectAnswer: 'Correct', fieldAudioText: 'Listening Text', fieldFeatures: 'Features', featGuest: 'Guest Access', featDisableCustom: 'Custom Settings Disabled', featRequireAll: 'Require All', featShowAnswer: 'Show Answers', featRandomQuestions: 'Random Questions', featRandomOptions: 'Random Options', featEnableAudio: 'Audio Exam', featStudentExport: 'Candidate Export', blankNo: 'Blank ', subjectiveNotGraded: 'Not auto-graded', noCorrectAnswer: 'No correct answer', enabled: 'On', disabled: 'Off',
     typeSingle: 'Single', typeMultiple: 'Multiple', typeJudge: 'Judge', typeFill: 'Fill', typeReading: 'Reading', typeShort: 'Short Answer', typeEssay: 'Essay',
     filterAll: 'All', searchPlaceholder: 'Search…', emptyValue: '—', noResults: 'No matches', notAnswered: 'Not answered', correct: 'Correct', wrong: 'Wrong', unanswered: 'Unanswered',
     minutes: 'min', unlimited: 'Unlimited', genderMale: 'Male', genderFemale: 'Female', genderOther: 'Other', noVerify: 'None', lines: 'lines', bytes: 'B',
@@ -397,10 +405,10 @@ const I18N = {
     rightDisabled: 'Right-click disabled', devDisabled: 'DevTools disabled', srcDisabled: 'View source disabled'
   },
   zh: {
-    appTitle: '考试数据查看器', importTitle: '加载数据文件', importDesc: '拖入或选择一个从考试系统导出的 .js 文件。', browseText: '选择文件', importHint: '仅支持 .js 文件', reimportText: '重新导入', downloadText: '下载', copyAllText: '复制全部',
+    appTitle: '考试数据查看器', importTitle: '加载数据文件', importDesc: '拖入或选择一个从考试系统导出的 .js 或 .json 文件。', browseText: '选择文件', importHint: '支持 .js 与 .json', reimportText: '重新导入', downloadText: '下载', copyAllText: '复制全部',
     tabOverview: '概览', tabQuestions: '题目', tabUsers: '考生', tabDetails: '详情', tabQuiz: '小测', tabRaw: '原始数据',
     sectionAdmin: '管理员', sectionExam: '考试信息', sectionStudent: '考生', sectionAudio: '音频试听', sectionScore: '成绩',
-    fieldName: '名称', fieldPassword: '密码', fieldSubject: '科目', fieldTitle: '主标题', fieldSubtitle: '副标题', fieldDuration: '时长', fieldTotalScore: '总分', fieldStartTime: '开始时间', fieldQuestionCount: '题目上限', fieldQuota: '题型配额', fieldOrder: '题型顺序', fieldUid: 'UID', fieldVerifyCode: '验证码', fieldGender: '性别', fieldScore: '得分', fieldCorrect: '答对', fieldAccuracy: '正确率', fieldUserAnswer: '考生答案', fieldCorrectAnswer: '正确答案', fieldAudioText: '听力文本', fieldAudioDictation: '听力听写', subjectiveNotGraded: '不自动评分', noCorrectAnswer: '无标准答案', enabled: '开启', disabled: '关闭',
+    fieldName: '名称', fieldPassword: '密码', fieldSubject: '科目', fieldTitle: '主标题', fieldSubtitle: '副标题', fieldDuration: '时长', fieldTotalScore: '总分', fieldStartTime: '开始时间', fieldQuestionCount: '题目上限', fieldQuota: '题型配额', fieldUidLength: 'UID 长度', fieldAudioTest: '音频测试内容', fieldOrder: '题型顺序', fieldUid: 'UID', fieldVerifyCode: '验证码', fieldGender: '性别', fieldScore: '得分', fieldCorrect: '答对', fieldAccuracy: '正确率', fieldUserAnswer: '考生答案', fieldCorrectAnswer: '正确答案', fieldAudioText: '听力文本', fieldFeatures: '功能', featGuest: '允许体验操作', featDisableCustom: '禁用自定义设置', featRequireAll: '要求完成答题', featShowAnswer: '显示答案', featRandomQuestions: '题目随机', featRandomOptions: '选项随机', featEnableAudio: '音频考试', featStudentExport: '考生可导出', blankNo: '空', subjectiveNotGraded: '不自动评分', noCorrectAnswer: '无标准答案', enabled: '开启', disabled: '关闭',
     typeSingle: '单选题', typeMultiple: '多选题', typeJudge: '判断题', typeFill: '填空题', typeReading: '阅读题', typeShort: '自答题', typeEssay: '作文题',
     filterAll: '全部', searchPlaceholder: '搜索…', emptyValue: '—', noResults: '无匹配结果', notAnswered: '未作答', correct: '正确', wrong: '错误', unanswered: '未作答',
     minutes: '分钟', unlimited: '不限', genderMale: '男', genderFemale: '女', genderOther: '其他', noVerify: '无', lines: '行', bytes: 'B',
@@ -421,18 +429,72 @@ const state = {
 const $ = id => document.getElementById(id);
 const t = key => (I18N[state.lang] || I18N.en)[key] || key;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const TYPE_LIST = ['single', 'multiple', 'judge', 'fill', 'reading', 'short', 'essay'];
-const SUBJECTIVE_TYPES = ['reading', 'short', 'essay'];
-function isSubjectiveType(type) { return SUBJECTIVE_TYPES.indexOf(type) >= 0; }
+const TYPE_LIST = ['single', 'multiple', 'judge', 'fill', 'short'];
+const SUBJECTIVE_TYPES = ['short'];
+function normalizeQuestionType(type) { return (type === 'reading' || type === 'essay') ? 'short' : (type || 'single'); }
+function isSubjectiveType(type) { return SUBJECTIVE_TYPES.indexOf(normalizeQuestionType(type)) >= 0; }
 function typeLabel(type) {
+  type = normalizeQuestionType(type);
   if (type === 'single') return t('typeSingle');
   if (type === 'multiple') return t('typeMultiple');
   if (type === 'judge') return t('typeJudge');
   if (type === 'fill') return t('typeFill');
-  if (type === 'reading') return t('typeReading');
   if (type === 'short') return t('typeShort');
-  if (type === 'essay') return t('typeEssay');
   return type;
+}
+function optionImageSrc(text) {
+  const value = String(text == null ? '' : text).trim();
+  if (/^data:image\//i.test(value)) return value;
+  if (/^<svg[\s\S]*<\/svg>$/i.test(value)) return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(value);
+  const match = value.match(/(?:^|\s)((?:https?:\/\/|data:image\/)?[^\s<>"']+\.(png|jpe?g|gif|webp|svg)(\?[^\s]*)?)$/i);
+  return match ? match[1] : '';
+}
+function optionContentHtml(text, image) {
+  const src = optionImageSrc(image || '') || optionImageSrc(text);
+  let html = '';
+  if (text && !optionImageSrc(text)) html += '<span class="q-opt-text">' + esc(text) + '</span>';
+  if (src) html += '<img class="option-image" src="' + esc(src) + '" alt="">';
+  return html || '<span class="q-opt-text">' + esc(text) + '</span>';
+}
+function extractSvgMarkup(image) {
+  const raw = String(image == null ? '' : image);
+  const start = raw.search(/<svg[\s>]/i);
+  if (start < 0) return '';
+  let svg = raw.slice(start);
+  const end = svg.toLowerCase().lastIndexOf('</svg>');
+  if (end >= 0) svg = svg.slice(0, end + 6);
+  else svg += '</svg>';
+  const firstTagEnd = svg.indexOf('>');
+  if (firstTagEnd >= 0 && !/\sxmlns\s*=/.test(svg.slice(0, firstTagEnd + 1))) {
+    svg = svg.replace(/<svg/i, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  return svg;
+}
+function questionImageHtml(image) {
+  const raw = String(image == null ? '' : image).trim();
+  if (!raw) return '';
+  if (/^data:image\//i.test(raw)) return '<img class="q-image" src="' + esc(raw) + '" alt="">';
+  if (/^<img[\s>]/i.test(raw)) return '<div class="q-image-wrap">' + raw + '</div>';
+  const svg = extractSvgMarkup(raw);
+  if (svg) return '<div class="q-image-wrap">' + svg + '</div>';
+  return '<img class="q-image" src="' + esc(raw) + '" alt="">';
+}
+function renderTitleHtml(title, type) {
+  const raw = String(title == null ? '' : title);
+  if (normalizeQuestionType(type) !== 'fill') return '<div class="q-title">' + esc(raw) + '</div>';
+  const parts = raw.split(/(_{3,})/);
+  if (parts.length < 3) return '<div class="q-title">' + esc(raw) + '</div>';
+  let html = '';
+  let blank = 0;
+  parts.forEach((part, i) => {
+    if (i % 2 === 1) {
+      blank++;
+      html += '<span class="fill-blank-no">' + esc(t('blankNo') + blank) + '</span>';
+    } else {
+      html += esc(part);
+    }
+  });
+  return '<div class="q-title">' + html + '</div>';
 }
 function copyText(text) {
   if (!text) return;
@@ -560,6 +622,18 @@ function renderTabs() {
     btn.onclick = () => { state.tab = btn.dataset.tab; renderTabs(); renderContent(); };
   });
 }
+function featureSummary(s) {
+  const items = [];
+  if (s.allowGuest) items.push(t('featGuest'));
+  if (s.disableCustom) items.push(t('featDisableCustom'));
+  if (s.requireAll) items.push(t('featRequireAll'));
+  if (s.showAnswer) items.push(t('featShowAnswer'));
+  if (s.randomQuestions) items.push(t('featRandomQuestions'));
+  if (s.randomOptions) items.push(t('featRandomOptions'));
+  if (s.enableAudio) items.push(t('featEnableAudio'));
+  if (s.allowStudentExport) items.push(t('featStudentExport'));
+  return items.join(' · ');
+}
 function renderOverview() {
   const d = state.data;
   let html = '';
@@ -575,7 +649,9 @@ function renderOverview() {
       kvRow(t('fieldDuration'), fmtDuration(s.examDuration || 0)) +
       kvRow(t('fieldTotalScore'), String(s.totalScore || '')) +
       kvRow(t('fieldQuestionCount'), s.examQuestionCount > 0 ? String(s.examQuestionCount) : t('unlimited')) +
-      kvRow(t('fieldAudioDictation'), s.audioDictation !== false ? t('enabled') : t('disabled')) +
+      kvRow(t('fieldUidLength'), String(s.uidLength || '')) +
+      kvRow(t('fieldFeatures'), featureSummary(s)) +
+      kvRow(t('fieldAudioTest'), s.audioTestText || '') +
       kvRow(t('fieldQuota'), TYPE_LIST.map(tp => typeLabel(tp) + ':' + ((s.typeQuotas || {})[tp] || 0)).join(' · ')) +
       (Array.isArray(s.typeOrder) ? kvRow(t('fieldOrder'), s.typeOrder.map(typeLabel).join(' → ')) : '') +
       '</div></div>';
@@ -635,6 +711,7 @@ function filterList(items, filter, search) {
     const parts = [item.title || '', item.explanation || '', item.audioText || ''];
     if (item.correct != null) parts.push(Array.isArray(item.correct) ? item.correct.join(' ') : String(item.correct));
     if (Array.isArray(item.options)) parts.push(item.options.join(' '));
+    if (Array.isArray(item.optionImages)) parts.push(item.optionImages.join(' '));
     return parts.join(' ').toLowerCase().includes(q);
   });
 }
@@ -642,13 +719,18 @@ function renderQuestionItem(q, index) {
   const type = q.type || 'single';
   let html = '<div class="q-item">';
   html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span></div>';
-  html += '<div class="q-title">' + esc(q.title || '') + '</div>';
+  html += renderTitleHtml(q.title, type);
+  if (q.image) {
+    const imageHtml = questionImageHtml(q.image);
+    if (imageHtml) html += imageHtml;
+  }
+  if (q.audio) html += '<div class="q-audio"><audio controls preload="metadata" src="' + esc(q.audio) + '"></audio></div>';
   if (q.audioText && String(q.audioText).trim()) html += '<div class="q-audio-text"><span>' + esc(t('fieldAudioText')) + ': ' + esc(q.audioText) + '</span><button class="q-audio-play" data-text="' + esc(q.audioText) + '">' + esc(t('audioTextPlay')) + '</button></div>';
   if (Array.isArray(q.options) && q.options.length) {
     html += '<div class="q-options">';
     q.options.forEach((opt, i) => {
       const isC = type === 'multiple' ? (Array.isArray(q.correct) && q.correct.indexOf(i) >= 0) : (Number(q.correct) === i);
-      html += '<div class="q-opt' + (isC ? ' correct' : '') + '"><span class="q-opt-letter">' + String.fromCharCode(65 + i) + '</span><span class="q-opt-text">' + esc(opt) + '</span></div>';
+      html += '<div class="q-opt' + (isC ? ' correct' : '') + '"><span class="q-opt-letter">' + String.fromCharCode(65 + i) + '</span>' + optionContentHtml(opt, (q.optionImages || [])[i] || '') + '</div>';
     });
     html += '</div>';
   }
@@ -693,7 +775,17 @@ function renderDetailItem(item, index) {
   const ok = !subjective && !!item.isCorrect;
   let html = '<div class="q-item">';
   html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span><span class="q-badge ' + (subjective ? 'neutral' : (ok ? 'ok' : 'no')) + '">' + esc(subjective ? t('subjectiveNotGraded') : (ok ? t('correct') : (answered ? t('wrong') : t('notAnswered')))) + '</span></div>';
-  html += '<div class="q-title">' + esc(item.title || '') + '</div>';
+  html += renderTitleHtml(item.title, type);
+  if (Array.isArray(item.options) && item.options.length && type !== 'judge') {
+    const correctArr = !subjective && item.correct != null ? (Array.isArray(item.correct) ? item.correct : [item.correct]).map(Number) : [];
+    const userArr = Array.isArray(item.userAnswer) ? item.userAnswer.map(Number) : (item.userAnswer == null || item.userAnswer === '' ? [] : [Number(item.userAnswer)]);
+    html += '<div class="q-options">';
+    item.options.forEach((opt, i) => {
+      const cls = 'q-opt' + (correctArr.indexOf(i) >= 0 ? ' correct' : '') + (userArr.indexOf(i) >= 0 ? ' picked' : '');
+      html += '<div class="' + cls + '"><span class="q-opt-letter">' + String.fromCharCode(65 + i) + '</span>' + optionContentHtml(opt, (item.optionImages || [])[i] || '') + '</div>';
+    });
+    html += '</div>';
+  }
   html += '<div class="q-meta">';
   if (answered) html += '<span class="q-meta-item">' + esc(t('fieldUserAnswer')) + ': <b>' + esc(answerText(item.userAnswer, type)) + '</b><button class="q-meta-copy" data-copy="' + esc(answerText(item.userAnswer, type)) + '">' + iconCopy() + '</button></span>';
   else html += '<span class="q-meta-item">' + esc(t('fieldUserAnswer')) + ': <b style="color:var(--subtle)">' + esc(t('notAnswered')) + '</b></span>';
@@ -752,7 +844,13 @@ function renderQuizItem(q, index) {
   html += '<div class="q-head"><span class="q-num">Q' + (index + 1) + '</span><span class="q-type ' + type + '">' + esc(typeLabel(type)) + '</span>';
   if (revealed) html += '<span class="q-badge ' + (subjective ? 'neutral' : (correct ? 'ok' : 'no')) + '">' + esc(subjective ? t('subjectiveNotGraded') : (correct ? t('correct') : (hasAnswer(userAns, type) ? t('wrong') : t('unanswered')))) + '</span>';
   html += '</div>';
-  html += '<div class="q-title">' + esc(q.title || '') + '</div>';
+  html += renderTitleHtml(q.title, type);
+  if (q.image) {
+    const imageHtml = questionImageHtml(q.image);
+    if (imageHtml) html += imageHtml;
+  }
+  if (q.audio) html += '<div class="q-audio"><audio controls preload="metadata" src="' + esc(q.audio) + '"></audio></div>';
+  if (q.audioText && String(q.audioText).trim()) html += '<div class="q-audio-text"><span>' + esc(t('fieldAudioText')) + ': ' + esc(q.audioText) + '</span><button class="q-audio-play" data-text="' + esc(q.audioText) + '">' + esc(t('audioTextPlay')) + '</button></div>';
   if (subjective) {
     const val = typeof userAns === 'string' ? userAns : '';
     html += '<textarea class="quiz-subjective" data-qi="' + index + '" rows="4" placeholder="' + esc(t('quizSubjectivePlaceholder')) + '"' + (revealed ? ' disabled' : '') + '>' + esc(val) + '</textarea>';
@@ -760,7 +858,7 @@ function renderQuizItem(q, index) {
     const vals = Array.isArray(userAns) ? userAns : (userAns ? [userAns] : ['']);
     const correctArr = Array.isArray(q.correct) ? q.correct : [q.correct];
     for (let i = 0; i < correctArr.length; i++) {
-      html += '<input type="text" class="quiz-input" data-qi="' + index + '" data-bi="' + i + '" value="' + esc(vals[i] || '') + '" placeholder="' + esc('Blank ' + (i + 1)) + '"' + (revealed ? ' disabled' : '') + '>';
+      html += '<input type="text" class="quiz-input" data-qi="' + index + '" data-bi="' + i + '" value="' + esc(vals[i] || '') + '" placeholder="' + esc(t('blankNo') + (i + 1)) + '"' + (revealed ? ' disabled' : '') + '>';
     }
   } else {
     const opts = type === 'judge' ? ['✓', '✗'] : (q.options || []);
@@ -775,7 +873,7 @@ function renderQuizItem(q, index) {
         else if (selected) optCls += ' wrong';
         optCls += ' disabled';
       }
-      html += '<div class="' + optCls + '" data-qi="' + index + '" data-opt="' + i + '"><span class="q-opt-letter">' + String.fromCharCode(65 + i) + '</span><span class="q-opt-text">' + esc(opt) + '</span></div>';
+      html += '<div class="' + optCls + '" data-qi="' + index + '" data-opt="' + i + '"><span class="q-opt-letter">' + String.fromCharCode(65 + i) + '</span>' + optionContentHtml(opt, (q.optionImages || [])[i] || '') + '</div>';
     });
     html += '</div>';
   }
@@ -1063,11 +1161,28 @@ function loadFile(file) {
       const text = String(e.target.result || '');
       if (!text.trim()) return showToast(t('emptyFile'));
       let data = null, type = null;
-      try { delete window.APP_DATA; delete window.STUDENT_RESULT; new Function(text)(); } catch (err) {}
-      if (window.APP_DATA && Array.isArray(window.APP_DATA.questions)) { data = window.APP_DATA; type = 'exam'; }
-      else if (window.STUDENT_RESULT && Array.isArray(window.STUDENT_RESULT.details)) { data = window.STUDENT_RESULT; type = 'student'; }
+      try {
+        const parsed = JSON.parse(text);
+        if (parsed && Array.isArray(parsed.questions)) { data = parsed; type = 'exam'; }
+        else if (parsed && Array.isArray(parsed.details)) {
+          data = parsed.result && Array.isArray(parsed.result.details) ? Object.assign({}, parsed.result) : parsed;
+          data.name = data.name || parsed.name || '';
+          data.uid = data.uid || parsed.uid || '';
+          if (data.score == null) data.score = parsed.score;
+          if (data.totalScore == null) data.totalScore = parsed.totalScore;
+          if (data.submittedAt == null) data.submittedAt = parsed.submittedAt;
+          type = 'student';
+        }
+      } catch (err) {}
+      if (!data) {
+        try { delete window.APP_DATA; delete window.STUDENT_RESULT; new Function(text)(); } catch (err) {}
+        if (window.APP_DATA && Array.isArray(window.APP_DATA.questions)) { data = window.APP_DATA; type = 'exam'; }
+        else if (window.STUDENT_RESULT && Array.isArray(window.STUDENT_RESULT.details)) { data = window.STUDENT_RESULT; type = 'student'; }
+      }
       if (!data) return showToast(t('invalidFile'));
       state.data = data; state.dataType = type;
+      if (type === 'exam' && Array.isArray(data.questions)) data.questions.forEach(q => { q.type = normalizeQuestionType(q.type); });
+      if (type === 'student' && Array.isArray(data.details)) data.details.forEach(d => { d.type = normalizeQuestionType(d.type); });
       state.fileName = file.name || (type === 'exam' ? 'exam_data.js' : 'student_result.js');
       state.rawText = text;
       state.tab = 'overview';
