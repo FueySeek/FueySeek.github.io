@@ -281,12 +281,13 @@
     C.faviconSources=function(url){
     var d=C.domainOf(url);
     if(!d)return[];
-    var host=d.split(':')[0];
+    var host=d;
+    try{host=new URL(/^https?:\/\//.test(url)?url:'https://'+url).hostname}catch(e){}
     if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host)||host==='localhost'||host==='[::1]'||host.indexOf('.')<0)return[];
-    return['https://'+d+'/favicon.ico','https://www.google.com/s2/favicons?sz=64&domain='+encodeURIComponent(d),'https://icons.duckduckgo.com/ip3/'+encodeURIComponent(d)+'.ico'];
+    return['https://'+host+'/favicon.ico'];
     };
     C.faviconUrl=function(url){return C.faviconSources(url)[0]||''};
-    C.faviconImg=function(url,cls){var list=C.faviconSources(url);if(!list.length)return'';return'<img'+(cls?' class="'+cls+'"':'')+' src="'+list[0]+'" alt="" loading="lazy" data-fi="0" data-fs="'+C.escapeHtml(list.join('|'))+'" onerror="window.Core.faviconError(this)">'};
+    C.faviconImg=function(url,cls){var list=C.faviconSources(url);if(!list.length)return'';return'<img'+(cls?' class="'+cls+'"':'')+' src="'+list[0]+'" alt="" loading="lazy" referrerpolicy="no-referrer" data-fi="0" data-fs="'+C.escapeHtml(list.join('|'))+'" onerror="window.Core.faviconError(this)">'};
     C.faviconError=function(img){
     var list=(img.getAttribute('data-fs')||'').split('|');
     var i=parseInt(img.getAttribute('data-fi')||'0',10)+1;
